@@ -1,0 +1,1000 @@
+﻿2026-03-28 22:33:35.941 [http-nio-8080-exec-4] [af54d781-559b-433d-bb72-5f174358add3] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:33:35.945 [http-nio-8080-exec-4] [af54d781-559b-433d-bb72-5f174358add3] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:33:35.947 [http-nio-8080-exec-4] [af54d781-559b-433d-bb72-5f174358add3] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:33:35.949 [http-nio-8080-exec-4] [af54d781-559b-433d-bb72-5f174358add3] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:33:35.959 [http-nio-8080-exec-4] [af54d781-559b-433d-bb72-5f174358add3] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] GET /api/service/bookings/branch/1 status=200 durationMs=39
+2026-03-28 22:34:19.417 [http-nio-8080-exec-10] [fd0eb15d-7cc9-43be-a01b-e5ea2cbc93e6] [] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-03-28 22:34:19.419 [http-nio-8080-exec-10] [fd0eb15d-7cc9-43be-a01b-e5ea2cbc93e6] [] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+2026-03-28 22:34:19.422 [http-nio-8080-exec-10] [fd0eb15d-7cc9-43be-a01b-e5ea2cbc93e6] [] DEBUG org.hibernate.SQL - 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+2026-03-28 22:34:19.441 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        sb1_0.id,
+        sb1_0.booking_date,
+        sb1_0.booking_id,
+        sb1_0.branch_id,
+        sb1_0.complaints,
+        sb1_0.created_at,
+        sb1_0.created_by,
+        sb1_0.customer_id,
+        sb1_0.preferred_service_date,
+        sb1_0.service_type,
+        sb1_0.status,
+        sb1_0.updated_at,
+        sb1_0.updated_by,
+        sb1_0.version 
+    from
+        service_bookings sb1_0 
+    where
+        sb1_0.branch_id=?
+2026-03-28 22:34:19.445 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+2026-03-28 22:34:19.448 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:19.451 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:19.454 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:19.456 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:19.459 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:19.464 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:19.474 [http-nio-8080-exec-10] [80d41d20-564d-4fba-9d6d-08eb179897f1] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] GET /api/service/bookings/branch/1 status=200 durationMs=39
+2026-03-28 22:34:42.027 [http-nio-8080-exec-1] [4c142e07-359a-4958-b6cf-6ed20b893917] [] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-03-28 22:34:42.031 [http-nio-8080-exec-1] [4c142e07-359a-4958-b6cf-6ed20b893917] [] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+2026-03-28 22:34:42.035 [http-nio-8080-exec-1] [4c142e07-359a-4958-b6cf-6ed20b893917] [] DEBUG org.hibernate.SQL - 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+2026-03-28 22:34:42.089 [http-nio-8080-exec-1] [132cece0-1a10-4ae3-a411-4156796b1cf4] [1] INFO  c.h.d.m.s.s.i.ServiceBookingServiceImpl - Creating new service booking for customer id: 11
+2026-03-28 22:34:42.090 [http-nio-8080-exec-1] [132cece0-1a10-4ae3-a411-4156796b1cf4] [1] DEBUG org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+2026-03-28 22:34:42.094 [http-nio-8080-exec-1] [132cece0-1a10-4ae3-a411-4156796b1cf4] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.122 [http-nio-8080-exec-1] [132cece0-1a10-4ae3-a411-4156796b1cf4] [1] DEBUG org.hibernate.SQL - 
+    insert 
+    into
+        service_bookings
+        (booking_date, booking_id, branch_id, complaints, created_at, created_by, customer_id, preferred_service_date, service_type, status, updated_at, updated_by, version) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-28 22:34:42.142 [http-nio-8080-exec-1] [132cece0-1a10-4ae3-a411-4156796b1cf4] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] POST /api/service/bookings status=201 durationMs=100
+2026-03-28 22:34:42.190 [http-nio-8080-exec-3] [8be6f756-ab94-4720-9e81-a3a23a7f078e] [] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-03-28 22:34:42.194 [http-nio-8080-exec-3] [8be6f756-ab94-4720-9e81-a3a23a7f078e] [] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+2026-03-28 22:34:42.197 [http-nio-8080-exec-3] [8be6f756-ab94-4720-9e81-a3a23a7f078e] [] DEBUG org.hibernate.SQL - 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+2026-03-28 22:34:42.212 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        sb1_0.id,
+        sb1_0.booking_date,
+        sb1_0.booking_id,
+        sb1_0.branch_id,
+        sb1_0.complaints,
+        sb1_0.created_at,
+        sb1_0.created_by,
+        sb1_0.customer_id,
+        sb1_0.preferred_service_date,
+        sb1_0.service_type,
+        sb1_0.status,
+        sb1_0.updated_at,
+        sb1_0.updated_by,
+        sb1_0.version 
+    from
+        service_bookings sb1_0 
+    where
+        sb1_0.branch_id=?
+2026-03-28 22:34:42.215 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+2026-03-28 22:34:42.216 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.220 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.224 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.227 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.230 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.232 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.235 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] DEBUG org.hibernate.SQL - 
+    select
+        c1_0.id,
+        c1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by 
+    from
+        customers c1_0 
+    join
+        branches b1_0 
+            on b1_0.id=c1_0.branch_id 
+    where
+        c1_0.id=?
+2026-03-28 22:34:42.244 [http-nio-8080-exec-3] [1bbd914f-b424-4e60-ae59-a56f51a184b9] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] GET /api/service/bookings/branch/1 status=200 durationMs=39
+2026-03-28 22:35:09.064 [http-nio-8080-exec-5] [d3b189c2-63f8-4778-b7ee-066254be705c] [] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-03-28 22:35:09.068 [http-nio-8080-exec-5] [d3b189c2-63f8-4778-b7ee-066254be705c] [] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+2026-03-28 22:35:09.071 [http-nio-8080-exec-5] [d3b189c2-63f8-4778-b7ee-066254be705c] [] DEBUG org.hibernate.SQL - 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+2026-03-28 22:35:09.092 [http-nio-8080-exec-5] [1d1380c9-0bac-4cd3-b352-60b97bd8cded] [1] DEBUG org.hibernate.SQL - 
+    select
+        sr1_0.id,
+        sr1_0.branch_id,
+        sr1_0.created_at,
+        sr1_0.created_by,
+        sr1_0.no_of_technicians,
+        sr1_0.notes,
+        sr1_0.odometer,
+        sr1_0.parts_used,
+        sr1_0.payment_status,
+        sr1_0.service_booking_id,
+        sr1_0.service_date,
+        sr1_0.status,
+        sr1_0.technician_hours,
+        sr1_0.updated_at,
+        sr1_0.updated_by,
+        sr1_0.version,
+        sr1_0.work_performed 
+    from
+        service_records sr1_0 
+    where
+        sr1_0.branch_id=?
+2026-03-28 22:35:09.122 [http-nio-8080-exec-5] [1d1380c9-0bac-4cd3-b352-60b97bd8cded] [1] DEBUG org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+2026-03-28 22:35:09.125 [http-nio-8080-exec-5] [1d1380c9-0bac-4cd3-b352-60b97bd8cded] [1] DEBUG org.hibernate.SQL - 
+    select
+        sb1_0.id,
+        sb1_0.booking_date,
+        sb1_0.booking_id,
+        sb1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        sb1_0.complaints,
+        sb1_0.created_at,
+        sb1_0.created_by,
+        sb1_0.customer_id,
+        c1_0.id,
+        c1_0.branch_id,
+        b2_0.id,
+        b2_0.code,
+        b2_0.created_at,
+        b2_0.created_by,
+        b2_0.gstin,
+        b2_0.is_active,
+        b2_0.name,
+        b2_0.region,
+        b2_0.updated_at,
+        b2_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        sb1_0.preferred_service_date,
+        sb1_0.service_type,
+        sb1_0.status,
+        sb1_0.updated_at,
+        sb1_0.updated_by,
+        sb1_0.version 
+    from
+        service_bookings sb1_0 
+    join
+        branches b1_0 
+            on b1_0.id=sb1_0.branch_id 
+    join
+        customers c1_0 
+            on c1_0.id=sb1_0.customer_id 
+    left join
+        branches b2_0 
+            on b2_0.id=c1_0.branch_id 
+    where
+        sb1_0.id=?
+2026-03-28 22:35:09.130 [http-nio-8080-exec-5] [1d1380c9-0bac-4cd3-b352-60b97bd8cded] [1] DEBUG org.hibernate.SQL - 
+    select
+        sb1_0.id,
+        sb1_0.booking_date,
+        sb1_0.booking_id,
+        sb1_0.branch_id,
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by,
+        sb1_0.complaints,
+        sb1_0.created_at,
+        sb1_0.created_by,
+        sb1_0.customer_id,
+        c1_0.id,
+        c1_0.branch_id,
+        b2_0.id,
+        b2_0.code,
+        b2_0.created_at,
+        b2_0.created_by,
+        b2_0.gstin,
+        b2_0.is_active,
+        b2_0.name,
+        b2_0.region,
+        b2_0.updated_at,
+        b2_0.updated_by,
+        c1_0.created_at,
+        c1_0.created_by,
+        c1_0.dob,
+        c1_0.email,
+        c1_0.location,
+        c1_0.mobile,
+        c1_0.name,
+        c1_0.updated_at,
+        c1_0.updated_by,
+        sb1_0.preferred_service_date,
+        sb1_0.service_type,
+        sb1_0.status,
+        sb1_0.updated_at,
+        sb1_0.updated_by,
+        sb1_0.version 
+    from
+        service_bookings sb1_0 
+    join
+        branches b1_0 
+            on b1_0.id=sb1_0.branch_id 
+    join
+        customers c1_0 
+            on c1_0.id=sb1_0.customer_id 
+    left join
+        branches b2_0 
+            on b2_0.id=c1_0.branch_id 
+    where
+        sb1_0.id=?
+2026-03-28 22:35:09.147 [http-nio-8080-exec-5] [1d1380c9-0bac-4cd3-b352-60b97bd8cded] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] GET /api/service/records/branch/1 status=200 durationMs=64

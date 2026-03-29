@@ -1,0 +1,2 @@
+Status: 500
+{"success":false,"error":{"timestamp":"2026-03-28T23:53:24.7809967","status":500,"errorCode":"INTERNAL_ERROR","message":"An unexpected error occurred. Please contact support.","path":"/api/testdrive/fleet/filter","correlationId":"920cd7ca-dbb4-43c8-9961-c17a16638d73"},"timestamp":"2026-03-28T23:53:24.7809967"}

@@ -1,0 +1,27 @@
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.sidenav-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+.sidenav {
+  width: 280px;
+  background: var(--dms-sidenav-bg) !important;
+  border-right: none !important;
+  transition: width 0.3s ease;
+}
+
+.main-content {
+  background-color: var(--dms-canvas) !important;
+}
+
+.content-wrapper {
+  padding: var(--dms-space-page);
+  max-width: 1440px;
+  margin: 0 auto;
+}

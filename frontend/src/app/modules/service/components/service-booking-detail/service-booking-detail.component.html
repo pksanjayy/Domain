@@ -1,0 +1,117 @@
+<div class="detail-container">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading && booking">
+    <!-- Breadcrumb & Back -->
+    <div class="breadcrumb">
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span>Service</span>
+      <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
+      <span>Bookings</span>
+      <mat-icon class="breadcrumb-sep">chevron_right</mat-icon>
+      <span class="current">{{ booking.bookingId }}</span>
+    </div>
+
+    <!-- Header -->
+    <div class="detail-header">
+      <div class="header-info">
+        <h2>Service Booking: {{ booking.bookingId }}</h2>
+        <p class="sub-text">{{ booking.customerName }}</p>
+      </div>
+      <div class="header-badges">
+        <span class="status-chip" [ngClass]="getStatusClass(booking.status)">
+          {{ booking.status }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-bar">
+      <button mat-raised-button color="primary" (click)="editBooking()">
+        <mat-icon>edit</mat-icon> Edit
+      </button>
+      <button mat-raised-button color="warn" (click)="deleteBooking()">
+        <mat-icon>delete</mat-icon> Delete
+      </button>
+    </div>
+
+    <!-- Detail Cards -->
+    <div class="detail-grid">
+      <!-- Booking Info -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Booking Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Booking ID</span>
+              <span class="info-value mono">{{ booking.bookingId }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Booking Date</span>
+              <span class="info-value">{{ booking.bookingDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="info-item" *ngIf="booking.preferredServiceDate">
+              <span class="info-label">Preferred Service Date</span>
+              <span class="info-value">{{ booking.preferredServiceDate | date:'mediumDate' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Service Type</span>
+              <span class="info-value">{{ booking.serviceType }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Status</span>
+              <span class="info-value">
+                <span class="status-chip" [ngClass]="getStatusClass(booking.status)">{{ booking.status }}</span>
+              </span>
+            </div>
+            <div class="info-item" *ngIf="booking.branchName">
+              <span class="info-label">Branch</span>
+              <span class="info-value">{{ booking.branchName }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Customer Info -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Customer Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Customer Name</span>
+              <span class="info-value">{{ booking.customerName }}</span>
+            </div>
+            <div class="info-item" *ngIf="booking.customerEmail">
+              <span class="info-label">Email</span>
+              <span class="info-value">{{ booking.customerEmail }}</span>
+            </div>
+            <div class="info-item" *ngIf="booking.customerMobile">
+              <span class="info-label">Mobile</span>
+              <span class="info-value">{{ booking.customerMobile }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+
+    <!-- Complaints / Service Requests -->
+    <mat-card *ngIf="booking.complaints" class="remarks-card">
+      <mat-card-header>
+        <mat-card-title>Complaints / Service Requests</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ booking.complaints }}</p>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</div>

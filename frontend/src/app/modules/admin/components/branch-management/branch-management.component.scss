@@ -1,0 +1,136 @@
+.branch-management {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dms-text-primary);
+    letter-spacing: -0.015em;
+  }
+
+  .subtitle {
+    margin: 4px 0 0;
+    color: var(--dms-text-secondary);
+    font-size: 14px;
+  }
+}
+
+.loading-bar {
+  margin-bottom: 16px;
+}
+
+.table-container {
+  border-radius: var(--dms-card-radius);
+  overflow: hidden;
+  border: 1px solid var(--dms-card-border);
+  box-shadow: var(--dms-card-shadow);
+  background: var(--dms-card);
+}
+
+.branch-table {
+  width: 100%;
+}
+
+.branch-code {
+  font-family: var(--dms-mono);
+  font-weight: 500;
+  color: var(--dms-accent);
+  font-size: 13px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px;
+  color: var(--dms-text-tertiary);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 14px;
+    margin: 0;
+    color: var(--dms-text-secondary);
+  }
+}
+
+/* ─── Drawer ─── */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -450px;
+  width: 420px;
+  height: 100vh;
+  background: var(--dms-card, #fff);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+
+  &.open {
+    right: 0;
+  }
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--dms-card-border);
+
+  h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dms-text-primary);
+  }
+}
+
+.drawer-body {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.drawer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: auto;
+  border-top: 1px solid var(--dms-card-border);
+  padding: 16px 0 0;
+}

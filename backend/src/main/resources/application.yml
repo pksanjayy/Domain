@@ -1,0 +1,86 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: dms-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/dms_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: dms_user
+    password: dms_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 600000
+      connection-timeout: 30000
+      max-lifetime: 1200000
+      pool-name: DmsHikariPool
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
+  cache:
+    type: caffeine
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=10m
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2s
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+app:
+  jwt:
+    secret: dGhpcyBpcyBhIDI1NiBiaXQgc2VjcmV0IGtleSBmb3IgSFMyNTYgand0IHNpZ25pbmcgdXNlZCBpbiBkbXM=
+    access-token-expiry: 28800000
+    refresh-token-expiry: 604800000
+
+  security:
+    max-failed-attempts: 5
+    lock-duration-minutes: 30
+
+logging:
+  level:
+    com.hyundai.dms: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{correlationId}] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method

@@ -1,0 +1,58 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app-shell",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "/index.html",
+          "/*.css",
+          "/*.js",
+          "/favicon.ico"
+        ]
+      }
+    },
+    {
+      "name": "static-assets",
+      "installMode": "lazy",
+      "updateMode": "lazy",
+      "resources": {
+        "files": [
+          "/assets/**",
+          "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api-performance",
+      "urls": [
+        "/api/admin/roles",
+        "/api/admin/menus",
+        "/api/admin/branches",
+        "/api/admin/codes"
+      ],
+      "cacheConfig": {
+        "maxSize": 20,
+        "maxAge": "1h",
+        "strategy": "performance"
+      }
+    },
+    {
+      "name": "api-freshness",
+      "urls": [
+        "/api/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 50,
+        "maxAge": "5m",
+        "strategy": "freshness",
+        "timeout": "10s"
+      }
+    }
+  ]
+}

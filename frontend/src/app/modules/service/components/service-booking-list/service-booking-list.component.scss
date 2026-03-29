@@ -1,0 +1,70 @@
+.list-container {
+  padding: 24px;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+
+.filter-field {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 16px;
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+}
+
+.text-muted {
+  color: #666;
+}
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+
+  &.confirmed { background: #e3f2fd; color: #1976d2; }
+  &.cancelled { background: #ffebee; color: #d32f2f; }
+  &.rescheduled { background: #fff3e0; color: #f57c00; }
+  &.completed { background: #e8f5e9; color: #388e3c; }
+  &.no_show { background: #fafafa; color: #616161; border: 1px solid #eee; }
+}

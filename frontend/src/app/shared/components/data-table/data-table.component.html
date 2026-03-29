@@ -1,0 +1,62 @@
+<div class="data-table-container">
+  <!-- Filter Panel -->
+  <app-filter-panel
+    *ngIf="filterConfig.length > 0"
+    [fields]="filterConfig"
+    (filterChange)="onFilterChange($event)">
+  </app-filter-panel>
+
+  <!-- Loading -->
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
+
+  <!-- Table -->
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+      <ng-container *ngFor="let col of columns" [matColumnDef]="col.field">
+        <th mat-header-cell *matHeaderCellDef
+            [mat-sort-header]="col.sortable !== false ? col.field : ''"
+            [disabled]="col.sortable === false">
+          {{ col.header }}
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <ng-container *ngIf="col.field === 'actions' && actionTemplate; else defaultCell">
+            <ng-container *ngTemplateOutlet="actionTemplate; context: { $implicit: row }"></ng-container>
+          </ng-container>
+          <ng-template #defaultCell>
+            <ng-container *ngIf="col.pipe === 'stockStatus'">
+              <span class="status-badge" [ngClass]="row[col.field]">{{ row[col.field] | titlecase }}</span>
+            </ng-container>
+            <ng-container *ngIf="col.pipe === 'ageDays'">
+              <span *ngIf="row[col.field] != null && row[col.field] !== ''; else noAge">{{ row[col.field] }} days</span>
+              <ng-template #noAge><span class="age-na">—</span></ng-template>
+            </ng-container>
+            <ng-container *ngIf="col.pipe !== 'stockStatus' && col.pipe !== 'ageDays'">
+              {{ row[col.field] }}
+            </ng-container>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          (click)="onRowClicked(row)"
+          class="clickable-row"></tr>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="isEmpty && !isLoading" class="empty-state">
+      <mat-icon>inbox</mat-icon>
+      <p>No data found</p>
+    </div>
+  </div>
+
+  <!-- Paginator -->
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="pageSize"
+    [pageIndex]="pageIndex"
+    [pageSizeOptions]="[5, 10, 25, 50]"
+    (page)="onPageChange($event)"
+    showFirstLastButtons>
+  </mat-paginator>
+</div>

@@ -1,0 +1,500 @@
+﻿    select
+        m1_0.role_id,
+        m1_1.id,
+        m1_1.created_at,
+        m1_1.created_by,
+        m1_1.display_order,
+        m1_1.icon,
+        m1_1.is_active,
+        m1_1.name,
+        m1_1.parent_id,
+        m1_1.path,
+        m1_1.updated_at,
+        m1_1.updated_by 
+    from
+        role_menus m1_0 
+    join
+        menus m1_1 
+            on m1_1.id=m1_0.menu_id 
+    where
+        m1_0.role_id=?
+Hibernate: 
+    select
+        m1_0.role_id,
+        m1_1.id,
+        m1_1.created_at,
+        m1_1.created_by,
+        m1_1.display_order,
+        m1_1.icon,
+        m1_1.is_active,
+        m1_1.name,
+        m1_1.parent_id,
+        m1_1.path,
+        m1_1.updated_at,
+        m1_1.updated_by 
+    from
+        role_menus m1_0 
+    join
+        menus m1_1 
+            on m1_1.id=m1_0.menu_id 
+    where
+        m1_0.role_id=?
+2026-03-27 00:20:04.921 [http-nio-8080-exec-6] [a8145786-5b59-4c0d-8370-a470a799163c] [] DEBUG org.hibernate.SQL - 
+    select
+        m1_0.role_id,
+        m1_1.id,
+        m1_1.created_at,
+        m1_1.created_by,
+        m1_1.display_order,
+        m1_1.icon,
+        m1_1.is_active,
+        m1_1.name,
+        m1_1.parent_id,
+        m1_1.path,
+        m1_1.updated_at,
+        m1_1.updated_by 
+    from
+        role_menus m1_0 
+    join
+        menus m1_1 
+            on m1_1.id=m1_0.menu_id 
+    where
+        m1_0.role_id=?
+Hibernate: 
+    select
+        m1_0.role_id,
+        m1_1.id,
+        m1_1.created_at,
+        m1_1.created_by,
+        m1_1.display_order,
+        m1_1.icon,
+        m1_1.is_active,
+        m1_1.name,
+        m1_1.parent_id,
+        m1_1.path,
+        m1_1.updated_at,
+        m1_1.updated_by 
+    from
+        role_menus m1_0 
+    join
+        menus m1_1 
+            on m1_1.id=m1_0.menu_id 
+    where
+        m1_0.role_id=?
+2026-03-27 00:20:04.926 [http-nio-8080-exec-4] [b5d1e37e-3c87-465f-adc4-ab81939bdea1] [] DEBUG org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+2026-03-27 00:20:04.926 [http-nio-8080-exec-6] [a8145786-5b59-4c0d-8370-a470a799163c] [] DEBUG org.hibernate.SQL - 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+Hibernate: 
+    select
+        b1_0.id,
+        b1_0.code,
+        b1_0.created_at,
+        b1_0.created_by,
+        b1_0.gstin,
+        b1_0.is_active,
+        b1_0.name,
+        b1_0.region,
+        b1_0.updated_at,
+        b1_0.updated_by 
+    from
+        branches b1_0 
+    where
+        b1_0.id=?
+2026-03-27 00:20:04.934 [http-nio-8080-exec-4] [b5d1e37e-3c87-465f-adc4-ab81939bdea1] [] DEBUG org.hibernate.SQL - 
+    update
+        refresh_tokens 
+    set
+        expires_at=?,
+        revoked=?,
+        token=?,
+        updated_at=?,
+        updated_by=?,
+        user_id=? 
+    where
+        id=?
+2026-03-27 00:20:04.934 [http-nio-8080-exec-6] [a8145786-5b59-4c0d-8370-a470a799163c] [] DEBUG org.hibernate.SQL - 
+    update
+        refresh_tokens 
+    set
+        expires_at=?,
+        revoked=?,
+        token=?,
+        updated_at=?,
+        updated_by=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        refresh_tokens 
+    set
+        expires_at=?,
+        revoked=?,
+        token=?,
+        updated_at=?,
+        updated_by=?,
+        user_id=? 
+    where
+        id=?
+Hibernate: 
+    update
+        refresh_tokens 
+    set
+        expires_at=?,
+        revoked=?,
+        token=?,
+        updated_at=?,
+        updated_by=?,
+        user_id=? 
+    where
+        id=?
+2026-03-27 00:20:04.956 [http-nio-8080-exec-6] [a8145786-5b59-4c0d-8370-a470a799163c] [] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] POST /api/auth/refresh status=200 durationMs=87
+2026-03-27 00:20:04.970 [http-nio-8080-exec-4] [b5d1e37e-3c87-465f-adc4-ab81939bdea1] [] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] POST /api/auth/refresh status=200 durationMs=97
+2026-03-27 00:20:05.002 [http-nio-8080-exec-7] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-03-27 00:20:05.012 [http-nio-8080-exec-7] [b308f04a-0a0b-48ed-a52f-3fa77c9e7495] [] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-03-27 00:20:05.013 [http-nio-8080-exec-7] [b308f04a-0a0b-48ed-a52f-3fa77c9e7495] [] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+2026-03-27 00:20:05.017 [http-nio-8080-exec-7] [b308f04a-0a0b-48ed-a52f-3fa77c9e7495] [] DEBUG org.hibernate.SQL - 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+Hibernate: 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+2026-03-27 00:20:05.027 [http-nio-8080-exec-7] [b308f04a-0a0b-48ed-a52f-3fa77c9e7495] [] DEBUG c.hyundai.dms.security.JwtAuthFilter - [b308f04a-0a0b-48ed-a52f-3fa77c9e7495] Authenticated user: admin
+2026-03-27 00:20:05.028 [http-nio-8080-exec-7] [b308f04a-0a0b-48ed-a52f-3fa77c9e7495] [] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-03-27 00:20:05.032 [http-nio-8080-exec-7] [8dc73366-e91b-4494-a7c8-7f983f067537] [1] INFO  c.h.d.c.logging.LogExecutionAspect - [ENTER] NotificationService.getUnreadCount(1)
+2026-03-27 00:20:05.034 [http-nio-8080-exec-7] [8dc73366-e91b-4494-a7c8-7f983f067537] [1] DEBUG org.hibernate.SQL - 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        n1_0.recipient_id=? 
+        and not(n1_0.is_read)
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        n1_0.recipient_id=? 
+        and not(n1_0.is_read)
+2026-03-27 00:20:05.036 [http-nio-8080-exec-7] [8dc73366-e91b-4494-a7c8-7f983f067537] [1] INFO  c.h.d.c.logging.LogExecutionAspect - [EXIT] NotificationService.getUnreadCount ΓåÆ Long (4ms)
+2026-03-27 00:20:05.038 [http-nio-8080-exec-8] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/auth/refresh
+2026-03-27 00:20:05.038 [http-nio-8080-exec-8] [db3fecc2-79fa-4140-88ab-20b5589b343f] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.038 [http-nio-8080-exec-8] [db3fecc2-79fa-4140-88ab-20b5589b343f] [] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/auth/refresh
+2026-03-27 00:20:05.042 [http-nio-8080-exec-7] [8dc73366-e91b-4494-a7c8-7f983f067537] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] GET /api/notifications/count status=200 durationMs=14
+2026-03-27 00:20:05.044 [http-nio-8080-exec-8] [f518e67a-82e9-4321-901b-80746fb36e97] [] DEBUG org.hibernate.SQL - 
+    select
+        rt1_0.id,
+        rt1_0.created_at,
+        rt1_0.created_by,
+        rt1_0.expires_at,
+        rt1_0.revoked,
+        rt1_0.token,
+        rt1_0.updated_at,
+        rt1_0.updated_by,
+        rt1_0.user_id 
+    from
+        refresh_tokens rt1_0 
+    where
+        rt1_0.token=?
+Hibernate: 
+    select
+        rt1_0.id,
+        rt1_0.created_at,
+        rt1_0.created_by,
+        rt1_0.expires_at,
+        rt1_0.revoked,
+        rt1_0.token,
+        rt1_0.updated_at,
+        rt1_0.updated_by,
+        rt1_0.user_id 
+    from
+        refresh_tokens rt1_0 
+    where
+        rt1_0.token=?
+2026-03-27 00:20:05.051 [http-nio-8080-exec-8] [f518e67a-82e9-4321-901b-80746fb36e97] [] ERROR c.h.d.e.GlobalExceptionHandler - [f518e67a-82e9-4321-901b-80746fb36e97] DmsException: Refresh token is expired or revoked
+2026-03-27 00:20:05.051 [http-nio-8080-exec-8] [f518e67a-82e9-4321-901b-80746fb36e97] [] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] POST /api/auth/refresh status=422 durationMs=12
+2026-03-27 00:20:05.081 [http-nio-8080-exec-9] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-03-27 00:20:05.086 [http-nio-8080-exec-9] [f2700aac-c4a3-4be8-b253-3a8185842174] [] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.branch_id,
+        u1_0.created_at,
+        u1_0.created_by,
+        u1_0.email,
+        u1_0.failed_login_attempts,
+        u1_0.force_password_change,
+        u1_0.is_active,
+        u1_0.locked_at,
+        u1_0.password_hash,
+        u1_0.role_id,
+        u1_0.updated_at,
+        u1_0.updated_by,
+        u1_0.username 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2026-03-27 00:20:05.092 [http-nio-8080-exec-9] [f2700aac-c4a3-4be8-b253-3a8185842174] [] DEBUG org.hibernate.SQL - 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.created_at,
+        r1_0.created_by,
+        r1_0.description,
+        r1_0.name,
+        r1_0.updated_at,
+        r1_0.updated_by 
+    from
+        roles r1_0 
+    where
+        r1_0.id=?
+2026-03-27 00:20:05.096 [http-nio-8080-exec-9] [f2700aac-c4a3-4be8-b253-3a8185842174] [] DEBUG org.hibernate.SQL - 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+Hibernate: 
+    select
+        p1_0.role_id,
+        p1_0.id,
+        p1_0.can_create,
+        p1_0.can_delete,
+        p1_0.can_read,
+        p1_0.can_update,
+        p1_0.created_at,
+        p1_0.created_by,
+        p1_0.module_name,
+        p1_0.updated_at,
+        p1_0.updated_by 
+    from
+        permissions p1_0 
+    where
+        p1_0.role_id=?
+2026-03-27 00:20:05.103 [http-nio-8080-exec-9] [f2700aac-c4a3-4be8-b253-3a8185842174] [] DEBUG c.hyundai.dms.security.JwtAuthFilter - [f2700aac-c4a3-4be8-b253-3a8185842174] Authenticated user: admin
+2026-03-27 00:20:05.103 [http-nio-8080-exec-9] [f2700aac-c4a3-4be8-b253-3a8185842174] [] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/notifications/count
+2026-03-27 00:20:05.112 [http-nio-8080-exec-9] [3e43840c-9db1-4e67-b5e4-bdfb5683404c] [1] INFO  c.h.d.c.logging.LogExecutionAspect - [ENTER] NotificationService.getUnreadCount(1)
+2026-03-27 00:20:05.113 [http-nio-8080-exec-9] [3e43840c-9db1-4e67-b5e4-bdfb5683404c] [1] DEBUG org.hibernate.SQL - 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        n1_0.recipient_id=? 
+        and not(n1_0.is_read)
+Hibernate: 
+    select
+        count(n1_0.id) 
+    from
+        notifications n1_0 
+    where
+        n1_0.recipient_id=? 
+        and not(n1_0.is_read)
+2026-03-27 00:20:05.116 [http-nio-8080-exec-9] [3e43840c-9db1-4e67-b5e4-bdfb5683404c] [1] INFO  c.h.d.c.logging.LogExecutionAspect - [EXIT] NotificationService.getUnreadCount ΓåÆ Long (4ms)
+2026-03-27 00:20:05.120 [http-nio-8080-exec-9] [3e43840c-9db1-4e67-b5e4-bdfb5683404c] [1] INFO  c.h.dms.config.LoggingInterceptor - [COMPLETED] GET /api/notifications/count status=200 durationMs=16
+2026-03-27 00:20:05.309 [http-nio-8080-exec-10] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/admin/branches
+2026-03-27 00:20:05.310 [http-nio-8080-exec-10] [4dd7f7cd-d283-4035-8a13-d9aaae6e03c5] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.311 [http-nio-8080-exec-1] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/inventory/vehicles/2
+2026-03-27 00:20:05.311 [http-nio-8080-exec-1] [8f9c5c9f-c5b2-470a-9831-aace9daf6dae] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.317 [http-nio-8080-exec-1] [8f9c5c9f-c5b2-470a-9831-aace9daf6dae] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.317 [http-nio-8080-exec-10] [4dd7f7cd-d283-4035-8a13-d9aaae6e03c5] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.328 [http-nio-8080-exec-10] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-03-27 00:20:05.328 [http-nio-8080-exec-1] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-03-27 00:20:05.329 [http-nio-8080-exec-1] [] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.329 [http-nio-8080-exec-10] [] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.329 [http-nio-8080-exec-10] [] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.329 [http-nio-8080-exec-1] [] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.345 [http-nio-8080-exec-2] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/notifications/count
+2026-03-27 00:20:05.346 [http-nio-8080-exec-2] [b91f77ae-9ff8-410c-afeb-13e66471cbca] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.346 [http-nio-8080-exec-2] [b91f77ae-9ff8-410c-afeb-13e66471cbca] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.347 [http-nio-8080-exec-2] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2026-03-27 00:20:05.348 [http-nio-8080-exec-2] [] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.348 [http-nio-8080-exec-2] [] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.449 [http-nio-8080-exec-3] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/inventory/vehicles/filter
+2026-03-27 00:20:05.449 [http-nio-8080-exec-3] [1840e7d1-cc7b-4ba7-bf1f-5492c2224bd4] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.449 [http-nio-8080-exec-3] [1840e7d1-cc7b-4ba7-bf1f-5492c2224bd4] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access
+2026-03-27 00:20:05.449 [http-nio-8080-exec-3] [] [] DEBUG o.s.security.web.FilterChainProxy - Securing POST /error
+2026-03-27 00:20:05.450 [http-nio-8080-exec-3] [] [] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2026-03-27 00:20:05.450 [http-nio-8080-exec-3] [] [] DEBUG o.s.s.w.a.Http403ForbiddenEntryPoint - Pre-authenticated entry point called. Rejecting access

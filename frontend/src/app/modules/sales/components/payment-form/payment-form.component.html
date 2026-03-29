@@ -1,0 +1,85 @@
+<div class="form-container">
+  <div class="header-section">
+    <h1>{{ isEditMode ? 'Edit Payment' : 'New Payment' }}</h1>
+    <button mat-icon-button (click)="onCancel()" matTooltip="Back to list">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="loading-shade" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="payment-form" *ngIf="paymentForm">
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Customer ID</mat-label>
+            <input matInput type="number" formControlName="customerId" placeholder="Enter Customer ID">
+            <mat-error *ngIf="paymentForm.get('customerId')?.hasError('required')">Customer ID is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Payment Date</mat-label>
+            <input matInput [matDatepicker]="datePicker" formControlName="paymentDate">
+            <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+            <mat-datepicker #datePicker></mat-datepicker>
+            <mat-error *ngIf="paymentForm.get('paymentDate')?.hasError('required')">Payment Date is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Total Price (₹)</mat-label>
+            <input matInput type="number" formControlName="totalPrice" placeholder="0.00">
+            <mat-icon matPrefix>currency_rupee</mat-icon>
+            <mat-error *ngIf="paymentForm.get('totalPrice')?.hasError('required')">Total Price is required</mat-error>
+            <mat-error *ngIf="paymentForm.get('totalPrice')?.hasError('min')">Total Price must be greater than 0</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Amount Paid (₹)</mat-label>
+            <input matInput type="number" formControlName="amountPaid" placeholder="0.00">
+            <mat-icon matPrefix>currency_rupee</mat-icon>
+            <mat-error *ngIf="paymentForm.get('amountPaid')?.hasError('required')">Amount is required</mat-error>
+            <mat-error *ngIf="paymentForm.get('amountPaid')?.hasError('min')">Amount must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Payment Method</mat-label>
+            <mat-select formControlName="paymentMethod">
+              <mat-option *ngFor="let method of paymentMethods" [value]="method">{{method}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="paymentForm.get('paymentMethod')?.hasError('required')">Payment method is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Payment Status</mat-label>
+            <mat-select formControlName="paymentStatus">
+              <mat-option *ngFor="let stat of statusOptions" [value]="stat">{{stat}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Transaction ID</mat-label>
+            <input matInput formControlName="transactionId" placeholder="E.g. TXN-12345">
+          </mat-form-field>
+        </div>
+
+        <div class="card-actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="paymentForm.invalid || isLoading">
+            {{ isEditMode ? 'Update' : 'Save' }} Payment
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

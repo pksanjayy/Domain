@@ -1,0 +1,184 @@
+.vehicle-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* ─── Breadcrumb ─── */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--dms-text-secondary);
+
+  .breadcrumb-sep {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: var(--dms-text-tertiary);
+  }
+
+  .current {
+    color: var(--dms-accent);
+    font-weight: 500;
+  }
+}
+
+/* ─── Header ─── */
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dms-text-primary);
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .vin-text {
+    color: var(--dms-text-secondary);
+    font-size: 16px;
+    margin-top: 4px;
+    font-family: var(--dms-mono);
+    letter-spacing: 0.02em;
+  }
+}
+
+.header-badges {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.status-chip {
+  padding: 0 12px;
+  height: 24px;
+  border-radius: var(--dms-radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+}
+
+.status-transit {
+  background: var(--dms-status-transit-bg); color: var(--dms-status-transit-text);
+  &::before { background: var(--dms-status-transit-dot); }
+}
+.status-stock, .status-available, .status-pdi-passed {
+  background: var(--dms-status-available-bg); color: var(--dms-status-available-text);
+  &::before { background: var(--dms-status-available-dot); }
+}
+.status-pdi-pending {
+  background: var(--dms-status-pdi-bg); color: var(--dms-status-pdi-text);
+  &::before { background: var(--dms-status-pdi-dot); }
+}
+.status-pdi-failed {
+  background: rgba(196,28,28,0.08); color: var(--dms-error);
+  &::before { background: var(--dms-error); }
+}
+.status-reserved {
+  background: var(--dms-status-hold-bg); color: var(--dms-status-hold-text);
+  &::before { background: var(--dms-status-hold-dot); }
+}
+.status-sold, .status-delivered {
+  background: var(--dms-status-transferred-bg); color: var(--dms-status-transferred-text);
+  &::before { background: var(--dms-status-transferred-dot); }
+}
+
+.age-chip {
+  padding: 0 12px;
+  height: 24px;
+  border-radius: var(--dms-radius-pill);
+  font-size: 11px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.age-green { background: var(--dms-status-available-bg); color: var(--dms-status-available-text); }
+.age-amber { background: var(--dms-status-hold-bg); color: var(--dms-status-hold-text); }
+.age-orange { background: var(--dms-accent-light); color: var(--dms-accent-dark); }
+.age-red { background: rgba(196,28,28,0.08); color: var(--dms-error); }
+
+/* ─── Actions ─── */
+.action-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* ─── Detail Grid ─── */
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-label {
+  font-size: 12px;
+  color: var(--dms-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dms-text-primary);
+}
+
+.remarks-card {
+  p {
+    font-size: 14px;
+    color: var(--dms-text-secondary);
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

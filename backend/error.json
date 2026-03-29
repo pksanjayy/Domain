@@ -1,0 +1,1 @@
+{"success":false,"error":{"timestamp":"2026-03-26T23:39:59.2403548","status":500,"errorCode":"INTERNAL_ERROR","message":"An unexpected error occurred. Please contact support.","path":"/api/inventory/vehicles/filter","correlationId":"cd1c0af2-cc87-4b10-9618-3bed7f5a1002"},"timestamp":"2026-03-26T23:39:59.2403548"}

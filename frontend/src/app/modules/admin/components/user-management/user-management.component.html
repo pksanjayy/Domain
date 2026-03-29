@@ -1,0 +1,223 @@
+<div class="user-management-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h2>User Management</h2>
+      <span class="record-count">{{ totalElements }} users</span>
+    </div>
+    <div class="header-right">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search users</mat-label>
+        <input matInput placeholder="Username or email..." (input)="onSearch($event)">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="openCreateDrawer()">
+        <mat-icon>person_add</mat-icon>
+        Create User
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <!-- Table -->
+  <div class="table-container mat-elevation-z2">
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
+
+      <!-- Username -->
+      <ng-container matColumnDef="username">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="user-cell">
+            <mat-icon class="user-avatar-icon">account_circle</mat-icon>
+            <span class="username-text">{{ row.username }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Email -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+      </ng-container>
+
+      <!-- Role -->
+      <ng-container matColumnDef="roleName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip [ngClass]="getRoleBadgeClass(row.roleName)">
+            {{ row.roleName }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Branch -->
+      <ng-container matColumnDef="branchName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Branch</th>
+        <td mat-cell *matCellDef="let row">{{ row.branchName || '—' }}</td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip [color]="getStatusColor(row)" selected>
+            <mat-icon class="status-icon">{{ row.lockedAt ? 'lock' : (row.isActive ? 'check_circle' : 'block') }}</mat-icon>
+            {{ getStatusLabel(row) }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <!-- Failed Attempts -->
+      <ng-container matColumnDef="failedLoginAttempts">
+        <th mat-header-cell *matHeaderCellDef>Failed Attempts</th>
+        <td mat-cell *matCellDef="let row">
+          <span *ngIf="row.failedLoginAttempts > 0" class="failed-attempts">
+            <mat-icon class="warn-icon">warning</mat-icon>
+            {{ row.failedLoginAttempts }}
+          </span>
+          <span *ngIf="row.failedLoginAttempts === 0">—</span>
+        </td>
+      </ng-container>
+
+      <!-- Created At -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdAt | date:'mediumDate' }}</td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button matTooltip="Edit" (click)="openEditDrawer(row); $event.stopPropagation()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button
+                  [matTooltip]="row.lockedAt ? 'Unlock' : 'Lock'"
+                  (click)="toggleLock(row); $event.stopPropagation()">
+            <mat-icon>{{ row.lockedAt ? 'lock_open' : 'lock' }}</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Reset Password"
+                  (click)="resetPassword(row); $event.stopPropagation()">
+            <mat-icon>vpn_key</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+    </table>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && dataSource.data.length === 0" class="empty-state">
+      <mat-icon>person_off</mat-icon>
+      <p>No users found</p>
+    </div>
+
+    <mat-paginator [length]="totalElements"
+                   [pageSize]="pageSize"
+                   [pageIndex]="pageIndex"
+                   [pageSizeOptions]="[10, 20, 50]"
+                   (page)="onPageChange($event)"
+                   showFirstLastButtons>
+    </mat-paginator>
+  </div>
+
+  <!-- Slide-out Drawer -->
+  <div class="drawer-overlay" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
+  <div class="drawer-panel" [class.open]="isDrawerOpen">
+    <div class="drawer-header">
+      <h3>{{ isEditMode ? 'Edit User' : 'Create User' }}</h3>
+      <button mat-icon-button (click)="closeDrawer()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmitUser()" class="drawer-form">
+      <!-- Username -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" placeholder="Enter username">
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-error *ngIf="userForm.get('username')?.hasError('required')">Username is required</mat-error>
+        <mat-error *ngIf="userForm.get('username')?.hasError('minlength')">Min 3 characters</mat-error>
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder="user@example.com" type="email">
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-error *ngIf="userForm.get('email')?.hasError('required')">Email is required</mat-error>
+        <mat-error *ngIf="userForm.get('email')?.hasError('email')">Invalid email format</mat-error>
+      </mat-form-field>
+
+      <!-- Password (Create mode only) -->
+      <mat-form-field appearance="outline" class="full-width" *ngIf="!isEditMode">
+        <mat-label>Password</mat-label>
+        <input matInput
+               [type]="hidePassword ? 'password' : 'text'"
+               formControlName="password"
+               placeholder="Min 8 characters"
+               autocomplete="new-password">
+        <mat-icon matPrefix>lock</mat-icon>
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="userForm.get('password')?.hasError('required')">Password is required</mat-error>
+        <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">Min 8 characters</mat-error>
+      </mat-form-field>
+
+      <!-- Reset Password button (Edit mode) -->
+      <div *ngIf="isEditMode" class="reset-password-section">
+        <button mat-stroked-button color="warn" type="button"
+                (click)="resetPassword(editingUser!)">
+          <mat-icon>vpn_key</mat-icon>
+          Reset Password
+        </button>
+      </div>
+
+      <!-- Role -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="roleId">
+          <mat-option *ngFor="let role of roles" [value]="role.id">
+            {{ role.displayName || role.name }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>admin_panel_settings</mat-icon>
+        <mat-error *ngIf="userForm.get('roleId')?.hasError('required')">Role is required</mat-error>
+      </mat-form-field>
+
+      <!-- Branch -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Branch</mat-label>
+        <mat-select formControlName="branchId">
+          <mat-option [value]="null">— None —</mat-option>
+          <mat-option *ngFor="let branch of branches" [value]="branch.id">
+            {{ branch.name }}
+          </mat-option>
+        </mat-select>
+        <mat-icon matPrefix>business</mat-icon>
+      </mat-form-field>
+
+      <!-- Active Toggle -->
+      <div class="toggle-field">
+        <mat-slide-toggle formControlName="isActive" color="primary">
+          Active
+        </mat-slide-toggle>
+      </div>
+
+      <!-- Actions -->
+      <div class="drawer-actions">
+        <button mat-button type="button" (click)="closeDrawer()">Cancel</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting">
+          <mat-spinner *ngIf="isSubmitting" diameter="18"></mat-spinner>
+          {{ isEditMode ? 'Update' : 'Create' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

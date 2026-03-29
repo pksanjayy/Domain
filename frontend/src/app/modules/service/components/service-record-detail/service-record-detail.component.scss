@@ -1,0 +1,90 @@
+.detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--dms-text-secondary);
+
+  .breadcrumb-sep {
+    font-size: 18px; width: 18px; height: 18px;
+    color: var(--dms-text-tertiary);
+  }
+  .current { color: var(--dms-accent); font-weight: 500; }
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  h2 { font-size: 24px; font-weight: 600; color: var(--dms-text-primary); letter-spacing: -0.015em; margin: 0; }
+  .sub-text { color: var(--dms-text-secondary); font-size: 16px; margin-top: 4px; }
+}
+
+.header-badges { display: flex; gap: 12px; align-items: center; }
+
+.status-chip {
+  padding: 4px 14px; border-radius: 12px; font-size: 12px; font-weight: 500;
+  letter-spacing: 0.04em; text-transform: uppercase; display: inline-flex; align-items: center;
+}
+
+.status-in-progress { background: #fff3e0; color: #f57c00; }
+.status-completed { background: #e8f5e9; color: #388e3c; }
+.status-waiting { background: #ffebee; color: #d32f2f; }
+.status-paid { background: #e8f5e9; color: #388e3c; }
+.status-unpaid { background: #ffebee; color: #d32f2f; }
+.status-partial { background: #fff3e0; color: #f57c00; }
+
+.action-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.info-item { display: flex; flex-direction: column; gap: 4px; }
+
+.info-label {
+  font-size: 12px; color: var(--dms-text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.04em; font-weight: 500;
+}
+
+.info-value {
+  font-size: 15px; font-weight: 500; color: var(--dms-text-primary);
+  &.mono { font-family: var(--dms-mono); letter-spacing: 0.02em; }
+}
+
+.text-card {
+  margin-bottom: 16px;
+  p { font-size: 14px; color: var(--dms-text-secondary); line-height: 1.6; white-space: pre-wrap; }
+}
+
+@media (max-width: 768px) {
+  .detail-grid { grid-template-columns: 1fr; }
+}

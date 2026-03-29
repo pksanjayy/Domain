@@ -1,0 +1,281 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: dms-admin
+      comment: "Create initial schema for DMS"
+      sqlFile:
+        path: v1.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DROP TABLE IF EXISTS refresh_tokens;
+          DROP TABLE IF EXISTS audit_logs;
+          DROP TABLE IF EXISTS codes;
+          DROP TABLE IF EXISTS permissions;
+          DROP TABLE IF EXISTS role_menus;
+          DROP TABLE IF EXISTS menus;
+          DROP TABLE IF EXISTS users;
+          DROP TABLE IF EXISTS branches;
+          DROP TABLE IF EXISTS roles;
+
+  - changeSet:
+      id: 2
+      author: dms-admin
+      validCheckSum: ANY
+      comment: "Seed initial data for DMS"
+      sqlFile:
+        path: v1.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM refresh_tokens;
+          DELETE FROM audit_logs;
+          DELETE FROM codes;
+          DELETE FROM permissions;
+          DELETE FROM role_menus;
+          DELETE FROM menus;
+          DELETE FROM users;
+          DELETE FROM branches;
+          DELETE FROM roles;
+
+  - changeSet:
+      id: 3
+      author: dms-admin
+      comment: "Create inventory management tables v2.0"
+      sqlFile:
+        path: v2.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DROP TABLE IF EXISTS vehicle_accessories;
+          DROP TABLE IF EXISTS stock_transfers;
+          DROP TABLE IF EXISTS pdi_checklist_items;
+          DROP TABLE IF EXISTS pdi_checklists;
+          DROP TABLE IF EXISTS grn_records;
+          DROP TABLE IF EXISTS vehicles;
+
+  - changeSet:
+      id: 4
+      author: dms-admin
+      comment: "Create notifications + sales tables v3.0"
+      sqlFile:
+        path: v3.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DROP TABLE IF EXISTS bookings;
+          DROP TABLE IF EXISTS quotations;
+          DROP TABLE IF EXISTS leads;
+          DROP TABLE IF EXISTS customers;
+          DROP TABLE IF EXISTS notifications;
+
+  - changeSet:
+      id: 5
+      author: antigravity
+      comment: "Add technical fields to vehicles table"
+      changes:
+        - addColumn:
+            tableName: vehicles
+            columns:
+              - column:
+                  name: engine_number
+                  type: varchar(30)
+              - column:
+                  name: chassis_number
+                  type: varchar(30)
+              - column:
+                  name: key_number
+                  type: varchar(20)
+              - column:
+                  name: exterior_colour_code
+                  type: varchar(20)
+              - column:
+                  name: interior_colour_code
+                  type: varchar(20)
+
+  - changeSet:
+      id: 6
+      author: antigravity
+      comment: "Add location field and remove occupation from customers table"
+      changes:
+        - addColumn:
+            tableName: customers
+            columns:
+              - column:
+                  name: location
+                  type: varchar(150)
+        - dropColumn:
+            tableName: customers
+            columnName: occupation
+
+  - changeSet:
+      id: 7
+      author: antigravity
+      comment: "Create Service Module tables v4.0"
+      sqlFile:
+        path: v4.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DROP TABLE IF EXISTS service_records;
+          DROP TABLE IF EXISTS service_bookings;
+
+  - changeSet:
+      id: 8
+      author: antigravity
+      comment: "Seed Service Module menus and permissions v4.0"
+      sqlFile:
+        path: v4.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM permissions WHERE module_name = 'SERVICE_MANAGEMENT';
+          DELETE FROM role_menus WHERE menu_id IN (19, 20, 21);
+          DELETE FROM menus WHERE id IN (19, 20, 21);
+
+  - changeSet:
+      id: 9
+      author: antigravity
+      comment: "Replace Quotations with Payments table v5.0"
+      sqlFile:
+        path: v5.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DROP TABLE IF EXISTS payments;
+
+  - changeSet:
+      id: 10
+      author: antigravity
+      comment: "Update Menu ID 9 to Payments v5.0"
+      sqlFile:
+        path: v5.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          UPDATE menus SET name = 'Quotations', path = '/sales/quotations', icon = 'request_quote' WHERE id = 9;
+
+  - changeSet:
+      id: 11
+      author: antigravity
+      comment: "Add total_price column to payments table v6.0"
+      sqlFile:
+        path: v6.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE payments DROP COLUMN total_price;
+
+  - changeSet:
+      id: 12
+      author: antigravity
+      comment: "Decouple service bookings from vehicles v6.1"
+      sqlFile:
+        path: v6.1/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE service_bookings ADD COLUMN vehicle_id BIGINT;
+  - changeSet:
+      id: 13
+      author: antigravity
+      comment: "Add Test Drive Module v7.0"
+      sqlFile:
+        path: v7.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DROP TABLE IF EXISTS test_drive_bookings;
+          DROP TABLE IF EXISTS test_drive_fleet;
+
+  - changeSet:
+      id: 14
+      author: antigravity
+      validCheckSum: ANY
+      comment: "Seed mock data for non-admin modules v8.0"
+      sqlFile:
+        path: v8.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM test_drive_bookings;
+          DELETE FROM test_drive_fleet;
+          DELETE FROM service_records;
+          DELETE FROM service_bookings;
+          DELETE FROM payments;
+          DELETE FROM bookings;
+          DELETE FROM leads;
+          DELETE FROM customers;
+          DELETE FROM stock_transfers;
+          DELETE FROM pdi_checklist_items;
+          DELETE FROM pdi_checklists;
+          DELETE FROM vehicle_accessories;
+          DELETE FROM grn_records;
+          DELETE FROM vehicles;
+
+  - changeSet:
+      id: 15
+      author: antigravity
+      comment: "Insert additional Test Drive data v9.0"
+      sqlFile:
+        path: v9.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM test_drive_bookings WHERE id IN (7, 8);
+          DELETE FROM test_drive_fleet WHERE id IN (8, 9);
+
+  - changeSet:
+      id: 16
+      author: antigravity
+      comment: "Insert mock data for Branch 2 (Mumbai) and Branch 3 (Chennai) v10.0"
+      sqlFile:
+        path: v10.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM test_drive_fleet WHERE id IN (20, 30);
+          DELETE FROM service_bookings WHERE id IN (20, 30);
+          DELETE FROM bookings WHERE id IN (20, 30);
+          DELETE FROM leads WHERE id IN (20, 21, 30, 31);
+          DELETE FROM customers WHERE id IN (20, 21, 30, 31);
+          DELETE FROM grn_records WHERE id IN (20, 21, 22);
+  - changeSet:
+      id: 17
+      author: antigravity
+      comment: "Configure granular Test Drive role access v11.0"
+      sqlFile:
+        path: v11.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM permissions WHERE role_id IN (3, 4) AND module_name = 'TEST_DRIVE';
+          DELETE FROM role_menus WHERE role_id = 3 AND menu_id IN (SELECT id FROM menus WHERE name IN ('Test Drive', 'Test Drive Bookings'));
+          DELETE FROM role_menus WHERE role_id = 4 AND menu_id IN (SELECT id FROM menus WHERE name IN ('Test Drive', 'Test Drive Fleet'));
+
+  - changeSet:
+      id: 18
+      author: antigravity
+      comment: "Swap token_amount with total_amount and amount_paid in bookings v12.0"
+      sqlFile:
+        path: v12.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE bookings DROP COLUMN amount_paid;
+          ALTER TABLE bookings DROP COLUMN total_amount;
+          ALTER TABLE bookings ADD COLUMN token_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00;
+
+  - changeSet:
+      id: 19
+      author: antigravity
+      comment: "Insert mock data for Bookings 2025/2026 v12.0"
+      sqlFile:
+        path: v12.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          DELETE FROM bookings WHERE id IN (100, 101, 102, 103);
+          DELETE FROM leads WHERE id IN (100, 101, 102, 103);
+          DELETE FROM vehicles WHERE id IN (100, 101, 102, 103);
+          DELETE FROM customers WHERE id IN (100, 101, 102, 103);

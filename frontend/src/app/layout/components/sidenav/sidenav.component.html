@@ -1,0 +1,114 @@
+<div class="sidenav-container">
+  <!-- Logo + Toggle -->
+  <div class="sidenav-header">
+    <div class="logo-section">
+      <div class="logo-icon">
+        <mat-icon>directions_car</mat-icon>
+      </div>
+      <span class="logo-text">Hyundai DMS</span>
+    </div>
+    <button mat-icon-button class="sidenav-toggle-btn" (click)="onToggleSidenav()" matTooltip="Collapse menu">
+      <mat-icon>menu_open</mat-icon>
+    </button>
+  </div>
+
+  <!-- Role Badge -->
+  <div class="role-badge" *ngIf="userRole$ | async as role">
+    <mat-icon>shield</mat-icon>
+    <span>{{ role.replace('_', ' ') }}</span>
+  </div>
+
+  <div class="sidenav-divider"></div>
+
+  <!-- Menu Tree -->
+  <mat-nav-list>
+    <ng-container *ngFor="let menu of menus$ | async">
+      <!-- Parent menu with children -->
+      <ng-container *ngIf="menu.children && menu.children.length > 0">
+        <mat-list-item (click)="toggleMenu(menu.id)" class="parent-menu">
+          <mat-icon matListItemIcon>{{ menu.icon || 'folder' }}</mat-icon>
+          <span matListItemTitle>{{ menu.name }}</span>
+          <mat-icon matListItemMeta>
+            {{ isExpanded(menu.id) ? 'expand_less' : 'expand_more' }}
+          </mat-icon>
+        </mat-list-item>
+
+        <div class="sub-menu" *ngIf="isExpanded(menu.id)" [@slideDown]>
+          <mat-list-item
+            *ngFor="let child of menu.children"
+            [class.active]="isActive(child.path)"
+            (click)="navigate(child.path)"
+            class="child-menu">
+            <mat-icon matListItemIcon>{{ child.icon || 'chevron_right' }}</mat-icon>
+            <span matListItemTitle>{{ child.name }}</span>
+          </mat-list-item>
+        </div>
+      </ng-container>
+
+      <!-- Leaf menu item -->
+      <mat-list-item
+        *ngIf="!menu.children || menu.children.length === 0"
+        [class.active]="isActive(menu.path)"
+        (click)="navigate(menu.path)"
+        class="leaf-menu">
+        <mat-icon matListItemIcon>{{ menu.icon || 'circle' }}</mat-icon>
+        <span matListItemTitle>{{ menu.name }}</span>
+      </mat-list-item>
+    </ng-container>
+
+    <!-- Default menus when user has no menus configured -->
+    <ng-container *ngIf="(menus$ | async)?.length === 0">
+      <mat-list-item [class.active]="isActive('/dashboard')" (click)="navigate('/dashboard')">
+        <mat-icon matListItemIcon>dashboard</mat-icon>
+        <span matListItemTitle>Dashboard</span>
+      </mat-list-item>
+      <mat-list-item [class.active]="isActive('/inventory')" (click)="navigate('/inventory')">
+        <mat-icon matListItemIcon>inventory_2</mat-icon>
+        <span matListItemTitle>Inventory</span>
+      </mat-list-item>
+      <mat-list-item [class.active]="isActive('/sales')" (click)="navigate('/sales')">
+        <mat-icon matListItemIcon>point_of_sale</mat-icon>
+        <span matListItemTitle>Sales</span>
+      </mat-list-item>
+      <mat-list-item [class.active]="isActive('/service')" (click)="navigate('/service')">
+        <mat-icon matListItemIcon>build</mat-icon>
+        <span matListItemTitle>Service</span>
+      </mat-list-item>
+
+      <!-- Test Drive Parent Menu -->
+      <mat-list-item (click)="toggleMenu(-100)" class="parent-menu">
+        <mat-icon matListItemIcon>directions_car</mat-icon>
+        <span matListItemTitle>Test Drive</span>
+        <mat-icon matListItemMeta>
+          {{ isExpanded(-100) ? 'expand_less' : 'expand_more' }}
+        </mat-icon>
+      </mat-list-item>
+      <div class="sub-menu" *ngIf="isExpanded(-100)" [@slideDown]>
+        <mat-list-item
+          [class.active]="isActive('/testdrive/fleet')"
+          (click)="navigate('/testdrive/fleet')"
+          class="child-menu">
+          <mat-icon matListItemIcon>local_taxi</mat-icon>
+          <span matListItemTitle>Test Drive Fleet</span>
+        </mat-list-item>
+        <mat-list-item
+          [class.active]="isActive('/testdrive/bookings')"
+          (click)="navigate('/testdrive/bookings')"
+          class="child-menu">
+          <mat-icon matListItemIcon>event_seat</mat-icon>
+          <span matListItemTitle>Test Drive Bookings</span>
+        </mat-list-item>
+      </div>
+
+      <mat-list-item [class.active]="isActive('/reports')" (click)="navigate('/reports')">
+        <mat-icon matListItemIcon>assessment</mat-icon>
+        <span matListItemTitle>Reports</span>
+      </mat-list-item>
+
+      <mat-list-item [class.active]="isActive('/admin')" (click)="navigate('/admin')" *hasRole="'SUPER_ADMIN'">
+        <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
+        <span matListItemTitle>Admin</span>
+      </mat-list-item>
+    </ng-container>
+  </mat-nav-list>
+</div>

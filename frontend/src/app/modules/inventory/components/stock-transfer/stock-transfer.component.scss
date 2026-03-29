@@ -1,0 +1,88 @@
+.transfer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--dms-text-primary);
+  letter-spacing: -0.015em;
+  margin: 0 0 24px;
+}
+
+.transfer-split {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Left panel ─── */
+.transfer-list-panel {
+  min-width: 0;
+}
+
+.transfer-actions-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--dms-status-booked-bg);
+  color: var(--dms-status-booked-text);
+  border-radius: var(--dms-radius-md);
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 500;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* ─── Right panel ─── */
+.transfer-form-panel {
+  position: sticky;
+  top: 24px;
+  align-self: start;
+}
+
+.form-card {
+  border-radius: var(--dms-card-radius) !important;
+}
+
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.required {
+  color: var(--dms-error);
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.submit-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+/* ─── Transfer Status Badges ─── */
+.status-pending { color: var(--dms-warning); }
+.status-approved { color: var(--dms-success); }
+.status-rejected { color: var(--dms-error); }
+.status-completed { color: var(--dms-info); }

@@ -1,0 +1,112 @@
+<div class="login-wrapper">
+  <!-- Left Panel — Coral Gradient -->
+  <div class="login-left">
+    <div class="dot-pattern"></div>
+    <div class="left-content">
+      <div class="left-logo">
+        <div class="left-logo-icon">
+          <mat-icon>directions_car</mat-icon>
+        </div>
+        <span>Hyundai DMS</span>
+      </div>
+
+      <div class="left-hero">
+        <h1>Dealer Management System</h1>
+        <p>Streamline your dealership operations with a modern, intuitive platform.</p>
+      </div>
+
+      <div class="left-features">
+        <div class="feature-item">
+          <mat-icon>inventory_2</mat-icon>
+          <div>
+            <strong>Inventory Tracking</strong>
+            <span>Real-time stock management with ageing insights</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <mat-icon>point_of_sale</mat-icon>
+          <div>
+            <strong>Sales Pipeline</strong>
+            <span>End-to-end lead and booking management</span>
+          </div>
+        </div>
+        <div class="feature-item">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <div>
+            <strong>Role-Based Access</strong>
+            <span>Granular permissions for every team member</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel — Login Card -->
+  <div class="login-right">
+    <div class="login-card">
+      <div class="login-header">
+        <h2>Welcome back</h2>
+        <p>Sign in to continue</p>
+      </div>
+
+      <!-- Error Alert -->
+      <div class="error-alert" *ngIf="error$ | async as error">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper" [class.focused]="usernameFocused" [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            <mat-icon class="input-icon">person</mat-icon>
+            <input
+              id="username"
+              type="text"
+              formControlName="username"
+              placeholder="Enter your username"
+              autocomplete="username"
+              (focus)="usernameFocused = true"
+              (blur)="usernameFocused = false" />
+          </div>
+          <span class="field-error" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            {{ getErrorMessage('username') }}
+          </span>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper" [class.focused]="passwordFocused" [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <mat-icon class="input-icon">lock</mat-icon>
+            <input
+              id="password"
+              [type]="hidePassword ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="off"
+              (focus)="passwordFocused = true"
+              (blur)="passwordFocused = false" />
+            <button type="button" class="toggle-password" (click)="hidePassword = !hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </div>
+          <span class="field-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            {{ getErrorMessage('password') }}
+          </span>
+        </div>
+
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="isLoading$ | async"
+          [class.loading]="isLoading$ | async">
+          <mat-spinner *ngIf="isLoading$ | async" diameter="20" class="button-spinner"></mat-spinner>
+          <span *ngIf="!(isLoading$ | async)">Sign In</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

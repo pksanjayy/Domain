@@ -1,0 +1,64 @@
+<div class="vehicle-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <h2>Vehicle Inventory</h2>
+    <div class="header-actions">
+      <mat-button-toggle-group [value]="useVirtualScroll ? 'virtual' : 'paginated'" (change)="toggleViewMode()">
+        <mat-button-toggle value="paginated" matTooltip="Paginated view">
+          <mat-icon>table_rows</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="virtual" matTooltip="Virtual scroll view">
+          <mat-icon>view_stream</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <button mat-raised-button (click)="exportVehicles()" [disabled]="isExporting">
+        <mat-icon>download</mat-icon>
+        Export CSV
+        <mat-spinner *ngIf="isExporting" diameter="18" class="export-spinner"></mat-spinner>
+      </button>
+
+      <button mat-raised-button color="primary" routerLink="/inventory/vehicles/new"
+              *hasRole="'WORKSHOP_EXEC,SUPER_ADMIN'">
+        <mat-icon>add</mat-icon>
+        New Vehicle
+      </button>
+    </div>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-box">
+    <mat-label>Global Search</mat-label>
+    <input matInput #globalSearch (keyup)="applyGlobalSearch(globalSearch.value)" placeholder="Search VIN, Model...">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <!-- Data Table (Paginated Mode) -->
+  <div *ngIf="!useVirtualScroll">
+    <app-data-table
+      [columns]="columns"
+      [filterConfig]="filterConfig"
+      [apiUrl]="apiUrl"
+      [defaultSort]="{ field: 'createdAt', direction: 'DESC' }"
+      (rowClick)="onRowClick($event)">
+
+      <!-- Custom cell templates would go here if DataTable supported it.
+           Since our DataTable renders {{ row[col.field] }}, we handle
+           pipe display and action buttons at the template level below. -->
+    </app-data-table>
+  </div>
+
+  <!-- Virtual Scroll Mode -->
+  <div *ngIf="useVirtualScroll" class="virtual-scroll-container">
+    <p class="virtual-info">
+      <mat-icon>info</mat-icon>
+      Virtual scroll mode — all rows rendered with CDK virtual scrolling for performance.
+    </p>
+    <app-data-table
+      [columns]="columns"
+      [filterConfig]="filterConfig"
+      [apiUrl]="apiUrl"
+      [defaultSort]="{ field: 'createdAt', direction: 'DESC' }"
+      (rowClick)="onRowClick($event)">
+    </app-data-table>
+  </div>
+</div>

@@ -1,0 +1,95 @@
+<div class="form-container">
+  <div class="header-section">
+    <h1>{{ isEditMode ? 'Edit Service Record' : 'New Service Record' }}</h1>
+    <button mat-icon-button (click)="onCancel()" matTooltip="Back to list">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="loading-shade" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <form [formGroup]="recordForm" (ngSubmit)="onSubmit()" class="record-form" *ngIf="recordForm">
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Service Booking ID</mat-label>
+            <input matInput type="number" formControlName="serviceBookingId" placeholder="Enter linked Booking ID">
+            <mat-error *ngIf="recordForm.get('serviceBookingId')?.hasError('required')">Booking ID is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Service Date</mat-label>
+            <input matInput [matDatepicker]="servicePicker" formControlName="serviceDate">
+            <mat-datepicker-toggle matIconSuffix [for]="servicePicker"></mat-datepicker-toggle>
+            <mat-datepicker #servicePicker></mat-datepicker>
+            <mat-error *ngIf="recordForm.get('serviceDate')?.hasError('required')">Service Date is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Odometer (km)</mat-label>
+            <input matInput type="number" formControlName="odometer">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>No. of Technicians</mat-label>
+            <input matInput type="number" formControlName="noOfTechnicians">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Technician Hours</mat-label>
+            <input matInput type="number" formControlName="technicianHours">
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width text-area-field">
+            <mat-label>Work Performed</mat-label>
+            <textarea matInput formControlName="workPerformed" rows="3"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width text-area-field">
+            <mat-label>Parts Used</mat-label>
+            <textarea matInput formControlName="partsUsed" rows="3"></textarea>
+          </mat-form-field>
+        </div>
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width text-area-field">
+            <mat-label>Notes</mat-label>
+            <textarea matInput formControlName="notes" rows="2"></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let stat of statusOptions" [value]="stat">{{stat}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Payment Status</mat-label>
+            <mat-select formControlName="paymentStatus">
+              <mat-option *ngFor="let p of paymentOptions" [value]="p">{{p}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="card-actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="recordForm.invalid || isLoading">
+            {{ isEditMode ? 'Update ' : 'Save ' }} Record
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

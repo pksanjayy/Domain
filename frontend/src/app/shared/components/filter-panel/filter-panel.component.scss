@@ -1,0 +1,42 @@
+.filter-form {
+  padding: 8px 0;
+}
+
+.filter-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  mat-form-field {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+  }
+}
+
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+
+  button {
+    border-radius: var(--dms-radius-button) !important;
+  }
+}
+
+mat-expansion-panel-header {
+  mat-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--dms-font);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--dms-text-primary);
+
+    mat-icon {
+      color: var(--dms-text-secondary);
+    }
+  }
+}

@@ -1,0 +1,109 @@
+<div class="role-permission-container">
+  <!-- Info Banner -->
+  <div class="info-banner">
+    <mat-icon>info</mat-icon>
+    <span>Changes take effect immediately for all users with the modified role.</span>
+  </div>
+
+  <div class="role-layout">
+    <!-- Left: Role List -->
+    <div class="role-list-panel">
+      <h3>Roles</h3>
+      <mat-nav-list>
+        <mat-list-item *ngFor="let role of roles"
+                       [class.selected]="selectedRole?.id === role.id"
+                       (click)="selectRole(role)">
+          <mat-icon matListItemIcon>shield</mat-icon>
+          <span matListItemTitle>{{ role.displayName || role.name }}</span>
+          <span matListItemLine class="role-name-sub">{{ role.name }}</span>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+
+    <!-- Right: Permission Config -->
+    <div class="role-config-panel" *ngIf="selectedRole">
+      <div class="config-header">
+        <h3>
+          <mat-icon>admin_panel_settings</mat-icon>
+          {{ selectedRole.displayName || selectedRole.name }}
+        </h3>
+        <button mat-raised-button color="primary"
+                [disabled]="!hasChanges || isSaving"
+                (click)="saveChanges()">
+          <mat-spinner *ngIf="isSaving" diameter="18"></mat-spinner>
+          <mat-icon *ngIf="!isSaving">save</mat-icon>
+          Save Changes
+        </button>
+      </div>
+
+      <!-- Permission Matrix -->
+      <div class="section">
+        <h4><mat-icon>security</mat-icon> Permission Matrix</h4>
+        <div class="matrix-table-container mat-elevation-z1">
+          <table mat-table [dataSource]="permissionMatrix">
+            <!-- Module Column -->
+            <ng-container matColumnDef="module">
+              <th mat-header-cell *matHeaderCellDef>Module</th>
+              <td mat-cell *matCellDef="let row">
+                <span class="module-name">{{ row.module }}</span>
+              </td>
+            </ng-container>
+
+            <!-- CREATE/READ/UPDATE/DELETE Columns -->
+            <ng-container *ngFor="let action of actions" [matColumnDef]="action">
+              <th mat-header-cell *matHeaderCellDef>{{ action }}</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-slide-toggle
+                  [checked]="isPermissionChecked(row, action)"
+                  (change)="togglePermission(row, action)"
+                  color="primary">
+                </mat-slide-toggle>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedPermColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedPermColumns;"></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- Menu Access -->
+      <div class="section">
+        <h4><mat-icon>menu_book</mat-icon> Menu Access</h4>
+        <div class="menu-tree-container mat-elevation-z1">
+          <mat-tree [dataSource]="menuDataSource" [treeControl]="treeControl">
+            <!-- Leaf node -->
+            <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+              <button mat-icon-button disabled></button>
+              <mat-checkbox [checked]="node.isSelected"
+                            (change)="toggleMenuNode(node)"
+                            color="primary">
+                {{ node.name }}
+              </mat-checkbox>
+            </mat-tree-node>
+
+            <!-- Expandable node -->
+            <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+              <button mat-icon-button matTreeNodeToggle>
+                <mat-icon>
+                  {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+                </mat-icon>
+              </button>
+              <mat-checkbox [checked]="node.isSelected"
+                            (change)="toggleMenuNode(node)"
+                            color="primary">
+                <strong>{{ node.name }}</strong>
+              </mat-checkbox>
+            </mat-tree-node>
+          </mat-tree>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Selection -->
+    <div class="no-selection" *ngIf="!selectedRole">
+      <mat-icon>touch_app</mat-icon>
+      <p>Select a role to configure permissions and menu access</p>
+    </div>
+  </div>
+</div>

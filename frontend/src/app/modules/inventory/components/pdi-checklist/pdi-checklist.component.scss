@@ -1,0 +1,178 @@
+.pdi-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.loading-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.pdi-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dms-text-primary);
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  p {
+    color: var(--dms-text-secondary);
+    font-size: 14px;
+    margin: 4px 0 0;
+  }
+}
+
+/* ─── Progress Card ─── */
+.progress-card {
+  margin-bottom: 24px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.progress-label {
+  font-weight: 500;
+  color: var(--dms-text-primary);
+}
+
+.progress-value {
+  font-weight: 600;
+  color: var(--dms-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-bar {
+  border-radius: var(--dms-radius-pill);
+}
+
+/* ─── Group ─── */
+.group-count {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+/* ─── PDI Items ─── */
+.pdi-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pdi-item {
+  padding: 16px;
+  border: 1px solid var(--dms-card-border);
+  border-radius: var(--dms-radius-md);
+  background: var(--dms-canvas);
+  transition: border-color 0.2s, background 0.2s;
+
+  &.completed {
+    border-color: rgba(46,170,85,0.30);
+    background: var(--dms-status-available-bg);
+  }
+}
+
+.item-header {
+  margin-bottom: 12px;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--dms-text-primary);
+}
+
+.item-desc {
+  display: block;
+  font-size: 13px;
+  color: var(--dms-text-secondary);
+  margin-top: 4px;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  mat-radio-group {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.result-pass {
+  ::ng-deep .mat-mdc-radio-button.mat-mdc-radio-checked {
+    .mdc-radio__outer-circle, .mdc-radio__inner-circle { border-color: var(--dms-success); }
+  }
+}
+
+.result-fail {
+  ::ng-deep .mat-mdc-radio-button.mat-mdc-radio-checked {
+    .mdc-radio__outer-circle, .mdc-radio__inner-circle { border-color: var(--dms-error); }
+  }
+}
+
+.photo-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.photo-preview {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--dms-radius-xs);
+  border: 1px solid var(--dms-card-border);
+}
+
+.remarks-field {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ─── Submit ─── */
+.submit-section {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.submit-btn {
+  padding: 8px 32px;
+  font-size: 16px;
+}
+
+.submit-spinner {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.submit-hint {
+  color: var(--dms-text-tertiary);
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+@media (max-width: 768px) {
+  .item-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .remarks-field {
+    min-width: 100%;
+  }
+}

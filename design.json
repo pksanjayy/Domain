@@ -1,0 +1,886 @@
+{
+    "_readme": "DMS Frontend Design System — based on reference dashboard aesthetic. Give this file to Copilot at the start of every frontend phase. It defines every visual decision: tokens, components, layout, motion, and Angular Material overrides.",
+    "colorTokens": {
+        "_usage": "Use CSS custom properties everywhere. Never hardcode hex values in components.",
+        "page": {
+            "canvas": "#F4F3F0",
+            "canvasDark": "#111110",
+            "comment": "Warm off-white page background — not pure white, not gray. Creates contrast with white cards."
+        },
+        "surface": {
+            "card": "#FFFFFF",
+            "cardDark": "#1C1C1A",
+            "cardHover": "#FAFAF8",
+            "cardBorder": "rgba(0,0,0,0.06)",
+            "cardBorderDark": "rgba(255,255,255,0.08)",
+            "elevated": "#FFFFFF",
+            "comment": "Cards are pure white on the warm canvas. Border is a whisper, not a line."
+        },
+        "accent": {
+            "primary": "#E85D3A",
+            "primaryHover": "#D44F2E",
+            "primaryLight": "#FAE8E3",
+            "primaryMid": "#F4C4B8",
+            "primaryDark": "#A33320",
+            "comment": "Coral-red from reference image. Used for: CTA buttons, active nav, KPI highlights, chart primary series, badges, progress fills."
+        },
+        "text": {
+            "primary": "#111110",
+            "secondary": "#6B6B68",
+            "tertiary": "#A8A8A4",
+            "inverse": "#FFFFFF",
+            "accentLabel": "#A33320",
+            "primaryDark": "#F0EFEA",
+            "secondaryDark": "#9A9A96"
+        },
+        "status": {
+            "available": {
+                "bg": "#E8F5EC",
+                "text": "#1A7A38",
+                "dot": "#2EAA55"
+            },
+            "hold": {
+                "bg": "#FFF3E0",
+                "text": "#A05A00",
+                "dot": "#F59500"
+            },
+            "booked": {
+                "bg": "#E8F0FF",
+                "text": "#1A3FAA",
+                "dot": "#2B5BF5"
+            },
+            "inTransit": {
+                "bg": "#F0EEFF",
+                "text": "#4A20A8",
+                "dot": "#7C4DFF"
+            },
+            "pdiPending": {
+                "bg": "#FFF8E0",
+                "text": "#967200",
+                "dot": "#DCAA00"
+            },
+            "invoiced": {
+                "bg": "#F0F0F0",
+                "text": "#4A4A4A",
+                "dot": "#888888"
+            },
+            "transferred": {
+                "bg": "#E3F8F5",
+                "text": "#0A6E62",
+                "dot": "#14A899"
+            },
+            "comment": "Status chips — always light background + dark same-family text. Never bright bg + white text."
+        },
+        "ageing": {
+            "fresh": {
+                "bg": "#E8F5EC",
+                "bar": "#2EAA55",
+                "label": "0-30 days"
+            },
+            "amber": {
+                "bg": "#FFF3E0",
+                "bar": "#F59500",
+                "label": "31-60 days"
+            },
+            "warning": {
+                "bg": "#FFF0E0",
+                "bar": "#E85D3A",
+                "label": "61-90 days"
+            },
+            "critical": {
+                "bg": "#FCEAEA",
+                "bar": "#C41C1C",
+                "label": "90+ days"
+            },
+            "comment": "Stock ageing heatmap colors — used in dashboard table cells and ageing bar chart."
+        },
+        "chart": {
+            "series1": "#E85D3A",
+            "series2": "#111110",
+            "series3": "#D4C5B0",
+            "series4": "#A8C5DA",
+            "series5": "#8BC4A0",
+            "gridLine": "rgba(0,0,0,0.06)",
+            "tooltip": "#1C1C1A",
+            "comment": "Coral primary, black secondary, warm neutrals for tertiary. Grid lines are invisible-light."
+        },
+        "semantic": {
+            "success": "#2EAA55",
+            "warning": "#F59500",
+            "error": "#C41C1C",
+            "info": "#2B5BF5"
+        }
+    },
+    "typography": {
+        "_googleFontsImport": "@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');",
+        "_comment": "DM Sans — clean, modern, slightly geometric. Feels premium without being cold. DM Mono for VINs, IDs, codes, masked values. Same design family keeps it cohesive.",
+        "fontFamilies": {
+            "sans": "'DM Sans', sans-serif",
+            "mono": "'DM Mono', monospace",
+            "display": "'DM Sans', sans-serif"
+        },
+        "scale": {
+            "display": {
+                "size": "32px",
+                "weight": 600,
+                "lineHeight": 1.15,
+                "letterSpacing": "-0.02em",
+                "usage": "Page hero numbers — total stock count, KPI values"
+            },
+            "h1": {
+                "size": "24px",
+                "weight": 600,
+                "lineHeight": 1.25,
+                "letterSpacing": "-0.015em",
+                "usage": "Page title (e.g. Inventory Management)"
+            },
+            "h2": {
+                "size": "18px",
+                "weight": 600,
+                "lineHeight": 1.3,
+                "letterSpacing": "-0.01em",
+                "usage": "Card section headings"
+            },
+            "h3": {
+                "size": "15px",
+                "weight": 500,
+                "lineHeight": 1.4,
+                "letterSpacing": "-0.005em",
+                "usage": "Card subheadings, table section labels"
+            },
+            "body": {
+                "size": "14px",
+                "weight": 400,
+                "lineHeight": 1.6,
+                "letterSpacing": "0",
+                "usage": "Default body text, table cell content"
+            },
+            "bodyMedium": {
+                "size": "14px",
+                "weight": 500,
+                "lineHeight": 1.6,
+                "letterSpacing": "0",
+                "usage": "Labels, column headers, form labels"
+            },
+            "small": {
+                "size": "12px",
+                "weight": 400,
+                "lineHeight": 1.5,
+                "letterSpacing": "0.01em",
+                "usage": "Helper text, timestamps, secondary metadata"
+            },
+            "caption": {
+                "size": "11px",
+                "weight": 500,
+                "lineHeight": 1.4,
+                "letterSpacing": "0.04em",
+                "usage": "Status chips, badge labels — UPPERCASE"
+            },
+            "mono": {
+                "size": "13px",
+                "weight": 400,
+                "lineHeight": 1.5,
+                "letterSpacing": "0.02em",
+                "usage": "VINs, IDs, masked values, code values"
+            },
+            "kpi": {
+                "size": "28px",
+                "weight": 600,
+                "lineHeight": 1.1,
+                "letterSpacing": "-0.03em",
+                "usage": "Dashboard KPI numbers — large, bold, prominent"
+            }
+        },
+        "numerals": {
+            "feature": "font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1;",
+            "comment": "All numbers in tables, KPIs, and charts must use tabular numerals for alignment."
+        }
+    },
+    "spacing": {
+        "_base": "4px",
+        "_comment": "4px grid. All spacing values are multiples of 4.",
+        "tokens": {
+            "xs": "4px",
+            "sm": "8px",
+            "md": "12px",
+            "lg": "16px",
+            "xl": "20px",
+            "2xl": "24px",
+            "3xl": "32px",
+            "4xl": "40px",
+            "5xl": "48px",
+            "page": "24px"
+        }
+    },
+    "borderRadius": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "12px",
+        "lg": "16px",
+        "xl": "20px",
+        "card": "20px",
+        "chip": "100px",
+        "button": "12px",
+        "input": "10px",
+        "avatar": "50%",
+        "comment": "Card radius is 20px — the defining shape of the design. Chips and tags are fully pill-shaped."
+    },
+    "shadows": {
+        "card": "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)",
+        "cardHover": "0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06)",
+        "cardActive": "0 1px 2px rgba(0,0,0,0.08)",
+        "dropdown": "0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
+        "button": "0 2px 8px rgba(232,93,58,0.30)",
+        "buttonHover": "0 4px 16px rgba(232,93,58,0.40)",
+        "none": "none",
+        "comment": "Cards have almost no shadow — they rely on background contrast. Buttons get coral-tinted shadow."
+    },
+    "components": {
+        "layout": {
+            "sidenav": {
+                "width": "64px",
+                "widthExpanded": "240px",
+                "background": "#111110",
+                "itemPadding": "0 12px",
+                "itemHeight": "44px",
+                "itemBorderRadius": "10px",
+                "itemColor": "rgba(255,255,255,0.5)",
+                "itemColorActive": "#FFFFFF",
+                "itemBgActive": "rgba(255,255,255,0.10)",
+                "accentDot": "#E85D3A",
+                "logoSize": "36px",
+                "logoBg": "#E85D3A",
+                "logoRadius": "10px",
+                "comment": "Dark sidenav creates strong contrast with white cards. Collapsed by default (icon-only). Logo is coral square matching accent."
+            },
+            "topbar": {
+                "height": "64px",
+                "background": "transparent",
+                "borderBottom": "none",
+                "padding": "0 24px",
+                "comment": "Topbar blends into the page canvas. Contains breadcrumb, search, notifications, avatar."
+            },
+            "pageCanvas": {
+                "background": "#F4F3F0",
+                "padding": "0 24px 24px 24px",
+                "maxWidth": "1440px"
+            }
+        },
+        "card": {
+            "background": "#FFFFFF",
+            "border": "1px solid rgba(0,0,0,0.06)",
+            "borderRadius": "20px",
+            "padding": "20px",
+            "shadow": "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)",
+            "hoverShadow": "0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06)",
+            "transition": "box-shadow 0.2s ease, transform 0.15s ease",
+            "hoverTransform": "translateY(-1px)",
+            "header": {
+                "display": "flex",
+                "justifyContent": "space-between",
+                "alignItems": "center",
+                "marginBottom": "16px",
+                "titleSize": "15px",
+                "titleWeight": 500,
+                "titleColor": "#111110",
+                "actionColor": "#6B6B68",
+                "actionSize": "13px"
+            },
+            "variants": {
+                "kpiCard": {
+                    "comment": "Small KPI card — icon top-left, big number middle, delta bottom-right",
+                    "minHeight": "120px",
+                    "iconSize": "36px",
+                    "iconBg": "#FAE8E3",
+                    "iconColor": "#E85D3A",
+                    "iconRadius": "10px",
+                    "numberSize": "28px",
+                    "numberWeight": 600,
+                    "deltaPositive": "#2EAA55",
+                    "deltaNegative": "#C41C1C"
+                },
+                "chartCard": {
+                    "comment": "Card with embedded chart — header with title + period selector, chart fills remaining height"
+                },
+                "tableCard": {
+                    "comment": "Card containing a data table — header with title + filter pill row + search"
+                },
+                "activityCard": {
+                    "comment": "Card with vertical timeline feed of recent events"
+                }
+            }
+        },
+        "button": {
+            "primary": {
+                "background": "#E85D3A",
+                "color": "#FFFFFF",
+                "borderRadius": "12px",
+                "height": "40px",
+                "padding": "0 20px",
+                "fontSize": "14px",
+                "fontWeight": 500,
+                "shadow": "0 2px 8px rgba(232,93,58,0.30)",
+                "hoverBackground": "#D44F2E",
+                "hoverShadow": "0 4px 16px rgba(232,93,58,0.40)",
+                "hoverTransform": "translateY(-1px)",
+                "activeTransform": "translateY(0)",
+                "transition": "all 0.15s ease"
+            },
+            "secondary": {
+                "background": "transparent",
+                "color": "#111110",
+                "border": "1px solid rgba(0,0,0,0.12)",
+                "borderRadius": "12px",
+                "height": "40px",
+                "padding": "0 16px",
+                "fontSize": "14px",
+                "fontWeight": 500,
+                "hoverBackground": "rgba(0,0,0,0.04)",
+                "hoverBorder": "1px solid rgba(0,0,0,0.20)"
+            },
+            "ghost": {
+                "background": "transparent",
+                "color": "#6B6B68",
+                "height": "36px",
+                "padding": "0 12px",
+                "fontSize": "13px",
+                "fontWeight": 500,
+                "hoverBackground": "rgba(0,0,0,0.05)",
+                "hoverColor": "#111110",
+                "borderRadius": "8px"
+            },
+            "iconButton": {
+                "size": "36px",
+                "background": "#FFFFFF",
+                "border": "1px solid rgba(0,0,0,0.08)",
+                "borderRadius": "10px",
+                "color": "#6B6B68",
+                "hoverBackground": "#F4F3F0"
+            }
+        },
+        "input": {
+            "height": "40px",
+            "background": "#F4F3F0",
+            "border": "1px solid transparent",
+            "borderRadius": "10px",
+            "padding": "0 12px",
+            "fontSize": "14px",
+            "color": "#111110",
+            "placeholderColor": "#A8A8A4",
+            "focusBorder": "1px solid rgba(232,93,58,0.50)",
+            "focusShadow": "0 0 0 3px rgba(232,93,58,0.10)",
+            "focusBackground": "#FFFFFF",
+            "transition": "all 0.15s ease",
+            "labelSize": "13px",
+            "labelWeight": 500,
+            "labelColor": "#6B6B68",
+            "labelMarginBottom": "6px",
+            "errorBorder": "1px solid #C41C1C",
+            "errorColor": "#C41C1C",
+            "errorSize": "12px"
+        },
+        "select": {
+            "pill": {
+                "height": "28px",
+                "padding": "0 10px 0 12px",
+                "background": "#F4F3F0",
+                "borderRadius": "100px",
+                "fontSize": "12px",
+                "fontWeight": 500,
+                "color": "#111110",
+                "hoverBg": "#ECEAE6",
+                "comment": "Period selectors in cards use this compact pill variant"
+            }
+        },
+        "chip": {
+            "height": "24px",
+            "padding": "0 10px",
+            "borderRadius": "100px",
+            "fontSize": "11px",
+            "fontWeight": 500,
+            "letterSpacing": "0.04em",
+            "textTransform": "uppercase",
+            "dotSize": "6px",
+            "dotMarginRight": "6px",
+            "variants": "Use colorTokens.status for each vehicle status chip"
+        },
+        "badge": {
+            "notificationBell": {
+                "size": "18px",
+                "background": "#E85D3A",
+                "color": "#FFFFFF",
+                "fontSize": "10px",
+                "fontWeight": 600,
+                "borderRadius": "100px",
+                "offset": "-4px -4px"
+            }
+        },
+        "table": {
+            "comment": "Angular Material table heavily restyled",
+            "headerBackground": "transparent",
+            "headerColor": "#6B6B68",
+            "headerSize": "12px",
+            "headerWeight": 500,
+            "headerLetterSpacing": "0.04em",
+            "headerTextTransform": "uppercase",
+            "headerBorderBottom": "1px solid rgba(0,0,0,0.06)",
+            "rowHeight": "52px",
+            "rowBorderBottom": "1px solid rgba(0,0,0,0.04)",
+            "rowHoverBackground": "rgba(232,93,58,0.03)",
+            "cellFontSize": "14px",
+            "cellColor": "#111110",
+            "cellSecondaryColor": "#6B6B68",
+            "vinFont": "DM Mono",
+            "vinSize": "13px",
+            "sortIconColor": "#E85D3A",
+            "stripedEvenBg": "rgba(0,0,0,0.015)",
+            "selectionBg": "rgba(232,93,58,0.06)"
+        },
+        "paginator": {
+            "background": "transparent",
+            "buttonSize": "32px",
+            "buttonRadius": "8px",
+            "buttonBorder": "1px solid rgba(0,0,0,0.08)",
+            "buttonHoverBg": "#F4F3F0",
+            "activeButton": {
+                "background": "#E85D3A",
+                "color": "#FFFFFF",
+                "border": "none"
+            },
+            "fontSize": "13px",
+            "color": "#6B6B68"
+        },
+        "search": {
+            "height": "36px",
+            "background": "#F4F3F0",
+            "border": "1px solid transparent",
+            "borderRadius": "10px",
+            "padding": "0 12px 0 36px",
+            "iconColor": "#A8A8A4",
+            "iconSize": "16px",
+            "fontSize": "13px",
+            "focusBorder": "1px solid rgba(232,93,58,0.40)",
+            "focusBackground": "#FFFFFF"
+        },
+        "avatar": {
+            "sizes": {
+                "sm": "28px",
+                "md": "36px",
+                "lg": "44px"
+            },
+            "borderRadius": "50%",
+            "border": "2px solid rgba(0,0,0,0.06)",
+            "fallbackBg": "#E85D3A",
+            "fallbackColor": "#FFFFFF",
+            "fallbackFont": "DM Sans",
+            "fallbackWeight": 600
+        },
+        "toggle": {
+            "trackWidth": "36px",
+            "trackHeight": "20px",
+            "trackBgOff": "rgba(0,0,0,0.12)",
+            "trackBgOn": "#E85D3A",
+            "thumbSize": "16px",
+            "thumbBg": "#FFFFFF",
+            "thumbShadow": "0 1px 4px rgba(0,0,0,0.20)",
+            "transition": "all 0.2s ease"
+        },
+        "progressBar": {
+            "height": "4px",
+            "background": "#ECEAE6",
+            "fill": "#E85D3A",
+            "borderRadius": "100px",
+            "comment": "PDI completion progress, target vs achievement bars"
+        },
+        "notification": {
+            "dropdownWidth": "360px",
+            "dropdownRadius": "16px",
+            "itemHeight": "64px",
+            "itemPadding": "12px 16px",
+            "itemBorderBottom": "1px solid rgba(0,0,0,0.05)",
+            "unreadDot": "#E85D3A",
+            "unreadBg": "rgba(232,93,58,0.04)",
+            "readBg": "transparent",
+            "titleSize": "13px",
+            "titleWeight": 500,
+            "bodySize": "12px",
+            "bodyColor": "#6B6B68",
+            "timeSize": "11px",
+            "timeColor": "#A8A8A4",
+            "critical": {
+                "leftBorder": "3px solid #C41C1C",
+                "bg": "rgba(196,28,28,0.04)"
+            }
+        },
+        "dialog": {
+            "background": "#FFFFFF",
+            "borderRadius": "20px",
+            "padding": "24px",
+            "backdropColor": "rgba(17,17,16,0.40)",
+            "width": "480px",
+            "titleSize": "18px",
+            "titleWeight": 600,
+            "shadow": "0 24px 80px rgba(0,0,0,0.20)"
+        },
+        "snackbar": {
+            "background": "#111110",
+            "color": "#FFFFFF",
+            "borderRadius": "12px",
+            "padding": "12px 16px",
+            "fontSize": "13px",
+            "fontWeight": 500,
+            "successLeft": "3px solid #2EAA55",
+            "errorLeft": "3px solid #C41C1C",
+            "warningLeft": "3px solid #F59500"
+        }
+    },
+    "charts": {
+        "_library": "Chart.js 4.x with ng2-charts@5",
+        "globalDefaults": {
+            "fontFamily": "DM Sans, sans-serif",
+            "fontSize": 13,
+            "color": "#6B6B68",
+            "borderWidth": 0,
+            "responsive": true,
+            "maintainAspectRatio": false,
+            "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+            },
+            "plugins": {
+                "legend": {
+                    "display": false,
+                    "comment": "No legend inside chart. Use custom HTML legend below card."
+                },
+                "tooltip": {
+                    "backgroundColor": "#111110",
+                    "titleColor": "#FFFFFF",
+                    "bodyColor": "rgba(255,255,255,0.70)",
+                    "borderColor": "rgba(255,255,255,0.10)",
+                    "borderWidth": 1,
+                    "padding": 12,
+                    "cornerRadius": 10,
+                    "displayColors": false
+                }
+            }
+        },
+        "ageingBar": {
+            "type": "bar",
+            "comment": "Stock ageing dashboard — 4 bars, each a different ageing color",
+            "barThickness": 32,
+            "borderRadius": 8,
+            "colors": [
+                "#2EAA55",
+                "#F59500",
+                "#E85D3A",
+                "#C41C1C"
+            ],
+            "scales": {
+                "x": {
+                    "grid": {
+                        "display": false
+                    },
+                    "ticks": {
+                        "color": "#6B6B68",
+                        "font": {
+                            "size": 12
+                        }
+                    }
+                },
+                "y": {
+                    "grid": {
+                        "color": "rgba(0,0,0,0.05)"
+                    },
+                    "ticks": {
+                        "color": "#6B6B68",
+                        "font": {
+                            "size": 12
+                        }
+                    },
+                    "beginAtZero": true
+                }
+            }
+        },
+        "statusDonut": {
+            "type": "doughnut",
+            "comment": "KPI donut — Available vs total. Center shows percentage.",
+            "cutout": "74%",
+            "borderWidth": 0,
+            "hoverOffset": 4,
+            "colors": [
+                "#E85D3A",
+                "#F4C4B8",
+                "#ECEAE6"
+            ],
+            "centerLabel": {
+                "fontSize": "24px",
+                "fontWeight": 600,
+                "color": "#111110",
+                "subSize": "12px",
+                "subColor": "#6B6B68"
+            }
+        },
+        "salesFunnelBar": {
+            "type": "bar",
+            "comment": "Horizontal bar — lead stages funnel",
+            "indexAxis": "y",
+            "barThickness": 16,
+            "borderRadius": 100,
+            "colors": [
+                "#E85D3A",
+                "#ECEAE6"
+            ]
+        },
+        "stockTrendLine": {
+            "type": "line",
+            "comment": "Dashboard sparkline — stock received vs invoiced per week",
+            "tension": 0.4,
+            "fill": true,
+            "fillColor": "rgba(232,93,58,0.08)",
+            "borderColor": "#E85D3A",
+            "borderWidth": 2,
+            "pointRadius": 0,
+            "pointHoverRadius": 5,
+            "pointHoverBg": "#E85D3A"
+        },
+        "branchDoughnut": {
+            "type": "doughnut",
+            "comment": "Branch stock distribution. One segment per branch.",
+            "cutout": "60%",
+            "colors": [
+                "#111110",
+                "#E85D3A",
+                "#D4C5B0",
+                "#A8C5DA",
+                "#8BC4A0",
+                "#ECEAE6"
+            ],
+            "hoverOffset": 6
+        }
+    },
+    "dashboard": {
+        "comment": "Inventory Dashboard — bento grid layout using CSS Grid",
+        "bentoGrid": {
+            "display": "grid",
+            "gridTemplateColumns": "repeat(12, 1fr)",
+            "gap": "16px",
+            "slots": {
+                "kpi1": {
+                    "gridColumn": "span 3",
+                    "comment": "Total Stock KPI"
+                },
+                "kpi2": {
+                    "gridColumn": "span 3",
+                    "comment": "Available KPI"
+                },
+                "kpi3": {
+                    "gridColumn": "span 3",
+                    "comment": "On Hold KPI"
+                },
+                "kpi4": {
+                    "gridColumn": "span 3",
+                    "comment": "Booked KPI"
+                },
+                "ageingChart": {
+                    "gridColumn": "span 5",
+                    "minHeight": "280px",
+                    "comment": "Ageing bar chart"
+                },
+                "statusDonut": {
+                    "gridColumn": "span 3",
+                    "minHeight": "280px",
+                    "comment": "Status donut"
+                },
+                "recentActivity": {
+                    "gridColumn": "span 4",
+                    "minHeight": "280px",
+                    "comment": "Last 10 audit events"
+                },
+                "stockTable": {
+                    "gridColumn": "span 8",
+                    "minHeight": "400px",
+                    "comment": "Quick view last 10 vehicles"
+                },
+                "transferStatus": {
+                    "gridColumn": "span 4",
+                    "minHeight": "400px",
+                    "comment": "Pending transfers"
+                }
+            },
+            "responsive": {
+                "below1200": "repeat(8, 1fr) — kpis span 2, charts span 4",
+                "below768": "repeat(4, 1fr) — all cards span 4",
+                "below480": "repeat(1, 1fr) — all cards full width"
+            }
+        },
+        "kpiCard": {
+            "structure": [
+                "top-left: category icon in coral bg rounded square",
+                "top-right: trend badge (up arrow + % green | down arrow + % red)",
+                "center: large KPI number (28px 600 tabular-nums)",
+                "bottom: label in secondary color (13px)",
+                "bottom-right: period selector pill (Weekly/Monthly)"
+            ],
+            "animation": "Count up from 0 on page load — 800ms easeOutQuart",
+            "iconBg": "#FAE8E3",
+            "iconColor": "#E85D3A",
+            "iconRadius": "10px",
+            "iconSize": "20px"
+        },
+        "activityFeed": {
+            "itemHeight": "48px",
+            "dotSize": "8px",
+            "dotColor": "#E85D3A",
+            "lineColor": "rgba(0,0,0,0.08)",
+            "timestampColor": "#A8A8A4",
+            "timestampSize": "11px",
+            "entityColor": "#E85D3A",
+            "entityWeight": 500
+        }
+    },
+    "motion": {
+        "_philosophy": "Motion is functional, not decorative. Animations guide attention and confirm actions.",
+        "pageEnter": {
+            "comment": "Staggered card reveal on route navigate",
+            "animation": "fadeSlideUp",
+            "staggerDelay": "60ms per card",
+            "duration": "400ms",
+            "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+            "from": "translateY(12px) opacity(0)",
+            "to": "translateY(0) opacity(1)"
+        },
+        "cardHover": {
+            "transform": "translateY(-2px)",
+            "duration": "150ms"
+        },
+        "kpiCountUp": {
+            "duration": "800ms",
+            "easing": "easeOutQuart",
+            "comment": "Use requestAnimationFrame loop — count from 0 to target value on component init"
+        },
+        "statusChipChange": {
+            "comment": "When status changes via WebSocket, the chip scales briefly",
+            "keyframes": "scale(1) to scale(1.15) to scale(1)",
+            "duration": "300ms"
+        },
+        "notificationBadge": {
+            "comment": "New notification — badge bounces in",
+            "keyframes": "scale(0) to scale(1.3) to scale(1)",
+            "duration": "400ms",
+            "easing": "cubic-bezier(0.34, 1.56, 0.64, 1)"
+        },
+        "rowHighlight": {
+            "comment": "New row added via WebSocket — flash highlight then fade",
+            "from": "background: rgba(232,93,58,0.12)",
+            "to": "background: transparent",
+            "duration": "1200ms"
+        },
+        "buttonPress": {
+            "transform": "scale(0.97)",
+            "duration": "100ms"
+        }
+    },
+    "angularMaterialOverrides": {
+        "_comment": "Paste scssVariables into styles.scss. Apply all token overrides to the Angular Material theme.",
+        "theme": {
+            "primary": "#E85D3A",
+            "accent": "#111110",
+            "warn": "#C41C1C"
+        },
+        "componentOverrides": {
+            "mat-card": "Remove default elevation and border-radius. Apply card tokens.",
+            "mat-form-field": "Appearance fill. Background #F4F3F0. BorderRadius 10px. Remove underline. Label always above.",
+            "mat-table": "Apply table tokens. Header 12px uppercase #6B6B68. Row height 52px. Hover bg rgba(232,93,58,0.03).",
+            "mat-chip": "Apply chip tokens. Replace Material blue with status colors from colorTokens.status.",
+            "mat-button": "Apply button tokens. Ripple color #E85D3A at 0.12 opacity.",
+            "mat-snack-bar": "Dark background #111110. Apply snackbar tokens.",
+            "mat-dialog": "20px border radius. Apply dialog tokens.",
+            "mat-progress-bar": "Coral fill #E85D3A. Apply progressBar tokens.",
+            "mat-sidenav": "Dark background #111110. No default border.",
+            "mat-paginator": "Apply paginator tokens. Active page button coral filled."
+        },
+        "scssVariables": "/* === DMS Design System — paste into styles.scss === */\n@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=DM+Mono:wght@400;500&display=swap');\n\n:root {\n  /* Canvas */\n  --dms-canvas: #F4F3F0;\n  /* Cards */\n  --dms-card: #FFFFFF;\n  --dms-card-border: rgba(0,0,0,0.06);\n  --dms-card-radius: 20px;\n  --dms-card-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);\n  --dms-card-hover-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.06);\n  /* Accent */\n  --dms-accent: #E85D3A;\n  --dms-accent-hover: #D44F2E;\n  --dms-accent-light: #FAE8E3;\n  --dms-accent-mid: #F4C4B8;\n  --dms-accent-dark: #A33320;\n  /* Text */\n  --dms-text-primary: #111110;\n  --dms-text-secondary: #6B6B68;\n  --dms-text-tertiary: #A8A8A4;\n  --dms-text-inverse: #FFFFFF;\n  /* Typography */\n  --dms-font: 'DM Sans', sans-serif;\n  --dms-mono: 'DM Mono', monospace;\n  /* Radii */\n  --dms-radius-xs: 4px;\n  --dms-radius-sm: 8px;\n  --dms-radius-md: 12px;\n  --dms-radius-lg: 20px;\n  --dms-radius-pill: 100px;\n  /* Semantic status */\n  --dms-success: #2EAA55;\n  --dms-warning: #F59500;\n  --dms-error: #C41C1C;\n  --dms-info: #2B5BF5;\n}\n\n* { box-sizing: border-box; }\nbody {\n  font-family: var(--dms-font);\n  background: var(--dms-canvas);\n  color: var(--dms-text-primary);\n  margin: 0;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.mono { font-family: var(--dms-mono); }\n.tabular { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }"
+    },
+    "pageSpecificGuidance": {
+        "inventoryList": {
+            "layout": "Full-width table card. Filter panel above table as horizontal chip row. Search left, export button right.",
+            "filterRow": "Active filters shown as dismissible chips (coral background). 'Clear all' ghost button far right.",
+            "vinDisplay": "Always DM Mono font. Gray secondary color. Full 17-char VIN always shown in lists.",
+            "statusColumn": "Chip component using colorTokens.status. Always has colored dot + uppercase text.",
+            "ageColumn": "Color-coded text: green under 30d, amber 31-60d, orange 61-90d, red over 90d. Bold if over 60d.",
+            "actionColumn": "Icon buttons 36px — view, edit, hold. Show only actions the user role permits via hasPermission directive."
+        },
+        "vehicleDetail": {
+            "layout": "Two-column grid. Left 8/12: main info cards. Right 4/12: status timeline + quick actions.",
+            "vin": "Large DM Mono 18px in hero card — most prominent element.",
+            "statusTimeline": "Vertical stepper — completed steps coral filled, current coral ring, future gray.",
+            "photoGallery": "PDI photos in horizontal scroll — 120px square thumbnails, 12px radius, click to modal."
+        },
+        "adminUsers": {
+            "layout": "Full-width table card. Create user CTA top-right (primary coral button).",
+            "drawerForm": "Right-side drawer 480px — slides over content. Has own scrollbar.",
+            "passwordField": "type=password with show/hide toggle. Eye icon in coral when focused.",
+            "roleSelect": "Custom role selector showing role name + colored badge, not plain dropdown."
+        },
+        "login": {
+            "layout": "Split screen — left 55% coral gradient, right 45% white card centered.",
+            "card": "480px max-width, 48px padding, 24px radius.",
+            "title": "'Welcome back' 24px 600 dark. Subtitle 'Sign in to continue' 14px secondary.",
+            "submitButton": "Full width, 44px height, coral, 'Sign in'. Loading spinner inside on submit.",
+            "leftPanel": {
+                "background": "linear-gradient(135deg, #E85D3A 0%, #A33320 100%)",
+                "content": "White DMS logo top-left. Center: 32px white bold headline. Bottom: 3 feature callouts in white.",
+                "patternOverlay": "Subtle geometric dot pattern at 8% white opacity over gradient"
+            }
+        },
+        "rolePermissionMatrix": {
+            "layout": "Left: 5 role cards as vertical list. Right panel: permission grid + menu tree on role select.",
+            "permissionGrid": "Angular Material table — rows = modules, columns = C/R/U/D. Each cell = styled mat-slide-toggle in coral.",
+            "menuTree": "Angular CDK Tree with checkboxes. Indent child items 20px per level.",
+            "saveBanner": "Fixed bottom bar in right panel: 'Changes take effect immediately' + Save button."
+        },
+        "auditLog": {
+            "layout": "Full-width table card. Columns: timestamp, user, role badge, module, action (color-coded), entity ID, before/after diff.",
+            "diffViewer": "Inline collapsed JSON diff — changed keys highlighted coral, removed keys red, added keys green.",
+            "actionColors": {
+                "CREATE": "#2EAA55",
+                "UPDATE": "#F59500",
+                "DELETE": "#C41C1C"
+            }
+        }
+    },
+    "copilotInstructions": {
+        "_critical": "Read these instructions before generating any component. They are non-negotiable.",
+        "doAlways": [
+            "Add the DM Sans + DM Mono Google Fonts @import to styles.scss — both must load before Angular bootstraps",
+            "Set body { font-family: var(--dms-font); background: var(--dms-canvas); margin: 0; -webkit-font-smoothing: antialiased; } in styles.scss",
+            "Paste the full scssVariables block from angularMaterialOverrides into styles.scss as the first thing after the import",
+            "Apply border-radius: var(--dms-card-radius) to EVERY mat-card override — default mat-card radius must be overridden globally",
+            "Use font-variant-numeric: tabular-nums on ALL number displays — KPIs, tables, quantities, prices",
+            "Use var(--dms-mono) font for every VIN, vehicle ID, code value, masked value, and currency amount in tables",
+            "Apply the coral accent --dms-accent ONLY to: primary buttons, active nav item, chart primary series, status chip dots, KPI icon backgrounds, focus rings, progress bar fills",
+            "Animate KPI numbers counting up from 0 on component init — 800ms easeOutQuart using requestAnimationFrame",
+            "Use staggered fadeSlideUp on dashboard cards — 60ms delay between each card, triggered once on component init",
+            "Every table row must show only the action buttons the current user role is permitted to use — use *hasPermission directive",
+            "Apply the bento grid layout to the dashboard using CSS Grid with the 12-column slot definitions from dashboard.bentoGrid.slots",
+            "The sidenav background must be #111110 (dark) — it creates the essential contrast with the white cards",
+            "The page canvas background must be #F4F3F0 (warm off-white) everywhere — never pure white for the page bg",
+            "Every mat-form-field must use the fill appearance with background #F4F3F0 and border-radius 10px",
+            "Filter chips above tables must use the dismissible chip pattern from colorTokens.status"
+        ],
+        "doNever": [
+            "Never use Inter, Roboto, system-ui, or any other font family — ONLY DM Sans for UI and DM Mono for codes",
+            "Never use purple, blue, or green as the primary UI accent — the ONLY accent color is coral #E85D3A",
+            "Never use #FFFFFF as the page background — white is ONLY for card surfaces",
+            "Never use Angular Material default blue as the primary theme color — override to #E85D3A",
+            "Never apply mat-elevation-z4 or heavier on cards — use the card shadow token only",
+            "Never use border-radius less than 20px on card components",
+            "Never display a VIN in any font other than DM Mono",
+            "Never render a data table without the filter chip row and search bar above it",
+            "Never use mat-table default styling without applying all table override tokens",
+            "Never hardcode a hex color in any component .scss file — always reference CSS custom properties from the :root block",
+            "Never use Angular Material's default underline mat-form-field appearance — always fill with rounded corners",
+            "Never show a status without the corresponding color from colorTokens.status — no plain text status values"
+        ]
+    }
+}

@@ -1,0 +1,32 @@
+<div class="grn-list-container">
+  <div class="list-header">
+    <h2>Goods Received Notes</h2>
+    <button mat-raised-button color="primary" (click)="createGrn()"
+            *hasRole="'WORKSHOP_EXEC,SUPER_ADMIN'">
+      <mat-icon>add</mat-icon> New GRN
+    </button>
+  </div>
+
+  <mat-form-field appearance="outline" class="search-box" style="margin-bottom: 16px; width: 100%;">
+    <mat-label>Global Search</mat-label>
+    <input matInput #globalSearch (keyup)="applyGlobalSearch(globalSearch.value)" placeholder="Search GRN, VIN...">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <app-data-table
+    [columns]="columns"
+    [filterConfig]="filterConfig"
+    [apiUrl]="apiUrl"
+    [apiUrl]="apiUrl"
+    [defaultSort]="{ field: 'createdAt', direction: 'DESC' }"
+    (rowClick)="onRowClick($event)">
+    <ng-template #actionTemplate let-row>
+      <button mat-icon-button color="primary" (click)="editGrn($event, row)" matTooltip="Edit GRN" *hasRole="'WORKSHOP_EXEC,SUPER_ADMIN'">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button mat-icon-button color="warn" (click)="deleteGrn($event, row)" matTooltip="Delete GRN" *hasRole="'SUPER_ADMIN'">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </ng-template>
+  </app-data-table>
+</div>

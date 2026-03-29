@@ -1,0 +1,223 @@
+.sidenav-container {
+  height: 100%;
+  padding-top: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--dms-sidenav-bg);
+}
+
+/* ─── Header with Logo + Toggle ─── */
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 12px 16px 16px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--dms-accent);
+  border-radius: var(--dms-sidenav-item-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dms-text-inverse);
+  flex-shrink: 0;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.logo-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dms-text-inverse);
+  letter-spacing: -0.01em;
+}
+
+.sidenav-toggle-btn {
+  color: rgba(255, 255, 255, 0.5) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  flex-shrink: 0;
+  transition: color 0.2s, background 0.2s;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: var(--dms-sidenav-item-radius);
+  }
+
+  ::ng-deep .mat-icon {
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* ─── Role Badge ─── */
+.role-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin: 0 12px 8px;
+  background: linear-gradient(135deg, var(--dms-accent), var(--dms-accent-dark));
+  color: var(--dms-text-inverse);
+  border-radius: var(--dms-sidenav-item-radius);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* ─── Divider ─── */
+.sidenav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 12px 12px;
+}
+
+/* ─── Nav List ─── */
+mat-nav-list {
+  padding-top: 0;
+}
+
+/* ─── Menu Items ─── */
+.parent-menu,
+.leaf-menu,
+::ng-deep .mat-mdc-list-item {
+  border-radius: var(--dms-sidenav-item-radius) !important;
+  margin: 2px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  height: var(--dms-sidenav-item-height) !important;
+
+  ::ng-deep .mdc-list-item__primary-text {
+    color: var(--dms-sidenav-text) !important;
+    font-family: var(--dms-font) !important;
+    font-size: 14px !important;
+    font-weight: 400;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.2s;
+  }
+
+  ::ng-deep .mat-icon {
+    color: var(--dms-sidenav-text) !important;
+    transition: color 0.2s;
+  }
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+
+    ::ng-deep .mdc-list-item__primary-text {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    ::ng-deep .mat-icon {
+      color: rgba(255, 255, 255, 0.8) !important;
+    }
+  }
+
+  &.active {
+    background-color: var(--dms-sidenav-item-active-bg) !important;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 20px;
+      background: var(--dms-accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    ::ng-deep .mdc-list-item__primary-text {
+      color: var(--dms-sidenav-text-active) !important;
+      font-weight: 500;
+    }
+
+    ::ng-deep .mat-icon {
+      color: var(--dms-sidenav-text-active) !important;
+    }
+  }
+}
+
+/* ─── Sub Menu ─── */
+.sub-menu {
+  .child-menu {
+    padding-left: 20px;
+    border-radius: var(--dms-sidenav-item-radius) !important;
+    margin: 2px 8px 2px 16px;
+    cursor: pointer;
+    font-size: 13px;
+
+    ::ng-deep .mdc-list-item__primary-text {
+      font-size: 13px !important;
+    }
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    &.active {
+      background-color: var(--dms-sidenav-item-active-bg) !important;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 16px;
+        background: var(--dms-accent);
+        border-radius: 0 2px 2px 0;
+      }
+
+      ::ng-deep .mdc-list-item__primary-text {
+        color: var(--dms-sidenav-text-active) !important;
+        font-weight: 500;
+      }
+
+      ::ng-deep .mat-icon {
+        color: var(--dms-sidenav-text-active) !important;
+      }
+    }
+
+    ::ng-deep .mdc-list-item__primary-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

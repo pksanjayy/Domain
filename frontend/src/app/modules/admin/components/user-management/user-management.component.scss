@@ -1,0 +1,221 @@
+.user-management-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dms-text-primary);
+      letter-spacing: -0.015em;
+    }
+
+    .record-count {
+      color: var(--dms-text-secondary);
+      font-size: 14px;
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .search-field {
+      width: 280px;
+      ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
+    }
+  }
+}
+
+.table-container {
+  border-radius: var(--dms-card-radius);
+  overflow: hidden;
+  background: var(--dms-card);
+  border: 1px solid var(--dms-card-border);
+  box-shadow: var(--dms-card-shadow);
+
+  table { width: 100%; }
+
+  .table-row:hover {
+    background: rgba(232,93,58,0.03);
+  }
+
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .user-avatar-icon {
+      color: var(--dms-accent);
+      font-size: 28px;
+      width: 28px;
+      height: 28px;
+    }
+
+    .username-text {
+      font-weight: 500;
+    }
+  }
+
+  .failed-attempts {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--dms-warning);
+    font-weight: 600;
+
+    .warn-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .status-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    margin-right: 4px;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: var(--dms-text-tertiary);
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+  }
+}
+
+/* ─── Role Badge Colors (coral family) ─── */
+.role-super-admin {
+  background: var(--dms-accent) !important;
+  color: var(--dms-text-inverse) !important;
+}
+.role-master-user {
+  background: var(--dms-accent-dark) !important;
+  color: var(--dms-text-inverse) !important;
+}
+.role-sales {
+  background: var(--dms-status-available-dot) !important;
+  color: var(--dms-text-inverse) !important;
+}
+.role-workshop {
+  background: var(--dms-warning) !important;
+  color: var(--dms-text-inverse) !important;
+}
+.role-manager {
+  background: var(--dms-status-transit-dot) !important;
+  color: var(--dms-text-inverse) !important;
+}
+
+/* ─── Drawer ─── */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17,17,16,0.40);
+  z-index: 999;
+  animation: fadeIn 0.2s ease;
+}
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  right: -480px;
+  width: 460px;
+  height: 100vh;
+  background: var(--dms-card);
+  box-shadow: var(--dms-shadow-dropdown);
+  z-index: 1000;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+
+  &.open {
+    right: 0;
+  }
+
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--dms-card-border);
+    background: var(--dms-canvas);
+
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dms-text-primary);
+    }
+  }
+
+  .drawer-form {
+    padding: 24px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .full-width { width: 100%; }
+
+    .reset-password-section { margin: 8px 0 16px; }
+    .toggle-field { margin: 12px 0 24px; }
+
+    .drawer-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--dms-card-border);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .header-right {
+      width: 100%;
+      .search-field { flex: 1; width: auto; }
+    }
+  }
+
+  .drawer-panel {
+    width: 100%;
+    right: -100%;
+  }
+}

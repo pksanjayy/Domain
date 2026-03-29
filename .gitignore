@@ -1,0 +1,53 @@
+# ─── OS / IDE ───
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+.gemini/
+
+# ─── Java / Maven (backend) ───
+backend/target/
+backend/*.jar
+backend/*.war
+backend/*.class
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/backend_test_results.txt
+
+# ─── Spring Boot ───
+backend/src/main/resources/application-local.yml
+backend/logs/
+*.log
+
+# ─── Node / Angular (frontend) ───
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.sass-cache/
+frontend/coverage/
+frontend/tmp/
+frontend/out-tsc/
+frontend/e2e/
+frontend/.env
+frontend/.env.local
+
+# ─── Docker ───
+docker-compose.override.yml
+
+# ─── Environment / Secrets ───
+.env
+.env.*
+*.pem
+*.key
+
+# ─── Project-specific temp files ───
+*.jpeg
+*.docx
+testing_walkthrough.md
+walkthrough.md
+COPILOT_CONTEXT.md
+PROJECT_CONVENTIONS.md

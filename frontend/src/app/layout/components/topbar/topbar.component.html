@@ -1,0 +1,46 @@
+<!-- Global Loading Bar -->
+<mat-progress-bar *ngIf="loading$ | async" mode="indeterminate" class="global-loading"></mat-progress-bar>
+
+<mat-toolbar class="topbar">
+  <button mat-icon-button (click)="onToggleSidenav()" class="menu-toggle">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <span class="breadcrumb" *ngIf="false">
+    <!-- Breadcrumb placeholder for future -->
+  </span>
+
+  <!-- Branch Selector (Admin Only) -->
+  <app-branch-selector></app-branch-selector>
+
+  <span class="spacer"></span>
+
+  <!-- Notification Bell -->
+  <app-notification-bell></app-notification-bell>
+
+  <!-- User Menu -->
+  <ng-container *ngIf="user$ | async as user">
+    <button mat-button [matMenuTriggerFor]="userMenu" class="user-button">
+      <div class="user-avatar">
+        {{ user.username.charAt(0).toUpperCase() }}
+      </div>
+      <span class="user-name">{{ user.username }}</span>
+      <mat-icon class="dropdown-arrow">expand_more</mat-icon>
+    </button>
+
+    <mat-menu #userMenu="matMenu">
+      <div class="user-menu-header" mat-menu-item disabled>
+        <div class="user-info">
+          <strong>{{ user.username }}</strong>
+          <small>{{ user.email }}</small>
+          <span class="role-chip">{{ user.role }}</span>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+</mat-toolbar>

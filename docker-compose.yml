@@ -1,0 +1,64 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: dms-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: dms_db
+      MYSQL_USER: dms_user
+      MYSQL_PASSWORD: dms_password
+    ports:
+      - "3307:3306"
+    volumes:
+      - dms_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dms-network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: dms-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - dms_redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - dms-network
+
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: dms-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/dms_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: dms_user
+      SPRING_DATASOURCE_PASSWORD: dms_password
+      SPRING_DATA_REDIS_HOST: redis
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - dms-network
+
+volumes:
+  dms_mysql_data:
+  dms_redis_data:
+
+networks:
+  dms-network:
+    driver: bridge

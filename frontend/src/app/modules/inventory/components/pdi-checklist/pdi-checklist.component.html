@@ -1,0 +1,100 @@
+<div class="pdi-container">
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <mat-spinner diameter="48"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading && checklist">
+    <!-- Header -->
+    <div class="pdi-header">
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-info">
+        <h2>PDI Checklist</h2>
+        <p *ngIf="vehicle">{{ vehicle.brand }} {{ vehicle.model }} — {{ vehicle.vin }}</p>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <mat-card class="progress-card">
+      <mat-card-content>
+        <div class="progress-info">
+          <span class="progress-label">Completion Progress</span>
+          <span class="progress-value">{{ completedCount }} / {{ totalCount }} items ({{ progressPercent }}%)</span>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="progressPercent"
+          [color]="progressPercent === 100 ? 'primary' : 'accent'"
+          class="progress-bar">
+        </mat-progress-bar>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Grouped Items -->
+    <mat-accordion multi>
+      <mat-expansion-panel *ngFor="let group of groupedItems" [expanded]="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>checklist</mat-icon>
+            <span>{{ group.category }}</span>
+            <mat-chip class="group-count">{{ group.items.length }}</mat-chip>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="pdi-items">
+          <div *ngFor="let item of group.items" class="pdi-item" [class.completed]="item.result !== null">
+            <div class="item-header">
+              <span class="item-name">{{ item.itemName }}</span>
+              <span class="item-desc" *ngIf="item.description">{{ item.description }}</span>
+            </div>
+
+            <div class="item-controls">
+              <!-- Pass/Fail/NA Toggle -->
+              <mat-radio-group [value]="item.result" (change)="onResultChange(item, $event.value)">
+                <mat-radio-button value="PASS" color="primary" class="result-pass">Pass</mat-radio-button>
+                <mat-radio-button value="FAIL" color="warn" class="result-fail">Fail</mat-radio-button>
+                <mat-radio-button value="NA" class="result-na">N/A</mat-radio-button>
+              </mat-radio-group>
+
+              <!-- Photo Upload -->
+              <div class="photo-section">
+                <button mat-icon-button (click)="photoInput.click()" matTooltip="Upload photo">
+                  <mat-icon>photo_camera</mat-icon>
+                </button>
+                <input #photoInput type="file" accept="image/*" hidden (change)="onPhotoSelect($event, item)">
+                <img *ngIf="photoPreviews[item.id]"
+                     [src]="photoPreviews[item.id]"
+                     class="photo-preview"
+                     alt="Preview">
+              </div>
+
+              <!-- Remarks -->
+              <mat-form-field appearance="outline" class="remarks-field">
+                <mat-label>Remarks</mat-label>
+                <input matInput [(ngModel)]="item.remarks" (blur)="onRemarksChange(item)"
+                       placeholder="Optional notes">
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <!-- Submit -->
+    <div class="submit-section">
+      <button mat-raised-button color="primary"
+              (click)="completePdi()"
+              [disabled]="!allCompleted || isSubmitting"
+              class="submit-btn">
+        <mat-spinner *ngIf="isSubmitting" diameter="18" class="submit-spinner"></mat-spinner>
+        <mat-icon *ngIf="!isSubmitting">check_circle</mat-icon>
+        Complete PDI
+      </button>
+      <p *ngIf="!allCompleted" class="submit-hint">
+        All {{ totalCount }} items must be filled before submission
+      </p>
+    </div>
+  </ng-container>
+</div>
