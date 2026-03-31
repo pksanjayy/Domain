@@ -13,6 +13,24 @@
     </div>
   </div>
 
+  <!-- Filters -->
+  <div class="filters-panel">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search branches</mat-label>
+      <input matInput placeholder="Name, code, or GSTIN..." (input)="onSearch($event)">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select (selectionChange)="onStatusChange($event.value)">
+        <mat-option value="">All Statuses</mat-option>
+        <mat-option value="true">Active</mat-option>
+        <mat-option value="false">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <!-- Loading -->
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
@@ -78,6 +96,14 @@
       <mat-icon>store</mat-icon>
       <p>No branches found</p>
     </div>
+
+    <mat-paginator [length]="totalElements"
+                   [pageSize]="pageSize"
+                   [pageIndex]="pageIndex"
+                   [pageSizeOptions]="[10, 20, 50]"
+                   (page)="onPageChange($event)"
+                   showFirstLastButtons>
+    </mat-paginator>
   </div>
 
   <!-- Create/Edit Drawer -->

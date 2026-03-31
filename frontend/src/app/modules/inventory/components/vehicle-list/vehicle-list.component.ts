@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 import { ColumnDef, FilterField } from '../../../../core/models';
 import { DataTableComponent } from '../../../../shared/components/data-table/data-table.component';
 import { InventoryService } from '../../services/inventory.service';
@@ -52,8 +53,12 @@ export class VehicleListComponent implements OnInit, OnDestroy {
         { value: 'TRANSFERRED', label: 'Transferred' },
       ],
     },
-    { field: 'brand', label: 'Brand', type: 'text' },
-    { field: 'branchName', label: 'Branch', type: 'text' },
+    {
+      field: 'branchName',
+      label: 'Branch',
+      type: 'select',
+      options: [],
+    },
   ];
 
   apiUrl = '/api/inventory/vehicles/filter';
@@ -63,7 +68,8 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     private inventoryService: InventoryService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -73,6 +79,16 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       .subscribe((result) => {
         this.isMobile = result.matches;
       });
+
+    // Load branches for dropdown filter
+    this.http.get<any>('/api/admin/branches').subscribe({
+      next: (res) => {
+        const branchFilter = this.filterConfig.find(f => f.field === 'branchName');
+        if (branchFilter && res.data) {
+          branchFilter.options = res.data.map((b: any) => ({ value: b.name, label: b.name }));
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {

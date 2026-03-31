@@ -32,6 +32,27 @@ import { BranchContextService } from '../../../../core/services/branch-context.s
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
+      <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <mat-form-field appearance="outline" style="min-width: 200px;">
+          <mat-label>Status</mat-label>
+          <mat-select (selectionChange)="onStatusFilterChange($event.value)">
+            <mat-option value="">All Statuses</mat-option>
+            <mat-option value="BOOKED">Booked</mat-option>
+            <mat-option value="COMPLETED">Completed</mat-option>
+            <mat-option value="CANCELLED">Cancelled</mat-option>
+            <mat-option value="NO_SHOW">No Show</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="min-width: 200px;">
+          <mat-label>Pickup Required</mat-label>
+          <mat-select (selectionChange)="onPickupFilterChange($event.value)">
+            <mat-option value="">All</mat-option>
+            <mat-option value="true">Yes</mat-option>
+            <mat-option value="false">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <mat-card class="content-card">
         <div class="table-container">
           <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
@@ -140,6 +161,8 @@ export class BookingListComponent implements OnInit, OnDestroy {
   sortField = 'id';
   sortDirection: 'ASC' | 'DESC' = 'DESC';
   globalSearchTerm = '';
+  statusFilter = '';
+  pickupFilter = '';
 
   constructor(
     private testDriveService: TestDriveService,
@@ -172,6 +195,12 @@ export class BookingListComponent implements OnInit, OnDestroy {
     }
     if (this.globalSearchTerm) {
       filters.push({ field: 'globalSearch', operator: 'LIKE', value: this.globalSearchTerm });
+    }
+    if (this.statusFilter) {
+      filters.push({ field: 'status', operator: 'EQUAL', value: this.statusFilter });
+    }
+    if (this.pickupFilter) {
+      filters.push({ field: 'pickupRequired', operator: 'EQUAL', value: this.pickupFilter });
     }
     const request: FilterRequest = {
       filters: filters,
@@ -207,6 +236,18 @@ export class BookingListComponent implements OnInit, OnDestroy {
       this.sortField = event.active;
       this.sortDirection = event.direction.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
     }
+    this.pageIndex = 0;
+    this.loadData();
+  }
+
+  onStatusFilterChange(status: string) {
+    this.statusFilter = status;
+    this.pageIndex = 0;
+    this.loadData();
+  }
+
+  onPickupFilterChange(pickup: string) {
+    this.pickupFilter = pickup;
     this.pageIndex = 0;
     this.loadData();
   }

@@ -6,16 +6,39 @@
       <span class="record-count">{{ totalElements }} users</span>
     </div>
     <div class="header-right">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search users</mat-label>
-        <input matInput placeholder="Username or email..." (input)="onSearch($event)">
-        <mat-icon matPrefix>search</mat-icon>
-      </mat-form-field>
       <button mat-raised-button color="primary" (click)="openCreateDrawer()">
         <mat-icon>person_add</mat-icon>
         Create User
       </button>
     </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters-panel">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search users</mat-label>
+      <input matInput placeholder="Username or email..." (input)="onSearch($event)">
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select (selectionChange)="onRoleChange($event.value)">
+        <mat-option value="">All Roles</mat-option>
+        <mat-option *ngFor="let role of roles" [value]="role.id">
+          {{ role.displayName || role.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select (selectionChange)="onStatusChange($event.value)">
+        <mat-option value="">All Statuses</mat-option>
+        <mat-option value="true">Active</mat-option>
+        <mat-option value="false">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
   <!-- Loading -->

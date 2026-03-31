@@ -16,6 +16,13 @@ export class BranchManagementComponent implements OnInit {
   displayedColumns = ['code', 'name', 'region', 'gstin', 'status', 'actions'];
   dataSource = new MatTableDataSource<BranchDto>([]);
   isLoading = false;
+  searchQuery = '';
+  filterStatus = '';
+  
+  // Pagination
+  totalElements = 0;
+  pageSize = 20;
+  pageIndex = 0;
 
   // Drawer state
   isDrawerOpen = false;
@@ -48,9 +55,16 @@ export class BranchManagementComponent implements OnInit {
 
   loadBranches(): void {
     this.isLoading = true;
-    this.adminService.getBranches().subscribe({
+    const isActive = this.filterStatus === '' ? undefined : this.filterStatus === 'true';
+    this.adminService.getBranches({
+      search: this.searchQuery,
+      isActive: isActive,
+      page: this.pageIndex,
+      size: this.pageSize
+    }).subscribe({
       next: (res) => {
-        this.dataSource.data = res.data;
+        this.dataSource.data = res.data.content;
+        this.totalElements = res.data.totalElements;
         this.isLoading = false;
       },
       error: () => {
@@ -58,6 +72,24 @@ export class BranchManagementComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  onSearch(event: Event): void {
+    this.searchQuery = (event.target as HTMLInputElement).value;
+    this.pageIndex = 0;
+    this.loadBranches();
+  }
+
+  onStatusChange(value: string): void {
+    this.filterStatus = value;
+    this.pageIndex = 0;
+    this.loadBranches();
+  }
+
+  onPageChange(event: any): void {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadBranches();
   }
 
   openCreateDrawer(): void {

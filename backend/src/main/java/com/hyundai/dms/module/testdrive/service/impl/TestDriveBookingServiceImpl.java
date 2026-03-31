@@ -1,7 +1,6 @@
 package com.hyundai.dms.module.testdrive.service.impl;
 
-import com.hyundai.dms.common.filter.FilterCriteria;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.exception.ResourceNotFoundException;
 import com.hyundai.dms.module.sales.entity.Customer;
 import com.hyundai.dms.module.sales.repository.CustomerRepository;
@@ -15,9 +14,8 @@ import com.hyundai.dms.module.testdrive.service.TestDriveBookingService;
 import com.hyundai.dms.module.user.entity.User;
 import com.hyundai.dms.module.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +30,12 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final TestDriveBookingMapper testDriveBookingMapper;
-    private final SpecificationBuilder<TestDriveBooking> specificationBuilder = new SpecificationBuilder<>();
+    private final QueryDslPredicateBuilder<TestDriveBooking> predicateBuilder = new QueryDslPredicateBuilder<>(TestDriveBooking.class);
 
     @Override
     @Transactional(readOnly = true)
     public com.hyundai.dms.common.PageResponse<TestDriveBookingDto> searchBookings(com.hyundai.dms.common.filter.FilterRequest filterRequest) {
-        Specification<TestDriveBooking> spec = specificationBuilder.build(filterRequest.filters());
+        Predicate predicate = predicateBuilder.build(filterRequest.filters());
         
         List<org.springframework.data.domain.Sort.Order> orders = filterRequest.sorts().stream()
                 .map(s -> new org.springframework.data.domain.Sort.Order(
@@ -51,7 +49,7 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
                 org.springframework.data.domain.Sort.by(orders));
                 
         return com.hyundai.dms.common.PageUtils.toPageResponse(
-                testDriveBookingRepository.findAll(spec, pageable).map(testDriveBookingMapper::toDto)
+                testDriveBookingRepository.findAll(predicate, pageable).map(testDriveBookingMapper::toDto)
         );
     }
 

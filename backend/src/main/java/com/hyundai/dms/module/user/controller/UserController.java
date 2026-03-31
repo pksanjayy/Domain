@@ -28,11 +28,14 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @Operation(summary = "List users", description = "Paginated list with optional search by username/email")
+    @Operation(summary = "List users", description = "Paginated list with optional search and filters")
     public ResponseEntity<ApiResponse<PageResponse<UserDto>>> getAllUsers(
             @RequestParam(required = false) String search,
+            @RequestParam(required = false) Long roleId,
+            @RequestParam(required = false) Long branchId,
+            @RequestParam(required = false) Boolean isActive,
             @PageableDefault(size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        PageResponse<UserDto> response = userService.getAllUsers(search, pageable);
+        PageResponse<UserDto> response = userService.getAllUsers(search, roleId, branchId, isActive, pageable);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

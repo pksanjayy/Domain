@@ -5,7 +5,7 @@ import com.hyundai.dms.module.inventory.enums.StockStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpecificationExecutor<Vehicle> {
+public interface VehicleRepository extends JpaRepository<Vehicle, Long>, QuerydslPredicateExecutor<Vehicle> {
 
     Optional<Vehicle> findByVin(String vin);
 
@@ -29,7 +29,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
 
     long countByBranchId(Long branchId);
 
-    @Query("SELECT v.brand, v.model FROM Vehicle v WHERE v.status = 'AVAILABLE' GROUP BY v.brand, v.model ORDER BY v.brand, v.model")
+    @Query("SELECT v.brand, v.model FROM Vehicle v WHERE v.status = 'AVAILABLE' AND v.status != 'DELETED' GROUP BY v.brand, v.model ORDER BY v.brand, v.model")
     List<Object[]> findAvailableModels();
 
     @Query("""
@@ -42,7 +42,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
                 END AS bucket,
                 COUNT(v)
             FROM Vehicle v
-            WHERE v.status NOT IN (com.hyundai.dms.module.inventory.enums.StockStatus.INVOICED, com.hyundai.dms.module.inventory.enums.StockStatus.TRANSFERRED)
+            WHERE v.status NOT IN (com.hyundai.dms.module.inventory.enums.StockStatus.INVOICED, com.hyundai.dms.module.inventory.enums.StockStatus.TRANSFERRED, com.hyundai.dms.module.inventory.enums.StockStatus.DELETED)
             GROUP BY
                 CASE
                     WHEN v.ageDays BETWEEN 0 AND 30 THEN '0-30'
@@ -54,17 +54,17 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long>, JpaSpec
     List<Object[]> findAgeingSummary();
 
     @Modifying
-    @Query(value = "UPDATE vehicles SET age_days = DATEDIFF(CURRENT_DATE, DATE(created_at)) WHERE status NOT IN ('INVOICED', 'TRANSFERRED')", nativeQuery = true)
+    @Query(value = "UPDATE vehicles SET age_days = DATEDIFF(CURRENT_DATE, DATE(created_at)) WHERE status NOT IN ('INVOICED', 'TRANSFERRED', 'DELETED')", nativeQuery = true)
     int updateAgeDays();
 
-    @Query("SELECT v FROM Vehicle v WHERE v.ageDays >= :threshold AND v.status NOT IN (com.hyundai.dms.module.inventory.enums.StockStatus.INVOICED, com.hyundai.dms.module.inventory.enums.StockStatus.TRANSFERRED)")
+    @Query("SELECT v FROM Vehicle v WHERE v.ageDays >= :threshold AND v.status NOT IN (com.hyundai.dms.module.inventory.enums.StockStatus.INVOICED, com.hyundai.dms.module.inventory.enums.StockStatus.TRANSFERRED, com.hyundai.dms.module.inventory.enums.StockStatus.DELETED)")
     List<Vehicle> findAgedVehicles(@Param("threshold") int threshold);
 
     boolean existsByVin(String vin);
 
-    @Query("SELECT v.status, COUNT(v) FROM Vehicle v WHERE v.branch.id = :branchId GROUP BY v.status")
+    @Query("SELECT v.status, COUNT(v) FROM Vehicle v WHERE v.branch.id = :branchId AND v.status != 'DELETED' GROUP BY v.status")
     List<Object[]> countByBranchGroupedByStatus(@Param("branchId") Long branchId);
 
-    @Query("SELECT v.status, COUNT(v) FROM Vehicle v GROUP BY v.status")
+    @Query("SELECT v.status, COUNT(v) FROM Vehicle v WHERE v.status != 'DELETED' GROUP BY v.status")
     List<Object[]> countGroupedByStatus();
 }

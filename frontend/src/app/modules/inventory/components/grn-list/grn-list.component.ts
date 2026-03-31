@@ -4,6 +4,7 @@ import { ColumnDef, FilterField } from '../../../../core/models';
 import { DataTableComponent } from '../../../../shared/components/data-table/data-table.component';
 import { InventoryService } from '../../services/inventory.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-grn-list',
@@ -34,6 +35,12 @@ export class GrnListComponent implements OnInit {
         { value: 'PARTIAL', label: 'Partial/Missing Parts' },
       ],
     },
+    {
+      field: 'branchName',
+      label: 'Branch',
+      type: 'select',
+      options: [],
+    },
   ];
 
   apiUrl = '/api/inventory/grn/filter';
@@ -41,10 +48,21 @@ export class GrnListComponent implements OnInit {
   constructor(
     private router: Router,
     private inventoryService: InventoryService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private http: HttpClient
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Load branches for dropdown filter
+    this.http.get<any>('/api/admin/branches').subscribe({
+      next: (res) => {
+        const branchFilter = this.filterConfig.find(f => f.field === 'branchName');
+        if (branchFilter && res.data) {
+          branchFilter.options = res.data.map((b: any) => ({ value: b.name, label: b.name }));
+        }
+      }
+    });
+  }
 
   onRowClick(row: any): void {
     this.router.navigate(['/inventory/vehicles', row.vehicleId]);

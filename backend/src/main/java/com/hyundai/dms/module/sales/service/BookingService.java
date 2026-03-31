@@ -5,7 +5,7 @@ import com.hyundai.dms.common.PageResponse;
 import com.hyundai.dms.common.PageUtils;
 import com.hyundai.dms.common.enums.ActionType;
 import com.hyundai.dms.common.filter.FilterRequest;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.common.logging.LogExecution;
 import com.hyundai.dms.exception.BusinessRuleException;
 import com.hyundai.dms.exception.ResourceNotFoundException;
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,15 +40,15 @@ public class BookingService {
     private final VehicleRepository vehicleRepository;
     private final VehicleService vehicleService;
     private final BookingMapper bookingMapper;
-    private final SpecificationBuilder<Booking> specificationBuilder = new SpecificationBuilder<>();
+    private final QueryDslPredicateBuilder<Booking> predicateBuilder = new QueryDslPredicateBuilder<>(Booking.class);
 
     @LogExecution
     @Transactional(readOnly = true)
     public PageResponse<BookingDto> listBookings(FilterRequest filterRequest) {
-        Specification<Booking> spec = specificationBuilder.build(filterRequest.filters());
+        Predicate predicate = predicateBuilder.build(filterRequest.filters());
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<Booking> page = bookingRepository.findAll(spec, pageRequest);
+        Page<Booking> page = bookingRepository.findAll(predicate, pageRequest);
         Page<BookingDto> dtoPage = page.map(bookingMapper::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }

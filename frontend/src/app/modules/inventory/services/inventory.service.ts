@@ -139,6 +139,6 @@ export class InventoryService extends BaseApiService {
 
   // ─── Branches ───
   getBranches(): Observable<ApiResponse<BranchDto[]>> {
-    return this.get<BranchDto[]>(this.branchUrl);
+    return this.get<BranchDto[]>(this.branchUrl + '/dropdown');
   }
 }

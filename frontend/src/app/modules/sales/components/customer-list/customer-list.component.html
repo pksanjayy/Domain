@@ -6,11 +6,31 @@
     </button>
   </div>
 
-  <mat-form-field appearance="outline" class="filter-field">
-    <mat-label>Search Customers</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="E.g. Name, Mobile, Email">
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <div class="filters-panel">
+    <mat-form-field appearance="outline">
+      <mat-label>Search Customers</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="E.g. Name, Mobile, Email">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Branch</mat-label>
+      <mat-select (selectionChange)="onBranchFilterChange($event.value)">
+        <mat-option value="">All Branches</mat-option>
+        <mat-option *ngFor="let branch of branches" [value]="branch.name">
+          {{ branch.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Created Year</mat-label>
+      <mat-select (selectionChange)="onYearFilterChange($event.value)">
+        <mat-option value="">All Years</mat-option>
+        <mat-option *ngFor="let year of availableYears" [value]="year">{{ year }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 

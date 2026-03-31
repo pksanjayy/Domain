@@ -5,7 +5,7 @@ import com.hyundai.dms.common.PageResponse;
 import com.hyundai.dms.common.PageUtils;
 import com.hyundai.dms.common.enums.ActionType;
 import com.hyundai.dms.common.filter.FilterRequest;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.common.logging.LogExecution;
 import com.hyundai.dms.exception.ResourceNotFoundException;
 import com.hyundai.dms.module.inventory.dto.CreateGrnRequest;
@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,15 +50,15 @@ public class GrnService {
     private final GrnMapper grnMapper;
     private final StockStatusTransitionValidator transitionValidator;
     private final NotificationService notificationService;
-    private final SpecificationBuilder<GrnRecord> specificationBuilder = new SpecificationBuilder<>();
+    private final QueryDslPredicateBuilder<GrnRecord> predicateBuilder = new QueryDslPredicateBuilder<>(GrnRecord.class);
 
     @LogExecution
     @Transactional(readOnly = true)
     public PageResponse<GrnDto> listGrns(FilterRequest filterRequest) {
-        Specification<GrnRecord> spec = specificationBuilder.build(filterRequest.filters());
+        Predicate predicate = predicateBuilder.build(filterRequest.filters());
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<GrnRecord> page = grnRecordRepository.findAll(spec, pageRequest);
+        Page<GrnRecord> page = grnRecordRepository.findAll(predicate, pageRequest);
         Page<GrnDto> dtoPage = page.map(grnMapper::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }

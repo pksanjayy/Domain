@@ -34,6 +34,30 @@ import { BranchContextService } from '../../../../core/services/branch-context.s
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
 
+      <div style="display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap;">
+        <mat-form-field appearance="outline" style="min-width: 200px;">
+          <mat-label>Status</mat-label>
+          <mat-select (selectionChange)="onStatusFilterChange($event.value)">
+            <mat-option value="">All Statuses</mat-option>
+            <mat-option value="AVAILABLE">Available</mat-option>
+            <mat-option value="ACTIVE">Active</mat-option>
+            <mat-option value="BOOKED">Booked</mat-option>
+            <mat-option value="MAINTENANCE">Maintenance</mat-option>
+            <mat-option value="RETIRED">Retired</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="min-width: 200px;">
+          <mat-label>Fuel Type</mat-label>
+          <mat-select (selectionChange)="onFuelTypeFilterChange($event.value)">
+            <mat-option value="">All Fuel Types</mat-option>
+            <mat-option value="PETROL">Petrol</mat-option>
+            <mat-option value="DIESEL">Diesel</mat-option>
+            <mat-option value="ELECTRIC">Electric</mat-option>
+            <mat-option value="HYBRID">Hybrid</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <mat-card class="content-card">
         <div class="table-container">
           <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
@@ -147,6 +171,8 @@ export class FleetListComponent implements OnInit, OnDestroy {
   sortField = 'id';
   sortDirection: 'ASC' | 'DESC' = 'DESC';
   globalSearchTerm = '';
+  statusFilter = '';
+  fuelTypeFilter = '';
 
   constructor(
     private testDriveService: TestDriveService,
@@ -178,6 +204,12 @@ export class FleetListComponent implements OnInit, OnDestroy {
     }
     if (this.globalSearchTerm) {
       filters.push({ field: 'globalSearch', operator: 'LIKE', value: this.globalSearchTerm });
+    }
+    if (this.statusFilter) {
+      filters.push({ field: 'status', operator: 'EQUAL', value: this.statusFilter });
+    }
+    if (this.fuelTypeFilter) {
+      filters.push({ field: 'fuelType', operator: 'EQUAL', value: this.fuelTypeFilter });
     }
     const request: FilterRequest = {
       filters: filters,
@@ -213,6 +245,18 @@ export class FleetListComponent implements OnInit, OnDestroy {
       this.sortField = event.active;
       this.sortDirection = event.direction.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
     }
+    this.pageIndex = 0;
+    this.loadData();
+  }
+
+  onStatusFilterChange(status: string) {
+    this.statusFilter = status;
+    this.pageIndex = 0;
+    this.loadData();
+  }
+
+  onFuelTypeFilterChange(fuelType: string) {
+    this.fuelTypeFilter = fuelType;
     this.pageIndex = 0;
     this.loadData();
   }

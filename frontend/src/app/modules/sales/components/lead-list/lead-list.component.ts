@@ -32,6 +32,12 @@ export class LeadListComponent implements OnInit, OnDestroy {
   pageIndex = 0;
   isLoading = false;
 
+  filterValues: any = {
+    globalSearch: '',
+    stage: '',
+    source: ''
+  };
+
   isDrawerOpen = false;
   leadForm!: FormGroup;
   isSubmitting = false;
@@ -56,6 +62,7 @@ export class LeadListComponent implements OnInit, OnDestroy {
     this.initForm();
     this.loadLeads();
     this.loadLookupData();
+    this.dataSource.filterPredicate = this.createFilter();
 
     // Reload when branch changes
     this.branchContext.activeBranchId$
@@ -63,10 +70,24 @@ export class LeadListComponent implements OnInit, OnDestroy {
       .subscribe(() => this.loadLeads());
   }
 
+  createFilter(): (data: LeadDto, filter: string) => boolean {
+    return (data: LeadDto, filter: string): boolean => {
+      const searchTerms = JSON.parse(filter);
+      const matchSearch = !!(!searchTerms.globalSearch ||
+        data.customerName?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.customerMobile?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.modelInterested?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.assignedToUsername?.toLowerCase().includes(searchTerms.globalSearch));
+      const matchStage = !!(!searchTerms.stage || data.stage === searchTerms.stage);
+      const matchSource = !!(!searchTerms.source || data.source === searchTerms.source);
+      return matchSearch && matchStage && matchSource;
+    };
+  }
+
   loadLookupData(): void {
-    this.adminService.getBranches().subscribe(res => this.branches = res.data);
+    this.adminService.getAllBranches().subscribe(res => this.branches = res.data);
     // Loading users (could be optimized to only sales users later)
-    this.adminService.getUsers(undefined, 0, 100).subscribe(res => this.users = res.data.content);
+    this.adminService.getUsers({ page: 0, size: 100 }).subscribe(res => this.users = res.data.content);
   }
 
 
@@ -111,8 +132,18 @@ export class LeadListComponent implements OnInit, OnDestroy {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.filterValues.globalSearch = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+
+  onStageFilterChange(stage: string): void {
+    this.filterValues.stage = stage;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+
+  onSourceFilterChange(source: string): void {
+    this.filterValues.source = source;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
   }
 
   openCreateDrawer(): void {

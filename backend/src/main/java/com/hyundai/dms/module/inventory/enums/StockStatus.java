@@ -9,5 +9,6 @@ public enum StockStatus {
     HOLD,
     BOOKED,
     INVOICED,
-    TRANSFERRED
+    TRANSFERRED,
+    DELETED
 }

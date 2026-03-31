@@ -143,7 +143,9 @@ public class AuthService {
         if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof CustomUserDetails userDetails)) {
             throw new BusinessRuleException("User not authenticated or session expired");
         }
-        User user = userDetails.getUser();
+        // Re-fetch from DB to ensure an active Hibernate session for lazy collections
+        User user = userRepository.findById(userDetails.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", userDetails.getId()));
         return buildUserProfile(user);
     }
 

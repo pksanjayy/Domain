@@ -9,7 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.PathBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,35 +32,30 @@ public class AuditLogService {
             String entityName, ActionType action,
             Long performedBy, Pageable pageable) {
 
-        Specification<AuditLog> spec = Specification.where(null);
+        BooleanBuilder builder = new BooleanBuilder();
+        PathBuilder<AuditLog> auditPath = new PathBuilder<>(AuditLog.class, "auditLog");
 
         if (from != null && to != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.between(root.get("performedAt"), from, to));
+            builder.and(auditPath.getDateTime("performedAt", LocalDateTime.class).between(from, to));
         } else if (from != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.greaterThanOrEqualTo(root.get("performedAt"), from));
+            builder.and(auditPath.getDateTime("performedAt", LocalDateTime.class).goe(from));
         } else if (to != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.lessThanOrEqualTo(root.get("performedAt"), to));
+            builder.and(auditPath.getDateTime("performedAt", LocalDateTime.class).loe(to));
         }
 
         if (entityName != null && !entityName.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("entityName"), entityName));
+            builder.and(auditPath.getString("entityName").eq(entityName));
         }
 
         if (action != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("action"), action));
+            builder.and(auditPath.get("action").eq(action));
         }
 
         if (performedBy != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("performedBy"), performedBy));
+            builder.and(auditPath.getNumber("performedBy", Long.class).eq(performedBy));
         }
 
-        Page<AuditLog> page = auditLogRepository.findAll(spec, pageable);
+        Page<AuditLog> page = auditLogRepository.findAll(builder, pageable);
 
         // Resolve usernames for performedBy IDs
         var userIds = page.getContent().stream()
@@ -96,31 +92,27 @@ public class AuditLogService {
             LocalDateTime from, LocalDateTime to,
             String entityName, ActionType action, Long performedBy) {
 
-        Specification<AuditLog> spec = Specification.where(null);
+        BooleanBuilder exportBuilder = new BooleanBuilder();
+        PathBuilder<AuditLog> exportPath = new PathBuilder<>(AuditLog.class, "auditLog");
 
         if (from != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.greaterThanOrEqualTo(root.get("performedAt"), from));
+            exportBuilder.and(exportPath.getDateTime("performedAt", LocalDateTime.class).goe(from));
         }
         if (to != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.lessThanOrEqualTo(root.get("performedAt"), to));
+            exportBuilder.and(exportPath.getDateTime("performedAt", LocalDateTime.class).loe(to));
         }
         if (entityName != null && !entityName.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("entityName"), entityName));
+            exportBuilder.and(exportPath.getString("entityName").eq(entityName));
         }
         if (action != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("action"), action));
+            exportBuilder.and(exportPath.get("action").eq(action));
         }
         if (performedBy != null) {
-            spec = spec.and((root, query, cb) ->
-                    cb.equal(root.get("performedBy"), performedBy));
+            exportBuilder.and(exportPath.getNumber("performedBy", Long.class).eq(performedBy));
         }
 
-        var logs = auditLogRepository.findAll(spec);
-        var userIds = logs.stream()
+        var logs = auditLogRepository.findAll(exportBuilder);
+        var userIds = java.util.stream.StreamSupport.stream(logs.spliterator(), false)
                 .map(AuditLog::getPerformedBy)
                 .filter(id -> id != null)
                 .collect(java.util.stream.Collectors.toSet());

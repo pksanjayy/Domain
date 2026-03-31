@@ -21,8 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.PathBuilder;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+
 
 @Slf4j
 @Service
@@ -39,8 +43,31 @@ public class UserService {
     private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$!";
 
     @Transactional(readOnly = true)
-    public PageResponse<UserDto> getAllUsers(String search, Pageable pageable) {
-        Page<User> page = userRepository.findAllWithSearch(search, pageable);
+    public PageResponse<UserDto> getAllUsers(String search, Long roleId, Long branchId, Boolean isActive, Pageable pageable) {
+        BooleanBuilder builder = new BooleanBuilder();
+        PathBuilder<User> userPath = new PathBuilder<>(User.class, "user");
+
+        if (search != null && !search.isBlank()) {
+            String searchLower = search.toLowerCase();
+            builder.and(
+                userPath.getString("username").containsIgnoreCase(searchLower)
+                    .or(userPath.getString("email").containsIgnoreCase(searchLower))
+            );
+        }
+
+        if (roleId != null) {
+            builder.and(userPath.get("role").get("id", Long.class).eq(roleId));
+        }
+
+        if (branchId != null) {
+            builder.and(userPath.get("branch").get("id", Long.class).eq(branchId));
+        }
+
+        if (isActive != null) {
+            builder.and(userPath.getBoolean("isActive").eq(isActive));
+        }
+
+        Page<User> page = userRepository.findAll(builder, pageable);
         Page<UserDto> dtoPage = page.map(this::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }

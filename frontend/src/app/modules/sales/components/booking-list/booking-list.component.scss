@@ -3,6 +3,23 @@
   margin: 0 auto;
 }
 
+.filters-panel {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  mat-form-field {
+    min-width: 200px;
+    flex: 1;
+  }
+
+  mat-form-field:first-child {
+    flex: 2;
+  }
+}
+
 .page-header {
   display: flex;
   justify-content: space-between;

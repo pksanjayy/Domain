@@ -5,7 +5,7 @@ import com.hyundai.dms.common.PageResponse;
 import com.hyundai.dms.common.PageUtils;
 import com.hyundai.dms.common.enums.ActionType;
 import com.hyundai.dms.common.filter.FilterRequest;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.common.logging.LogExecution;
 import com.hyundai.dms.exception.BusinessRuleException;
 import com.hyundai.dms.exception.ResourceNotFoundException;
@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -51,17 +51,17 @@ public class LeadService {
     private final VehicleRepository vehicleRepository;
     private final LeadMapper leadMapper;
     private final LeadStageTransitionValidator stageValidator;
-    private final SpecificationBuilder<Lead> specificationBuilder = new SpecificationBuilder<>();
+    private final QueryDslPredicateBuilder<Lead> predicateBuilder = new QueryDslPredicateBuilder<>(Lead.class);
 
 
 
     @LogExecution
     @Transactional(readOnly = true)
     public PageResponse<LeadDto> listLeads(FilterRequest filterRequest) {
-        Specification<Lead> spec = specificationBuilder.build(filterRequest.filters());
+        Predicate predicate = predicateBuilder.build(filterRequest.filters());
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<Lead> page = leadRepository.findAll(spec, pageRequest);
+        Page<Lead> page = leadRepository.findAll(predicate, pageRequest);
         Page<LeadDto> dtoPage = page.map(leadMapper::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }

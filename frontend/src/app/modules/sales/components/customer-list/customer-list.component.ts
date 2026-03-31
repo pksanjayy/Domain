@@ -26,6 +26,7 @@ export class CustomerListComponent implements OnInit {
   pageIndex = 0;
   isLoading = false;
   branches: { id: number; name: string }[] = [];
+  availableYears: number[] = [];
   private destroy$ = new Subject<void>();
 
   isDrawerOpen = false;
@@ -33,6 +34,12 @@ export class CustomerListComponent implements OnInit {
   editingCustomer: CustomerDto | null = null;
   customerForm!: FormGroup;
   isSubmitting = false;
+
+  filterValues: any = {
+    globalSearch: '',
+    branchFilter: '',
+    yearFilter: ''
+  };
 
   constructor(
     private salesService: SalesService,
@@ -47,6 +54,8 @@ export class CustomerListComponent implements OnInit {
     this.initForm();
     this.loadCustomers();
     this.loadBranches();
+    this.generateYears();
+    this.dataSource.filterPredicate = this.createFilter();
     
     this.branchContext.activeBranchId$
       .pipe(takeUntil(this.destroy$))
@@ -54,6 +63,33 @@ export class CustomerListComponent implements OnInit {
         this.pageIndex = 0;
         this.loadCustomers();
       });
+  }
+
+  createFilter(): (data: CustomerDto, filter: string) => boolean {
+    return (data: CustomerDto, filter: string): boolean => {
+      const searchTerms = JSON.parse(filter);
+      const matchSearch = !!(!searchTerms.globalSearch ||
+        data.name?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.mobile?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.email?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.location?.toLowerCase().includes(searchTerms.globalSearch));
+      const matchBranch = !!(!searchTerms.branchFilter || data.branchName === searchTerms.branchFilter);
+      
+      let matchYear = true;
+      if (searchTerms.yearFilter) {
+        const createdYear = new Date(data.createdAt).getFullYear();
+        matchYear = createdYear === Number(searchTerms.yearFilter);
+      }
+      
+      return matchSearch && matchBranch && matchYear;
+    };
+  }
+
+  generateYears(): void {
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= 2024; i--) {
+      this.availableYears.push(i);
+    }
   }
 
   ngOnDestroy(): void {
@@ -73,7 +109,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   loadBranches(): void {
-    this.http.get<any>('/api/admin/branches').subscribe({
+    this.http.get<any>('/api/admin/branches/dropdown').subscribe({
       next: (res) => { this.branches = res.data || []; },
       error: () => {},
     });
@@ -109,8 +145,18 @@ export class CustomerListComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.filterValues.globalSearch = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+
+  onBranchFilterChange(branchName: string): void {
+    this.filterValues.branchFilter = branchName;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+
+  onYearFilterChange(year: string): void {
+    this.filterValues.yearFilter = year;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
   }
 
   openCreateDrawer(): void {

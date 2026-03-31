@@ -11,6 +11,12 @@
   <!-- Filter Bar -->
   <mat-card class="filter-card">
     <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filter-bar">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search logs</mat-label>
+        <input matInput formControlName="search" placeholder="Action or entity...">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+
       <mat-form-field appearance="outline">
         <mat-label>From Date</mat-label>
         <input matInput [matDatepicker]="fromPicker" formControlName="from">

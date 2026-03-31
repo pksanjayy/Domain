@@ -1,82 +1,81 @@
 package com.hyundai.dms.module.inventory.filter;
 
 import com.hyundai.dms.common.filter.FilterCriteria;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
-import com.hyundai.dms.exception.ValidationException;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
+import com.querydsl.core.types.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SpecificationBuilderTest {
+class QueryDslPredicateBuilderTest {
 
-    private SpecificationBuilder<Object> builder;
+    private QueryDslPredicateBuilder<Object> builder;
 
     @BeforeEach
     void setUp() {
-        builder = new SpecificationBuilder<>();
+        builder = new QueryDslPredicateBuilder<>(Object.class);
     }
 
     @Test
-    @DisplayName("Empty filters returns non-null Specification")
-    void emptyFiltersReturnsSpec() {
-        Specification<Object> spec = builder.build(List.of());
-        assertNotNull(spec);
+    @DisplayName("Empty filters returns non-null Predicate")
+    void emptyFiltersReturnsPredicate() {
+        Predicate predicate = builder.build(List.of());
+        assertNotNull(predicate);
     }
 
     @Test
-    @DisplayName("Null filters returns non-null Specification")
-    void nullFiltersReturnsSpec() {
-        Specification<Object> spec = builder.build(null);
-        assertNotNull(spec);
+    @DisplayName("Null filters returns non-null Predicate")
+    void nullFiltersReturnsPredicate() {
+        Predicate predicate = builder.build(null);
+        assertNotNull(predicate);
     }
 
     @Test
     @DisplayName("Single eq filter builds successfully")
     void singleEqFilter() {
         FilterCriteria criteria = new FilterCriteria("status", "eq", "AVAILABLE");
-        Specification<Object> spec = builder.build(List.of(criteria));
-        assertNotNull(spec);
+        Predicate predicate = builder.build(List.of(criteria));
+        assertNotNull(predicate);
     }
 
     @Test
     @DisplayName("Like filter builds successfully")
     void likeFilter() {
         FilterCriteria criteria = new FilterCriteria("brand", "like", "Hyundai");
-        Specification<Object> spec = builder.build(List.of(criteria));
-        assertNotNull(spec);
+        Predicate predicate = builder.build(List.of(criteria));
+        assertNotNull(predicate);
     }
 
     @Test
     @DisplayName("Between filter with proper values builds successfully")
     void betweenFilter() {
         FilterCriteria criteria = new FilterCriteria("msrp", "between", "500000,1500000");
-        Specification<Object> spec = builder.build(List.of(criteria));
-        assertNotNull(spec);
+        Predicate predicate = builder.build(List.of(criteria));
+        assertNotNull(predicate);
     }
 
     @Test
     @DisplayName("In filter with comma-separated values builds successfully")
     void inFilter() {
         FilterCriteria criteria = new FilterCriteria("status", "in", "AVAILABLE,HOLD,BOOKED");
-        Specification<Object> spec = builder.build(List.of(criteria));
-        assertNotNull(spec);
+        Predicate predicate = builder.build(List.of(criteria));
+        assertNotNull(predicate);
     }
 
     @Test
-    @DisplayName("Multiple filters build compound Specification")
+    @DisplayName("Multiple filters build compound Predicate")
     void multipleFilters() {
         List<FilterCriteria> criteria = List.of(
                 new FilterCriteria("brand", "eq", "Hyundai"),
                 new FilterCriteria("status", "eq", "AVAILABLE"),
                 new FilterCriteria("ageDays", "gte", "30")
         );
-        Specification<Object> spec = builder.build(criteria);
-        assertNotNull(spec);
+        Predicate predicate = builder.build(criteria);
+        assertNotNull(predicate);
     }
 
     @Test

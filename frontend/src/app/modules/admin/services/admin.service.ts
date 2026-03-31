@@ -27,12 +27,24 @@ export class AdminService extends BaseApiService {
   }
 
   // ─── Users ───
-  getUsers(search?: string, page = 0, size = 20): Observable<ApiResponse<PageResponse<UserListDto>>> {
-    let params: any = { page, size };
-    if (search) {
-      params.search = search;
-    }
-    return this.get<PageResponse<UserListDto>>(this.userUrl, params);
+  getUsers(params: {
+    search?: string,
+    roleId?: number,
+    branchId?: number,
+    isActive?: boolean,
+    page?: number,
+    size?: number
+  } = {}): Observable<ApiResponse<PageResponse<UserListDto>>> {
+    let httpParams: any = { 
+      page: params.page || 0, 
+      size: params.size || 20 
+    };
+    if (params.search) httpParams.search = params.search;
+    if (params.roleId) httpParams.roleId = params.roleId;
+    if (params.branchId) httpParams.branchId = params.branchId;
+    if (params.isActive !== undefined) httpParams.isActive = params.isActive;
+    
+    return this.get<PageResponse<UserListDto>>(this.userUrl, httpParams);
   }
 
   getUser(id: number): Observable<ApiResponse<UserListDto>> {
@@ -118,8 +130,24 @@ export class AdminService extends BaseApiService {
   }
 
   // ─── Branches ───
-  getBranches(): Observable<ApiResponse<BranchDto[]>> {
-    return this.get<BranchDto[]>(this.branchUrl);
+  getBranches(params: {
+    search?: string,
+    isActive?: boolean,
+    page?: number,
+    size?: number
+  } = {}): Observable<ApiResponse<PageResponse<BranchDto>>> {
+    let httpParams: any = {
+      page: params.page || 0,
+      size: params.size || 20
+    };
+    if (params.search) httpParams.search = params.search;
+    if (params.isActive !== undefined) httpParams.isActive = params.isActive;
+    
+    return this.get<PageResponse<BranchDto>>(this.branchUrl, httpParams);
+  }
+
+  getAllBranches(): Observable<ApiResponse<BranchDto[]>> {
+    return this.get<BranchDto[]>(`${this.branchUrl}/dropdown`);
   }
 
   createBranch(request: any): Observable<ApiResponse<BranchDto>> {

@@ -20,32 +20,32 @@ public class TestDriveFleetController {
     private final TestDriveFleetService testDriveFleetService;
 
     @PostMapping("/filter")
-    @PreAuthorize("hasAuthority('TEST_DRIVE_READ')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasAuthority('TEST_DRIVE_READ')")
     public ResponseEntity<com.hyundai.dms.common.ApiResponse<com.hyundai.dms.common.PageResponse<TestDriveFleetDto>>> searchFleet(
             @RequestBody com.hyundai.dms.common.filter.FilterRequest filterRequest) {
         return ResponseEntity.ok(com.hyundai.dms.common.ApiResponse.success(testDriveFleetService.searchFleet(filterRequest)));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('TEST_DRIVE_READ')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasAuthority('TEST_DRIVE_READ')")
     public ResponseEntity<TestDriveFleetDto> getFleet(@PathVariable Long id) {
         return ResponseEntity.ok(testDriveFleetService.getFleetById(id));
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('TEST_DRIVE_CREATE')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasAuthority('TEST_DRIVE_CREATE')")
     public ResponseEntity<TestDriveFleetDto> createFleet(@RequestBody TestDriveFleetDto dto) {
         return ResponseEntity.ok(testDriveFleetService.createFleet(dto));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('TEST_DRIVE_UPDATE')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasAuthority('TEST_DRIVE_UPDATE')")
     public ResponseEntity<TestDriveFleetDto> updateFleet(@PathVariable Long id, @RequestBody TestDriveFleetDto dto) {
         return ResponseEntity.ok(testDriveFleetService.updateFleet(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('TEST_DRIVE_DELETE')")
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasAuthority('TEST_DRIVE_DELETE')")
     public ResponseEntity<Void> deleteFleet(@PathVariable Long id) {
         testDriveFleetService.deleteFleet(id);
         return ResponseEntity.ok().build();

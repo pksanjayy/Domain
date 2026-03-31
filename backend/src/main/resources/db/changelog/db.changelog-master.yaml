@@ -279,3 +279,13 @@ databaseChangeLog:
           DELETE FROM leads WHERE id IN (100, 101, 102, 103);
           DELETE FROM vehicles WHERE id IN (100, 101, 102, 103);
           DELETE FROM customers WHERE id IN (100, 101, 102, 103);
+  - changeSet:
+      id: 20
+      author: antigravity
+      comment: "Add DELETED status to vehicles enum v13.0"
+      sqlFile:
+        path: v13.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE vehicles MODIFY COLUMN status ENUM('IN_TRANSIT','GRN_RECEIVED','PDI_PENDING','PDI_DONE','AVAILABLE','HOLD','BOOKED','INVOICED','TRANSFERRED') NOT NULL DEFAULT 'IN_TRANSIT';

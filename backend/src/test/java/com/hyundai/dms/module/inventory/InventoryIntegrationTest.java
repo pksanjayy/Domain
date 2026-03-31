@@ -54,7 +54,7 @@ class InventoryIntegrationTest {
                     "colour": "Phantom Black",
                     "fuelType": "DIESEL",
                     "transmission": "AUTOMATIC",
-                    "yearOfManufacture": 2024,
+                    "manufacturedDate": "2024-01-01",
                     "msrp": 1850000,
                     "branchId": 1
                 }

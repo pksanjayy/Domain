@@ -4,7 +4,7 @@ import com.hyundai.dms.common.ApiResponse;
 import com.hyundai.dms.common.PageResponse;
 import com.hyundai.dms.common.PageUtils;
 import com.hyundai.dms.common.filter.FilterRequest;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.common.logging.LogExecution;
 import com.hyundai.dms.module.user.dto.UserDto;
 import com.hyundai.dms.module.user.entity.User;
@@ -19,7 +19,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -50,14 +50,14 @@ public class DemoController {
     @Operation(summary = "Filter test", description = "Demonstrates JPA Specification engine with FilterRequest")
     @LogExecution
     public ResponseEntity<ApiResponse<PageResponse<UserDto>>> filterTest(FilterRequest filterRequest) {
-        SpecificationBuilder<User> specBuilder = new SpecificationBuilder<>();
-        Specification<User> spec = specBuilder.build(filterRequest.filters());
+        QueryDslPredicateBuilder<User> predicateBuilder = new QueryDslPredicateBuilder<>(User.class);
+        Predicate predicate = predicateBuilder.build(filterRequest.filters());
 
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts()
         );
 
-        Page<User> page = userRepository.findAll(spec, pageRequest);
+        Page<User> page = userRepository.findAll(predicate, pageRequest);
         Page<UserDto> dtoPage = page.map(this::toDto);
         PageResponse<UserDto> response = PageUtils.toPageResponse(dtoPage);
 

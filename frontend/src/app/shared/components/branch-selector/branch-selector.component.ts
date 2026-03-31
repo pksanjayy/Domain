@@ -84,9 +84,9 @@ export class BranchSelectorComponent implements OnInit, OnDestroy {
 
     if (this.isAdmin) {
       // Load branches for dropdown
-      this.adminService.getBranches().subscribe({
+      this.adminService.getAllBranches().subscribe({
         next: (res) => {
-          this.branches = (res.data || []).filter(b => b.isActive);
+          this.branches = (res.data || []).filter((b: BranchDto) => b.isActive);
         },
       });
 

@@ -27,7 +27,14 @@ export class BookingListComponent implements OnInit {
   pageSize = 20;
   pageIndex = 0;
   isLoading = false;
+  availableYears: number[] = [];
   private destroy$ = new Subject<void>();
+
+  filterValues: any = {
+    globalSearch: '',
+    status: '',
+    yearFilter: ''
+  };
 
   isDrawerOpen = false;
   bookingForm!: FormGroup;
@@ -44,6 +51,8 @@ export class BookingListComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.loadBookings();
+    this.generateYears();
+    this.dataSource.filterPredicate = this.createFilter();
     
     this.branchContext.activeBranchId$
       .pipe(takeUntil(this.destroy$))
@@ -51,6 +60,32 @@ export class BookingListComponent implements OnInit {
         this.pageIndex = 0;
         this.loadBookings();
       });
+  }
+
+  createFilter(): (data: BookingDto, filter: string) => boolean {
+    return (data: BookingDto, filter: string): boolean => {
+      const searchTerms = JSON.parse(filter);
+      const matchSearch = !!(!searchTerms.globalSearch ||
+        data.customerName?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.vehicleVin?.toLowerCase().includes(searchTerms.globalSearch) ||
+        data.vehicleModel?.toLowerCase().includes(searchTerms.globalSearch));
+      const matchStatus = !!(!searchTerms.status || data.status === searchTerms.status);
+      
+      let matchYear = true;
+      if (searchTerms.yearFilter) {
+        const bookedYear = new Date(data.bookingDate).getFullYear();
+        matchYear = bookedYear === Number(searchTerms.yearFilter);
+      }
+      
+      return matchSearch && matchStatus && matchYear;
+    };
+  }
+
+  generateYears(): void {
+    const currentYear = new Date().getFullYear();
+    for (let i = currentYear; i >= 2024; i--) {
+      this.availableYears.push(i);
+    }
   }
 
   ngOnDestroy(): void {
@@ -102,8 +137,18 @@ export class BookingListComponent implements OnInit {
   }
 
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.filterValues.globalSearch = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+
+  onStatusFilterChange(status: string): void {
+    this.filterValues.status = status;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+  }
+
+  onYearFilterChange(year: string): void {
+    this.filterValues.yearFilter = year;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
   }
 
   openCreateDrawer(): void {

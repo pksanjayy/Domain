@@ -80,14 +80,24 @@ export class UserManagementComponent implements OnInit {
     this.adminService.getRoles().subscribe({
       next: (res) => (this.roles = res.data),
     });
-    this.adminService.getBranches().subscribe({
+    this.adminService.getAllBranches().subscribe({
       next: (res) => (this.branches = res.data),
     });
   }
 
   loadUsers(): void {
     this.isLoading = true;
-    this.adminService.getUsers(this.searchQuery, this.pageIndex, this.pageSize).subscribe({
+    const params: any = {
+      search: this.searchQuery,
+      page: this.pageIndex,
+      size: this.pageSize
+    };
+
+    if (this.filterRole) params.roleId = Number(this.filterRole);
+    if (this.filterBranch) params.branchId = Number(this.filterBranch);
+    if (this.filterStatus !== '') params.isActive = this.filterStatus === 'true';
+
+    this.adminService.getUsers(params).subscribe({
       next: (res) => {
         this.dataSource.data = res.data.content;
         this.totalElements = res.data.totalElements;
@@ -101,6 +111,24 @@ export class UserManagementComponent implements OnInit {
 
   onSearch(event: Event): void {
     this.searchQuery = (event.target as HTMLInputElement).value;
+    this.pageIndex = 0;
+    this.loadUsers();
+  }
+
+  onRoleChange(value: string): void {
+    this.filterRole = value;
+    this.pageIndex = 0;
+    this.loadUsers();
+  }
+
+  onBranchChange(value: string): void {
+    this.filterBranch = value;
+    this.pageIndex = 0;
+    this.loadUsers();
+  }
+
+  onStatusChange(value: string): void {
+    this.filterStatus = value;
     this.pageIndex = 0;
     this.loadUsers();
   }

@@ -6,11 +6,39 @@
     </button>
   </div>
 
-  <mat-form-field appearance="outline" class="filter-field">
-    <mat-label>Search Leads</mat-label>
-    <input matInput (keyup)="applyFilter($event)" placeholder="E.g. Customer, Model, Source">
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+  <div class="filters-panel">
+    <mat-form-field appearance="outline">
+      <mat-label>Search Leads</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="E.g. Customer, Mobile, Model">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Stage</mat-label>
+      <mat-select (selectionChange)="onStageFilterChange($event.value)">
+        <mat-option value="">All Stages</mat-option>
+        <mat-option value="NEW_LEAD">New Lead</mat-option>
+        <mat-option value="TEST_DRIVE">Test Drive</mat-option>
+        <mat-option value="QUOTATION">Quotation</mat-option>
+        <mat-option value="BOOKING">Booking</mat-option>
+        <mat-option value="DELIVERY_READY">Delivery Ready</mat-option>
+        <mat-option value="DELIVERED">Delivered</mat-option>
+        <mat-option value="LOST">Lost</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Source</mat-label>
+      <mat-select (selectionChange)="onSourceFilterChange($event.value)">
+        <mat-option value="">All Sources</mat-option>
+        <mat-option value="WALK_IN">Walk-In</mat-option>
+        <mat-option value="PHONE">Phone</mat-option>
+        <mat-option value="REFERRAL">Referral</mat-option>
+        <mat-option value="ONLINE">Online</mat-option>
+        <mat-option value="CAMP">Camp</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
 

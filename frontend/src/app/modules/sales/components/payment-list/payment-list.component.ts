@@ -26,7 +26,8 @@ export class PaymentListComponent implements OnInit, OnDestroy {
   isLoading = true;
   filterValues: any = {
     globalSearch: '',
-    status: ''
+    status: '',
+    method: ''
   };
 
   constructor(
@@ -52,13 +53,14 @@ export class PaymentListComponent implements OnInit, OnDestroy {
     return (data: Payment, filter: string): boolean => {
       let searchTerms = JSON.parse(filter);
       
-      const matchSearch = data.customerName?.toLowerCase().indexOf(searchTerms.globalSearch) !== -1 ||
+      const matchSearch = !!(data.customerName?.toLowerCase().indexOf(searchTerms.globalSearch) !== -1 ||
                           data.transactionId?.toLowerCase().indexOf(searchTerms.globalSearch) !== -1 ||
-                          data.id?.toString().indexOf(searchTerms.globalSearch) !== -1;
+                          data.id?.toString().indexOf(searchTerms.globalSearch) !== -1);
                           
-      const matchStatus = searchTerms.status ? data.paymentStatus === searchTerms.status : true;
+      const matchStatus = !!(searchTerms.status ? data.paymentStatus === searchTerms.status : true);
+      const matchMethod = !!(searchTerms.method ? data.paymentMethod === searchTerms.method : true);
       
-      return matchSearch && matchStatus;
+      return matchSearch && matchStatus && matchMethod;
     };
   }
 
@@ -89,6 +91,14 @@ export class PaymentListComponent implements OnInit, OnDestroy {
 
   onStatusFilterChange(status: string) {
     this.filterValues.status = status;
+    this.dataSource.filter = JSON.stringify(this.filterValues);
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  onMethodFilterChange(method: string) {
+    this.filterValues.method = method;
     this.dataSource.filter = JSON.stringify(this.filterValues);
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();

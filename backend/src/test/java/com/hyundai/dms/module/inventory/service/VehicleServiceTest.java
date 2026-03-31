@@ -1,6 +1,6 @@
 package com.hyundai.dms.module.inventory.service;
 
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+
 import com.hyundai.dms.exception.BusinessRuleException;
 import com.hyundai.dms.module.inventory.dto.VehicleDetailDto;
 import com.hyundai.dms.module.inventory.entity.Vehicle;

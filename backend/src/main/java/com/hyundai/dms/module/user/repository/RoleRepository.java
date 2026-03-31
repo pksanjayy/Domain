@@ -3,7 +3,7 @@ package com.hyundai.dms.module.user.repository;
 import com.hyundai.dms.common.enums.RoleName;
 import com.hyundai.dms.module.user.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
+public interface RoleRepository extends JpaRepository<Role, Long>, QuerydslPredicateExecutor<Role> {
 
     Optional<Role> findByName(RoleName name);
 

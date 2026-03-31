@@ -22,6 +22,18 @@
       <mat-option value="PENDING">Pending</mat-option>
     </mat-select>
   </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Payment Method</mat-label>
+    <mat-select (selectionChange)="onMethodFilterChange($event.value)">
+      <mat-option value="">All Methods</mat-option>
+      <mat-option value="CASH">Cash</mat-option>
+      <mat-option value="CARD">Card</mat-option>
+      <mat-option value="UPI">UPI</mat-option>
+      <mat-option value="CHEQUE">Cheque</mat-option>
+      <mat-option value="NEFT">NEFT</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 
 <div class="mat-elevation-z8 table-container">

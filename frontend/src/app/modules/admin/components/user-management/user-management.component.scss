@@ -34,11 +34,24 @@
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+}
 
-    .search-field {
-      width: 280px;
-      ::ng-deep .mat-mdc-form-field-subscript-wrapper { display: none; }
-    }
+.filters-panel {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+
+  mat-form-field {
+    min-width: 200px;
+    flex: 1;
+  }
+
+  .search-field {
+    flex: 2;
+    min-width: 300px;
   }
 }
 

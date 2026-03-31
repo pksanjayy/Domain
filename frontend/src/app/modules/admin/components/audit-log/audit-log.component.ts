@@ -36,6 +36,7 @@ export class AuditLogComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterForm = this.fb.group({
+      search: [''],
       from: [null],
       to: [null],
       module: [''],
@@ -59,6 +60,7 @@ export class AuditLogComponent implements OnInit {
     if (filters.to) {
       params.to = new Date(filters.to).toISOString();
     }
+    if (filters.search) params.search = filters.search;
     if (filters.module) params.module = filters.module;
     if (filters.action) params.action = filters.action;
     if (filters.userId) params.userId = filters.userId;

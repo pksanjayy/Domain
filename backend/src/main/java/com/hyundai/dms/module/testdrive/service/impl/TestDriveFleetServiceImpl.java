@@ -1,7 +1,6 @@
 package com.hyundai.dms.module.testdrive.service.impl;
 
-import com.hyundai.dms.common.filter.FilterCriteria;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.exception.ResourceNotFoundException;
 import com.hyundai.dms.module.testdrive.dto.TestDriveFleetDto;
 import com.hyundai.dms.module.testdrive.entity.TestDriveFleet;
@@ -17,7 +16,7 @@ import com.hyundai.dms.common.filter.FilterRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +29,12 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     private final TestDriveFleetRepository testDriveFleetRepository;
     private final TestDriveFleetMapper testDriveFleetMapper;
     private final BranchRepository branchRepository;
-    private final SpecificationBuilder<TestDriveFleet> specificationBuilder = new SpecificationBuilder<>();
+    private final QueryDslPredicateBuilder<TestDriveFleet> predicateBuilder = new QueryDslPredicateBuilder<>(TestDriveFleet.class);
 
     @Override
     @Transactional(readOnly = true)
     public PageResponse<TestDriveFleetDto> searchFleet(FilterRequest filterRequest) {
-        Specification<TestDriveFleet> spec = specificationBuilder.build(filterRequest.filters());
+        Predicate predicate = predicateBuilder.build(filterRequest.filters());
         
         List<Sort.Order> orders = filterRequest.sorts().stream()
                 .map(s -> new Sort.Order(Sort.Direction.fromString(s.direction()), s.field()))
@@ -43,7 +42,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
                 
         Pageable pageable = PageRequest.of(filterRequest.page(), filterRequest.size(), Sort.by(orders));
         
-        Page<TestDriveFleet> result = testDriveFleetRepository.findAll(spec, pageable);
+        Page<TestDriveFleet> result = testDriveFleetRepository.findAll(predicate, pageable);
         return com.hyundai.dms.common.PageUtils.toPageResponse(result.map(testDriveFleetMapper::toDto));
     }
 

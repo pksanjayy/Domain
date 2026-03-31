@@ -6,7 +6,7 @@ import com.hyundai.dms.common.PageUtils;
 import com.hyundai.dms.common.enums.ActionType;
 import com.hyundai.dms.common.enums.RoleName;
 import com.hyundai.dms.common.filter.FilterRequest;
-import com.hyundai.dms.common.filter.SpecificationBuilder;
+import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.common.logging.LogExecution;
 import com.hyundai.dms.exception.BusinessRuleException;
 import com.hyundai.dms.exception.DuplicateResourceException;
@@ -30,7 +30,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+import com.querydsl.core.types.Predicate;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -51,17 +51,25 @@ public class VehicleService {
     private final VehicleMapper vehicleMapper;
     private final StockStatusTransitionValidator transitionValidator;
     private final NotificationService notificationService;
-    private final SpecificationBuilder<Vehicle> specificationBuilder = new SpecificationBuilder<>();
+    private final QueryDslPredicateBuilder<Vehicle> predicateBuilder = new QueryDslPredicateBuilder<>(Vehicle.class);
 
     // ── Reads ──
 
     @LogExecution
     @Transactional(readOnly = true)
     public PageResponse<VehicleListDto> listVehicles(FilterRequest filterRequest) {
-        Specification<Vehicle> spec = specificationBuilder.build(filterRequest.filters());
+        List<com.hyundai.dms.common.filter.FilterCriteria> filters = new ArrayList<>(filterRequest.filters());
+        
+        // Always exclude DELETED vehicles if not explicitly requested
+        boolean hasStatusFilter = filters.stream().anyMatch(f -> f.field().equals("status"));
+        if (!hasStatusFilter) {
+            filters.add(new com.hyundai.dms.common.filter.FilterCriteria("status", "neq", "DELETED"));
+        }
+
+        Predicate predicate = predicateBuilder.build(filters);
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<Vehicle> page = vehicleRepository.findAll(spec, pageRequest);
+        Page<Vehicle> page = vehicleRepository.findAll(predicate, pageRequest);
         Page<VehicleListDto> dtoPage = page.map(vehicleMapper::toListDto);
         return PageUtils.toPageResponse(dtoPage);
     }
@@ -167,6 +175,7 @@ public class VehicleService {
     @Transactional(readOnly = true)
     public List<VehicleListDto> searchByVin(String vin) {
         return vehicleRepository.findByVinContainingIgnoreCase(vin).stream()
+                .filter(v -> v.getStatus() != StockStatus.DELETED)
                 .map(vehicleMapper::toListDto)
                 .collect(Collectors.toList());
     }
@@ -334,12 +343,13 @@ public class VehicleService {
 
     @LogExecution
     @Audited(entity = "Vehicle", action = ActionType.DELETE)
-    @PreAuthorize("hasPermission(null, 'INVENTORY', 'DELETE')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @Transactional
     public void deleteVehicle(Long id) {
         Vehicle vehicle = findVehicleOrThrow(id);
-        vehicleRepository.delete(vehicle);
-        log.info("Soft-deleted vehicle id={}", id);
+        vehicle.setStatus(StockStatus.DELETED);
+        vehicleRepository.save(vehicle);
+        log.info("Soft-deleted vehicle id={} (Status set to DELETED)", id);
     }
 
     // ── Helpers ──
