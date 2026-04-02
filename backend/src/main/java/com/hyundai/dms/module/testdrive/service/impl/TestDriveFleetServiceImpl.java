@@ -3,23 +3,26 @@ package com.hyundai.dms.module.testdrive.service.impl;
 import com.hyundai.dms.common.filter.QueryDslPredicateBuilder;
 import com.hyundai.dms.exception.ResourceNotFoundException;
 import com.hyundai.dms.module.testdrive.dto.TestDriveFleetDto;
+import com.hyundai.dms.module.testdrive.entity.QTestDriveFleet;
 import com.hyundai.dms.module.testdrive.entity.TestDriveFleet;
 import com.hyundai.dms.module.testdrive.mapper.TestDriveFleetMapper;
 import com.hyundai.dms.module.testdrive.repository.TestDriveFleetRepository;
 import com.hyundai.dms.module.testdrive.service.TestDriveFleetService;
 import com.hyundai.dms.module.user.entity.Branch;
 import com.hyundai.dms.module.user.repository.BranchRepository;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import com.hyundai.dms.common.PageResponse;
 import com.hyundai.dms.common.filter.FilterRequest;
+import com.hyundai.dms.common.filter.FilterCriteria;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
-import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,7 +37,32 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<TestDriveFleetDto> searchFleet(FilterRequest filterRequest) {
-        Predicate predicate = predicateBuilder.build(filterRequest.filters());
+        // Extract globalSearch before passing to generic predicate builder
+        String globalSearch = null;
+        List<FilterCriteria> remaining = new ArrayList<>();
+        if (filterRequest.filters() != null) {
+            for (FilterCriteria f : filterRequest.filters()) {
+                if ("globalSearch".equals(f.field())) {
+                    globalSearch = (String) f.value();
+                } else {
+                    remaining.add(f);
+                }
+            }
+        }
+
+        BooleanBuilder builder = new BooleanBuilder(predicateBuilder.build(remaining));
+
+        if (globalSearch != null && !globalSearch.isBlank()) {
+            QTestDriveFleet q = QTestDriveFleet.testDriveFleet;
+            builder.and(
+                q.vin.containsIgnoreCase(globalSearch)
+                .or(q.brand.containsIgnoreCase(globalSearch))
+                .or(q.model.containsIgnoreCase(globalSearch))
+                .or(q.variant.containsIgnoreCase(globalSearch))
+                .or(q.fleetId.containsIgnoreCase(globalSearch))
+                .or(q.registrationNumber.containsIgnoreCase(globalSearch))
+            );
+        }
         
         List<Sort.Order> orders = filterRequest.sorts().stream()
                 .map(s -> new Sort.Order(Sort.Direction.fromString(s.direction()), s.field()))
@@ -42,7 +70,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
                 
         Pageable pageable = PageRequest.of(filterRequest.page(), filterRequest.size(), Sort.by(orders));
         
-        Page<TestDriveFleet> result = testDriveFleetRepository.findAll(predicate, pageable);
+        Page<TestDriveFleet> result = testDriveFleetRepository.findAll(builder, pageable);
         return com.hyundai.dms.common.PageUtils.toPageResponse(result.map(testDriveFleetMapper::toDto));
     }
 

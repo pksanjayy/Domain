@@ -3,10 +3,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestDriveService } from '../../services/testdrive.service';
-import { TestDriveBookingStatus } from '../../models/testdrive.model';
+import { TestDriveBookingStatus, TestDriveFleet } from '../../models/testdrive.model';
+import { SalesService } from '../../../sales/services/sales.service';
+import { AdminService } from '../../../admin/services/admin.service';
+import { CustomerDto } from '../../../sales/models/sales.model';
+import { UserListDto } from '../../../admin/models/admin.model';
+import { FilterRequest } from '../../../../core/models';
 
 @Component({
   selector: 'app-booking-form',
+// ... template omitted for replace target ... //
   template: `
     <div class="page-container">
       <div class="page-header">
@@ -24,15 +30,19 @@ import { TestDriveBookingStatus } from '../../models/testdrive.model';
           
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Customer ID</mat-label>
-              <input matInput type="number" formControlName="customerId" placeholder="Enter Customer ID">
-              <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">Customer ID is required</mat-error>
+              <mat-label>Customer</mat-label>
+              <mat-select formControlName="customerId">
+                <mat-option *ngFor="let c of customers" [value]="c.id">{{c.name}} ({{c.mobile}})</mat-option>
+              </mat-select>
+              <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">Customer is required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Fleet Vehicle ID</mat-label>
-              <input matInput type="number" formControlName="fleetId" placeholder="Enter Fleet ID">
-              <mat-error *ngIf="bookingForm.get('fleetId')?.hasError('required')">Fleet ID is required</mat-error>
+              <mat-label>Fleet Vehicle</mat-label>
+              <mat-select formControlName="fleetId">
+                <mat-option *ngFor="let f of fleets" [value]="f.id">{{f.model}} - {{f.vin}} ({{f.fleetId}})</mat-option>
+              </mat-select>
+              <mat-error *ngIf="bookingForm.get('fleetId')?.hasError('required')">Fleet is required</mat-error>
             </mat-form-field>
           </div>
 
@@ -58,8 +68,10 @@ import { TestDriveBookingStatus } from '../../models/testdrive.model';
 
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Sales Executive ID (Optional)</mat-label>
-              <input matInput type="number" formControlName="salesExecutiveId">
+              <mat-label>Sales Executive</mat-label>
+              <mat-select formControlName="salesExecutiveId">
+                <mat-option *ngFor="let u of salesExecutives" [value]="u.id">{{u.username}}</mat-option>
+              </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="form-field">
@@ -111,10 +123,15 @@ export class BookingFormComponent implements OnInit {
   isSubmitting = false;
 
   statuses = Object.values(TestDriveBookingStatus);
+  customers: CustomerDto[] = [];
+  fleets: TestDriveFleet[] = [];
+  salesExecutives: UserListDto[] = [];
 
   constructor(
     private fb: FormBuilder,
     private testDriveService: TestDriveService,
+    private salesService: SalesService,
+    private adminService: AdminService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
@@ -135,6 +152,8 @@ export class BookingFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loadDependencies();
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -142,6 +161,19 @@ export class BookingFormComponent implements OnInit {
         this.editingId = +id;
         this.loadBookingData(this.editingId);
       }
+    });
+  }
+
+  loadDependencies() {
+    const defaultRequest: FilterRequest = { page: 0, size: 1000, filters: [], sorts: [] };
+    this.salesService.getCustomers(defaultRequest).subscribe(res => {
+      if (res.data && res.data.content) this.customers = res.data.content;
+    });
+    this.testDriveService.searchFleet(defaultRequest).subscribe(res => {
+      if (res.data && res.data.content) this.fleets = res.data.content;
+    });
+    this.adminService.getUsers(defaultRequest).subscribe(res => {
+      if (res.data && res.data.content) this.salesExecutives = res.data.content;
     });
   }
 

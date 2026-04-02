@@ -19,9 +19,7 @@ public class StockStatusTransitionValidator {
 
     static {
         ALLOWED_TRANSITIONS.put(StockStatus.IN_TRANSIT, Set.of(StockStatus.GRN_RECEIVED));
-        ALLOWED_TRANSITIONS.put(StockStatus.GRN_RECEIVED, Set.of(StockStatus.PDI_PENDING));
-        ALLOWED_TRANSITIONS.put(StockStatus.PDI_PENDING, Set.of(StockStatus.PDI_DONE));
-        ALLOWED_TRANSITIONS.put(StockStatus.PDI_DONE, Set.of(StockStatus.AVAILABLE));
+        ALLOWED_TRANSITIONS.put(StockStatus.GRN_RECEIVED, Set.of(StockStatus.AVAILABLE));
         ALLOWED_TRANSITIONS.put(StockStatus.AVAILABLE, Set.of(StockStatus.HOLD, StockStatus.BOOKED, StockStatus.TRANSFERRED));
         ALLOWED_TRANSITIONS.put(StockStatus.HOLD, Set.of(StockStatus.AVAILABLE, StockStatus.BOOKED));
         ALLOWED_TRANSITIONS.put(StockStatus.BOOKED, Set.of(StockStatus.INVOICED, StockStatus.AVAILABLE));

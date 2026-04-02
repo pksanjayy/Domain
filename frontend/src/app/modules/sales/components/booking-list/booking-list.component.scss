@@ -37,6 +37,15 @@
   box-shadow: var(--dms-card-shadow);
 
   table { width: 100%; }
+
+  .clickable-row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
 }
 
 .status-badge {

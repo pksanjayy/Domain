@@ -44,8 +44,6 @@ export class VehicleListComponent implements OnInit, OnDestroy {
       options: [
         { value: 'IN_TRANSIT', label: 'In Transit' },
         { value: 'GRN_RECEIVED', label: 'GRN Received' },
-        { value: 'PDI_PENDING', label: 'PDI Pending' },
-        { value: 'PDI_DONE', label: 'PDI Done' },
         { value: 'AVAILABLE', label: 'Available' },
         { value: 'HOLD', label: 'On Hold' },
         { value: 'BOOKED', label: 'Booked' },
@@ -180,8 +178,6 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     const classMap: Record<string, string> = {
       IN_TRANSIT: 'status-transit',
       GRN_RECEIVED: 'status-stock',
-      PDI_PENDING: 'status-pdi-pending',
-      PDI_DONE: 'status-pdi-passed',
       AVAILABLE: 'status-available',
       HOLD: 'status-reserved',
       BOOKED: 'status-sold',

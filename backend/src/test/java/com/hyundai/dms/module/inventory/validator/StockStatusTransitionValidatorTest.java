@@ -28,21 +28,9 @@ class StockStatusTransitionValidatorTest {
     }
 
     @Test
-    @DisplayName("GRN_RECEIVED → PDI_PENDING is valid")
-    void grnReceivedToPdiPending() {
-        assertDoesNotThrow(() -> validator.validate(StockStatus.GRN_RECEIVED, StockStatus.PDI_PENDING));
-    }
-
-    @Test
-    @DisplayName("PDI_PENDING → PDI_DONE is valid")
-    void pdiPendingToPdiDone() {
-        assertDoesNotThrow(() -> validator.validate(StockStatus.PDI_PENDING, StockStatus.PDI_DONE));
-    }
-
-    @Test
-    @DisplayName("PDI_DONE → AVAILABLE is valid")
-    void pdiDoneToAvailable() {
-        assertDoesNotThrow(() -> validator.validate(StockStatus.PDI_DONE, StockStatus.AVAILABLE));
+    @DisplayName("GRN_RECEIVED → AVAILABLE is valid (bypass PDI)")
+    void grnReceivedToAvailable() {
+        assertDoesNotThrow(() -> validator.validate(StockStatus.GRN_RECEIVED, StockStatus.AVAILABLE));
     }
 
     @Test
@@ -123,13 +111,6 @@ class StockStatusTransitionValidatorTest {
     void inTransitToAvailable_Invalid() {
         assertThrows(BusinessRuleException.class,
                 () -> validator.validate(StockStatus.IN_TRANSIT, StockStatus.AVAILABLE));
-    }
-
-    @Test
-    @DisplayName("PDI_PENDING → AVAILABLE is invalid (must pass PDI_DONE first)")
-    void pdiPendingToAvailable_Invalid() {
-        assertThrows(BusinessRuleException.class,
-                () -> validator.validate(StockStatus.PDI_PENDING, StockStatus.AVAILABLE));
     }
 
     // ── getAllowedTransitions ──

@@ -110,6 +110,39 @@ public class BookingService {
         return bookingMapper.toDto(booking);
     }
 
+    @LogExecution
+    @Audited(entity = "Booking", action = ActionType.UPDATE)
+    @PreAuthorize("hasRole('ROLE_SALES_CRM_EXEC') or hasRole('ROLE_SUPER_ADMIN')")
+    @Transactional
+    public BookingDto updateBooking(Long id, com.hyundai.dms.module.sales.dto.UpdateBookingRequest request) {
+        Booking booking = findBookingOrThrow(id);
+        
+        if (!booking.getVehicle().getId().equals(request.getVehicleId())) {
+            Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Vehicle", request.getVehicleId()));
+            booking.setVehicle(vehicle);
+        }
+
+        booking.setTotalAmount(request.getTotalAmount());
+        booking.setAmountPaid(request.getAmountPaid());
+        booking.setBookingDate(request.getBookingDate());
+        booking.setExpectedDelivery(request.getExpectedDelivery());
+
+        booking = bookingRepository.save(booking);
+        log.info("Updated booking id={}", id);
+        return bookingMapper.toDto(booking);
+    }
+
+    @LogExecution
+    @Audited(entity = "Booking", action = ActionType.DELETE)
+    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
+    @Transactional
+    public void deleteBooking(Long id) {
+        Booking booking = findBookingOrThrow(id);
+        bookingRepository.delete(booking);
+        log.info("Deleted booking id={}", id);
+    }
+
     private Booking findBookingOrThrow(Long id) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking", id));

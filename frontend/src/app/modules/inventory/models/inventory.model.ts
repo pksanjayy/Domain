@@ -2,9 +2,6 @@
 export type StockStatus =
   | 'IN_TRANSIT'
   | 'IN_STOCK'
-  | 'PDI_PENDING'
-  | 'PDI_PASSED'
-  | 'PDI_FAILED'
   | 'AVAILABLE'
   | 'RESERVED'
   | 'SOLD'
@@ -15,10 +12,6 @@ export type FuelType = 'PETROL' | 'DIESEL' | 'ELECTRIC' | 'HYBRID' | 'CNG';
 export type TransmissionType = 'MANUAL' | 'AUTOMATIC' | 'CVT' | 'DCT' | 'AMT';
 
 export type ArrivalCondition = 'GOOD' | 'DAMAGED' | 'PARTIAL';
-
-export type PdiItemResult = 'PASS' | 'FAIL' | 'NA';
-
-export type PdiOverallStatus = 'PENDING' | 'IN_PROGRESS' | 'PASSED' | 'FAILED';
 
 export type TransferStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'COMPLETED';
 
@@ -132,35 +125,6 @@ export interface CreateGrnRequest {
   arrivalDate: string;
   arrivalCondition: ArrivalCondition;
   remarks: string;
-}
-
-// ─── PDI DTOs ───
-export interface PdiChecklistItemDto {
-  id: number;
-  category: string;
-  itemName: string;
-  description: string;
-  result: PdiItemResult | null;
-  photoUrl: string | null;
-  remarks: string;
-  sortOrder: number;
-}
-
-export interface PdiChecklistDto {
-  id: number;
-  vehicleId: number;
-  vehicleVin: string;
-  overallStatus: PdiOverallStatus;
-  completedAt: string | null;
-  completedBy: string | null;
-  items: PdiChecklistItemDto[];
-  createdAt: string;
-}
-
-export interface UpdatePdiItemRequest {
-  result: PdiItemResult;
-  remarks: string;
-  photoUrl: string | null;
 }
 
 // ─── Stock Transfer DTOs ───

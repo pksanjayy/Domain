@@ -42,9 +42,14 @@ public class CustomerService {
     @Transactional(readOnly = true)
     public PageResponse<CustomerDto> listCustomers(FilterRequest filterRequest) {
         Predicate predicate = predicateBuilder.build(filterRequest.filters());
+        
+        com.hyundai.dms.module.sales.entity.QCustomer qCustomer = com.hyundai.dms.module.sales.entity.QCustomer.customer;
+        com.querydsl.core.BooleanBuilder finalPredicate = new com.querydsl.core.BooleanBuilder(predicate);
+        finalPredicate.and(qCustomer.deleted.isFalse());
+        
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<Customer> page = customerRepository.findAll(predicate, pageRequest);
+        Page<Customer> page = customerRepository.findAll(finalPredicate, pageRequest);
         Page<CustomerDto> dtoPage = page.map(customerMapper::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }
@@ -109,7 +114,8 @@ public class CustomerService {
     @Transactional
     public void deleteCustomer(Long id) {
         Customer customer = findCustomerOrThrow(id);
-        customerRepository.delete(customer);
+        customer.setDeleted(true);
+        customerRepository.save(customer);
         log.info("Deleted customer id={}", id);
     }
 

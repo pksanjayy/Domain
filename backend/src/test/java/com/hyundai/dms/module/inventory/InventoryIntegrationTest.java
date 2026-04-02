@@ -37,8 +37,6 @@ class InventoryIntegrationTest {
     private StockStatusTransitionValidator transitionValidator;
 
     private static Long vehicleId;
-    private static Long grnId;
-    private static Long checklistId;
 
     @Test
     @Order(1)
@@ -92,12 +90,10 @@ class InventoryIntegrationTest {
     @Order(3)
     @DisplayName("State machine: full forward path is valid")
     void verifyFullForwardPath() {
-        // IN_TRANSIT → GRN_RECEIVED → PDI_PENDING → PDI_DONE → AVAILABLE → BOOKED → INVOICED
+        // IN_TRANSIT → GRN_RECEIVED → AVAILABLE → BOOKED → INVOICED
         assertDoesNotThrow(() -> {
             transitionValidator.validate(StockStatus.IN_TRANSIT, StockStatus.GRN_RECEIVED);
-            transitionValidator.validate(StockStatus.GRN_RECEIVED, StockStatus.PDI_PENDING);
-            transitionValidator.validate(StockStatus.PDI_PENDING, StockStatus.PDI_DONE);
-            transitionValidator.validate(StockStatus.PDI_DONE, StockStatus.AVAILABLE);
+            transitionValidator.validate(StockStatus.GRN_RECEIVED, StockStatus.AVAILABLE);
             transitionValidator.validate(StockStatus.AVAILABLE, StockStatus.BOOKED);
             transitionValidator.validate(StockStatus.BOOKED, StockStatus.INVOICED);
         });

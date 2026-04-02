@@ -8,7 +8,7 @@
 INSERT INTO vehicles (id, vin, brand, model, variant, colour, fuel_type, transmission, manufactured_date, msrp, status, branch_id, engine_number, chassis_number, key_number, exterior_colour_code, interior_colour_code, created_by) VALUES
 (20, 'MH12VIN0000000020', 'Hyundai', 'Creta', 'SX Opt', 'Phantom Black', 'PETROL', 'AUTOMATIC', '2023-11-01', 1900000.00, 'AVAILABLE', 2, 'ENGMUM001', 'CHSMUM001', 'KEYMUM001', 'BLK01', 'INTBLK01', 'system'),
 (21, 'MH12VIN0000000021', 'Hyundai', 'Venue', 'SX', 'Typhoon Silver', 'DIESEL', 'MANUAL', '2023-11-05', 1300000.00, 'AVAILABLE', 2, 'ENGMUM002', 'CHSMUM002', 'KEYMUM002', 'SLV01', 'INTBLK02', 'system'),
-(22, 'MH12VIN0000000022', 'Hyundai', 'i20', 'Asta (O)', 'Fiery Red', 'PETROL', 'AUTOMATIC', '2023-11-10', 1150000.00, 'PDI_PENDING', 2, 'ENGMUM003', 'CHSMUM003', 'KEYMUM003', 'RED01', 'INTGRY01', 'system');
+(22, 'MH12VIN0000000022', 'Hyundai', 'i20', 'Asta (O)', 'Fiery Red', 'PETROL', 'AUTOMATIC', '2023-11-10', 1150000.00, 'AVAILABLE', 2, 'ENGMUM003', 'CHSMUM003', 'KEYMUM003', 'RED01', 'INTGRY01', 'system');
 
 -- Inventory: GRN Records
 INSERT INTO grn_records (id, grn_number, vehicle_id, transporter_name, dispatch_date, received_date, condition_on_arrival, remarks, branch_id, created_by) VALUES

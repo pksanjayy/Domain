@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -41,6 +42,7 @@ export class LeadListComponent implements OnInit, OnDestroy {
   isDrawerOpen = false;
   leadForm!: FormGroup;
   isSubmitting = false;
+  editingLeadId: number | null = null;
 
   branches: BranchDto[] = [];
   users: UserListDto[] = [];
@@ -55,6 +57,7 @@ export class LeadListComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private branchContext: BranchContextService,
+    private router: Router
   ) {}
 
 
@@ -147,6 +150,7 @@ export class LeadListComponent implements OnInit, OnDestroy {
   }
 
   openCreateDrawer(): void {
+    this.editingLeadId = null;
     this.leadForm.reset({
       branchId: this.branchContext.getActiveBranchId(),
       source: 'WALK_IN'
@@ -154,9 +158,21 @@ export class LeadListComponent implements OnInit, OnDestroy {
     this.isDrawerOpen = true;
   }
 
+  editLead(lead: LeadDto): void {
+    this.editingLeadId = lead.id;
+    this.leadForm.patchValue({
+      customerId: lead.customerId,
+      assignedToId: lead.assignedToId,
+      modelInterested: lead.modelInterested,
+      source: lead.source,
+      branchId: lead.branchId
+    });
+    this.isDrawerOpen = true;
+  }
 
   closeDrawer(): void {
     this.isDrawerOpen = false;
+    this.editingLeadId = null;
   }
 
   onSubmit(): void {
@@ -166,49 +182,40 @@ export class LeadListComponent implements OnInit, OnDestroy {
     }
     this.isSubmitting = true;
     const request: CreateLeadRequest = this.leadForm.value;
-    this.salesService.createLead(request).subscribe({
-      next: () => {
-        this.snackBar.open('Lead created', 'Close', { duration: 3000 });
-        this.closeDrawer();
-        this.loadLeads();
-        this.isSubmitting = false;
-      },
-      error: (err) => {
-        const message = err?.error?.error?.message || 'Failed to create lead';
-        this.snackBar.open(message, 'Close', { duration: 5000 });
-        this.isSubmitting = false;
-      },
-    });
+
+    if (this.editingLeadId) {
+      this.salesService.updateLead(this.editingLeadId, request).subscribe({
+        next: () => {
+          this.snackBar.open('Lead updated', 'Close', { duration: 3000 });
+          this.closeDrawer();
+          this.loadLeads();
+          this.isSubmitting = false;
+        },
+        error: (err) => {
+          const message = err?.error?.error?.message || 'Failed to update lead';
+          this.snackBar.open(message, 'Close', { duration: 5000 });
+          this.isSubmitting = false;
+        },
+      });
+    } else {
+      this.salesService.createLead(request).subscribe({
+        next: () => {
+          this.snackBar.open('Lead created', 'Close', { duration: 3000 });
+          this.closeDrawer();
+          this.loadLeads();
+          this.isSubmitting = false;
+        },
+        error: (err) => {
+          const message = err?.error?.error?.message || 'Failed to create lead';
+          this.snackBar.open(message, 'Close', { duration: 5000 });
+          this.isSubmitting = false;
+        },
+      });
+    }
   }
 
-  transitionStage(lead: LeadDto, newStage: LeadStage): void {
-    const message = newStage === 'LOST'
-      ? `Mark lead for "${lead.customerName}" as LOST?`
-      : `Move lead for "${lead.customerName}" to ${newStage}?`;
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Transition Lead Stage',
-        message,
-        confirmText: 'Confirm',
-        confirmColor: newStage === 'LOST' ? 'warn' : 'primary',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (confirmed) {
-        this.salesService.transitionLeadStage(lead.id, { newStage }).subscribe({
-          next: () => {
-            this.snackBar.open(`Lead moved to ${newStage}`, 'Close', { duration: 3000 });
-            this.loadLeads();
-          },
-          error: (err) => {
-            const message = err?.error?.error?.message || 'Failed to transition lead stage';
-            this.snackBar.open(message, 'Close', { duration: 5000 });
-          },
-        });
-      }
-    });
+  onRowClick(lead: LeadDto): void {
+    this.router.navigate(['/sales/leads', lead.id]);
   }
 
   deleteLead(lead: LeadDto): void {

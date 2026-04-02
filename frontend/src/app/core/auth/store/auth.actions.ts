@@ -30,7 +30,8 @@ export const refreshTokenSuccess = createAction(
 );
 
 export const refreshTokenFailure = createAction(
-  '[Auth] Refresh Token Failure'
+  '[Auth] Refresh Token Failure',
+  props<{ isNetworkError?: boolean }>()
 );
 
 // Load user from stored token (app init)

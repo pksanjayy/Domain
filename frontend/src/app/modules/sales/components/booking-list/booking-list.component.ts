@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SalesService } from '../../services/sales.service';
 import { BookingDto, CreateBookingRequest } from '../../models/sales.model';
@@ -39,13 +40,15 @@ export class BookingListComponent implements OnInit {
   isDrawerOpen = false;
   bookingForm!: FormGroup;
   isSubmitting = false;
+  editingBookingId: number | null = null;
 
   constructor(
     private salesService: SalesService,
     private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private branchContext: BranchContextService
+    private branchContext: BranchContextService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -152,12 +155,28 @@ export class BookingListComponent implements OnInit {
   }
 
   openCreateDrawer(): void {
+    this.editingBookingId = null;
     this.bookingForm.reset();
+    this.bookingForm.patchValue({ bookingDate: new Date() });
+    this.isDrawerOpen = true;
+  }
+
+  editBooking(booking: BookingDto): void {
+    this.editingBookingId = booking.id;
+    this.bookingForm.patchValue({
+      leadId: booking.leadId,
+      vehicleId: booking.vehicleId,
+      totalAmount: booking.totalAmount,
+      amountPaid: booking.amountPaid,
+      bookingDate: booking.bookingDate ? new Date(booking.bookingDate) : new Date(),
+      expectedDelivery: booking.expectedDelivery ? new Date(booking.expectedDelivery) : null
+    });
     this.isDrawerOpen = true;
   }
 
   closeDrawer(): void {
     this.isDrawerOpen = false;
+    this.editingBookingId = null;
   }
 
   onSubmit(): void {
@@ -179,15 +198,28 @@ export class BookingListComponent implements OnInit {
         ? val.expectedDelivery.toISOString().slice(0, 10)
         : val.expectedDelivery,
     };
-    this.salesService.createBooking(request).subscribe({
-      next: () => {
-        this.snackBar.open('Booking created — vehicle is now on HOLD', 'Close', { duration: 3000 });
-        this.closeDrawer();
-        this.loadBookings();
-        this.isSubmitting = false;
-      },
-      error: () => (this.isSubmitting = false),
-    });
+
+    if (this.editingBookingId) {
+      this.salesService.updateBooking(this.editingBookingId, request).subscribe({
+        next: () => {
+          this.snackBar.open('Booking updated successfully', 'Close', { duration: 3000 });
+          this.closeDrawer();
+          this.loadBookings();
+          this.isSubmitting = false;
+        },
+        error: () => (this.isSubmitting = false),
+      });
+    } else {
+      this.salesService.createBooking(request).subscribe({
+        next: () => {
+          this.snackBar.open('Booking created — vehicle is now on HOLD', 'Close', { duration: 3000 });
+          this.closeDrawer();
+          this.loadBookings();
+          this.isSubmitting = false;
+        },
+        error: () => (this.isSubmitting = false),
+      });
+    }
   }
 
   cancelBooking(booking: BookingDto): void {
@@ -212,6 +244,28 @@ export class BookingListComponent implements OnInit {
     });
   }
 
+  deleteBooking(booking: BookingDto): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Booking',
+        message: `Delete booking #${booking.id} permanently? This action cannot be undone.`,
+        confirmText: 'Delete',
+        confirmColor: 'warn',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.salesService.deleteBooking(booking.id).subscribe({
+          next: () => {
+            this.snackBar.open('Booking deleted', 'Close', { duration: 3000 });
+            this.loadBookings();
+          },
+        });
+      }
+    });
+  }
+
   getStatusColor(status: string): string {
     const map: Record<string, string> = {
       ACTIVE: '#1976d2',
@@ -223,5 +277,9 @@ export class BookingListComponent implements OnInit {
 
   formatCurrency(value: number): string {
     return '₹' + (value ?? 0).toLocaleString('en-IN');
+  }
+
+  onRowClick(booking: BookingDto): void {
+    this.router.navigate(['/sales/bookings', booking.id]);
   }
 }

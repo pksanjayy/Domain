@@ -257,6 +257,7 @@ public class VehicleService {
         Branch branch = branchRepository.findById(request.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch", request.getBranchId()));
 
+        vehicle.setVin(request.getVin().toUpperCase());
         vehicle.setBrand(request.getBrand());
         vehicle.setModel(request.getModel());
         vehicle.setVariant(request.getVariant());

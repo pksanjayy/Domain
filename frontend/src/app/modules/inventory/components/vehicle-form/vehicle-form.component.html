@@ -21,7 +21,7 @@
             <mat-label>VIN <span class="required">*</span></mat-label>
             <input matInput formControlName="vin" placeholder="17-character VIN" maxlength="17"
                    [style.text-transform]="'uppercase'">
-            <mat-hint>17 alphanumeric characters (no I, O, Q)</mat-hint>
+            <mat-hint>17 alphanumeric characters</mat-hint>
             <mat-error *ngIf="vehicleForm.get('vin')?.touched">
               {{ getErrorMessage('vin') }}
             </mat-error>
@@ -31,7 +31,7 @@
           <div class="form-row">
             <mat-form-field appearance="outline">
               <mat-label>Brand <span class="required">*</span></mat-label>
-              <input matInput formControlName="brand" placeholder="e.g. Hyundai">
+              <input matInput formControlName="brand" placeholder="e.g. Toyota">
               <mat-error *ngIf="vehicleForm.get('brand')?.touched">
                 {{ getErrorMessage('brand') }}
               </mat-error>

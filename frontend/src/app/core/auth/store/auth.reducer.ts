@@ -54,10 +54,19 @@ export const authReducer = createReducer(
     initialized: true,
   })),
 
-  on(AuthActions.refreshTokenFailure, () => ({
-    ...initialAuthState,
-    initialized: true,
-  })),
+  on(AuthActions.refreshTokenFailure, (state, { isNetworkError }) => {
+    if (isNetworkError) {
+      // Don't wipe session on network error
+      return {
+        ...state,
+        initialized: true,
+      };
+    }
+    return {
+      ...initialAuthState,
+      initialized: true,
+    };
+  }),
 
   on(AuthActions.loadUser, (state, { user, accessToken }) => ({
     ...state,

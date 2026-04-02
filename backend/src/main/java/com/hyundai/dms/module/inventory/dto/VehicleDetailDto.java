@@ -40,6 +40,5 @@ public class VehicleDetailDto {
 
     // Nested details
     private GrnDto grnRecord;
-    private PdiChecklistDto pdiChecklist;
     private List<VehicleAccessoryDto> accessories;
 }

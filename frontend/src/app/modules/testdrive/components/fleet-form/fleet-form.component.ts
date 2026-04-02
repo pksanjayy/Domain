@@ -41,7 +41,7 @@ import { BranchDto } from '../../../inventory/models/inventory.model';
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Brand</mat-label>
-              <input matInput formControlName="brand" placeholder="e.g. Hyundai">
+              <input matInput formControlName="brand" placeholder="e.g. Toyota">
               <mat-error *ngIf="fleetForm.get('brand')?.hasError('required')">Brand is required</mat-error>
             </mat-form-field>
 
@@ -215,11 +215,27 @@ export class FleetFormComponent implements OnInit {
     this.testDriveService.getFleetById(id).subscribe({
       next: (res) => {
         if (res.data) {
-          this.fleetForm.patchValue(res.data);
+          const data: any = { ...res.data };
+          // Format dates to YYYY-MM-DD for type="date" inputs
+          if (data.insuranceExpiry) data.insuranceExpiry = this.formatDate(data.insuranceExpiry);
+          if (data.rcExpiry) data.rcExpiry = this.formatDate(data.rcExpiry);
+          if (data.lastServiceDate) data.lastServiceDate = this.formatDate(data.lastServiceDate);
+          if (data.nextServiceDue) data.nextServiceDue = this.formatDate(data.nextServiceDue);
+          this.fleetForm.patchValue(data);
         }
       },
       error: () => this.snackBar.open('Failed to load fleet details', 'Close', { duration: 3000 })
     });
+  }
+
+  formatDate(dateVal: any): string {
+    if (!dateVal) return '';
+    try {
+      const d = new Date(dateVal);
+      return d.toISOString().split('T')[0];
+    } catch {
+      return dateVal;
+    }
   }
 
   onSubmit() {

@@ -1,5 +1,4 @@
--- Liquibase formatted SQL
--- changeset cursor:13
+
 
 DROP TABLE IF EXISTS test_drive_bookings;
 DROP TABLE IF EXISTS test_drive_fleet;

@@ -1,0 +1,96 @@
+<div class="booking-detail-container" *ngIf="booking">
+  <div class="page-header">
+    <div class="title-area">
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Booking Details: #{{ booking.id }}</h2>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="warn" 
+              *ngIf="booking.status === 'ACTIVE'" 
+              (click)="cancelBooking()">
+        <mat-icon>cancel</mat-icon>
+        Cancel Booking
+      </button>
+    </div>
+  </div>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div class="detail-cards-grid" *ngIf="!isLoading">
+    <!-- Status Card -->
+    <mat-card class="detail-card status-card">
+      <mat-card-header>
+        <mat-card-title>Booking Status</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label">Status:</span>
+          <span class="status-badge" [style.background]="getStatusColor(booking.status)">
+            {{ booking.status }}
+          </span>
+        </div>
+        <div class="info-row">
+          <span class="label">Booking Date:</span>
+          <span class="value">{{ booking.bookingDate | date:'mediumDate' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Expected Delivery:</span>
+          <span class="value">{{ booking.expectedDelivery | date:'mediumDate' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Customer Card -->
+    <mat-card class="detail-card customer-card">
+      <mat-card-header>
+        <mat-card-title>Customer Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label">Customer:</span>
+          <span class="value">{{ booking.customerName }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Vehicle Card -->
+    <mat-card class="detail-card vehicle-card">
+      <mat-card-header>
+        <mat-card-title>Vehicle Details</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label">VIN:</span>
+          <span class="value"><code>{{ booking.vehicleVin }}</code></span>
+        </div>
+        <div class="info-row">
+          <span class="label">Model:</span>
+          <span class="value">{{ booking.vehicleModel }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Financial Card -->
+    <mat-card class="detail-card financial-card">
+      <mat-card-header>
+        <mat-card-title>Payment Summary</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label">Total Amount:</span>
+          <span class="value amount">{{ formatCurrency(booking.totalAmount) }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Amount Paid:</span>
+          <span class="value amount paid">{{ formatCurrency(booking.amountPaid) }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Balance Due:</span>
+          <span class="value amount due">{{ formatCurrency(booking.totalAmount - booking.amountPaid) }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

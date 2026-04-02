@@ -11,8 +11,6 @@ import {
   DashboardSummaryDto,
   GrnDto,
   CreateGrnRequest,
-  PdiChecklistDto,
-  UpdatePdiItemRequest,
   StockTransferDto,
   RequestTransferRequest,
   BranchDto,
@@ -22,7 +20,6 @@ import {
 export class InventoryService extends BaseApiService {
   private readonly vehicleUrl = '/api/inventory/vehicles';
   private readonly grnUrl = '/api/inventory/grn';
-  private readonly pdiUrl = '/api/inventory/pdi';
   private readonly transferUrl = '/api/inventory/transfers';
   private readonly branchUrl = '/api/admin/branches';
 
@@ -105,19 +102,6 @@ export class InventoryService extends BaseApiService {
 
   deleteGrn(id: number): Observable<ApiResponse<void>> {
     return this.delete<void>(`${this.grnUrl}/${id}`);
-  }
-
-  // ─── PDI ───
-  getPdiChecklist(vehicleId: number): Observable<ApiResponse<PdiChecklistDto>> {
-    return this.get<PdiChecklistDto>(`${this.pdiUrl}/vehicle/${vehicleId}`);
-  }
-
-  updatePdiItem(checklistId: number, itemId: number, request: UpdatePdiItemRequest): Observable<ApiResponse<any>> {
-    return this.put<any>(`${this.pdiUrl}/${checklistId}/item/${itemId}`, request);
-  }
-
-  completePdi(checklistId: number): Observable<ApiResponse<PdiChecklistDto>> {
-    return this.post<PdiChecklistDto>(`${this.pdiUrl}/${checklistId}/complete`, {});
   }
 
   // ─── Stock Transfers ───

@@ -58,6 +58,10 @@ export class SalesService extends BaseApiService {
     return this.post<LeadDto>(this.leadUrl, request);
   }
 
+  updateLead(id: number, request: any): Observable<ApiResponse<LeadDto>> {
+    return this.put<LeadDto>(`${this.leadUrl}/${id}`, request);
+  }
+
   transitionLeadStage(id: number, request: StageTransitionRequest): Observable<ApiResponse<LeadDto>> {
     return this.patch<LeadDto>(`${this.leadUrl}/${id}/stage`, request);
   }
@@ -81,6 +85,14 @@ export class SalesService extends BaseApiService {
 
   cancelBooking(id: number): Observable<ApiResponse<BookingDto>> {
     return this.patch<BookingDto>(`${this.bookingUrl}/${id}/cancel`, {});
+  }
+
+  updateBooking(id: number, request: any): Observable<ApiResponse<BookingDto>> {
+    return this.put<BookingDto>(`${this.bookingUrl}/${id}`, request);
+  }
+
+  deleteBooking(id: number): Observable<ApiResponse<void>> {
+    return this.delete<void>(`${this.bookingUrl}/${id}`);
   }
 }
 

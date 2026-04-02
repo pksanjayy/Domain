@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .errorCode("INTERNAL_ERROR")
-                .message("An unexpected error occurred. Please contact support.")
+                .message("500 Error: " + ex.getMessage() + " | " + ex.getClass().getName())
                 .path(request.getRequestURI())
                 .correlationId(getCorrelationId())
                 .build();

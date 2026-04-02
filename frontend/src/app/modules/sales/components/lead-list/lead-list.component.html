@@ -93,24 +93,21 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button matTooltip="Advance Stage" color="primary"
-                  *ngIf="getNextStage(row.stage) as next"
-                  (click)="transitionStage(row, next)">
-            <mat-icon>arrow_forward</mat-icon>
+          <button mat-icon-button matTooltip="Edit Lead" color="primary"
+                  (click)="$event.stopPropagation(); editLead(row)">
+            <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button matTooltip="Mark Lost" color="warn"
-                  *ngIf="row.stage !== 'DELIVERED' && row.stage !== 'LOST'"
-                  (click)="transitionStage(row, 'LOST')">
-            <mat-icon>block</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Delete" color="warn" (click)="deleteLead(row)">
+          <button mat-icon-button matTooltip="Delete" color="warn" 
+                  (click)="$event.stopPropagation(); deleteLead(row)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          class="clickable-row"
+          (click)="onRowClick(row)"></tr>
     </table>
 
     <mat-paginator [length]="totalElements"

@@ -14,6 +14,10 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class UpdateVehicleRequest {
 
+    @NotBlank(message = "VIN is required")
+    @com.hyundai.dms.common.validation.ValidVin
+    private String vin;
+
     @NotBlank(message = "Brand is required")
     @Size(max = 50)
     private String brand;

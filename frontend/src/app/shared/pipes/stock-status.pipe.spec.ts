@@ -17,18 +17,6 @@ describe('StockStatusPipe', () => {
     expect(pipe.transform('IN_STOCK')).toBe('In Stock');
   });
 
-  it('should transform PDI_PENDING to "PDI Pending"', () => {
-    expect(pipe.transform('PDI_PENDING')).toBe('PDI Pending');
-  });
-
-  it('should transform PDI_PASSED to "PDI Passed"', () => {
-    expect(pipe.transform('PDI_PASSED')).toBe('PDI Passed');
-  });
-
-  it('should transform PDI_FAILED to "PDI Failed"', () => {
-    expect(pipe.transform('PDI_FAILED')).toBe('PDI Failed');
-  });
-
   it('should transform AVAILABLE to "Available"', () => {
     expect(pipe.transform('AVAILABLE')).toBe('Available');
   });

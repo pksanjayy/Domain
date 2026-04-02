@@ -90,9 +90,6 @@ public class Vehicle extends BaseEntity {
     @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private GrnRecord grnRecord;
 
-    @OneToOne(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private PdiChecklist pdiChecklist;
-
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<VehicleAccessory> accessories = new ArrayList<>();

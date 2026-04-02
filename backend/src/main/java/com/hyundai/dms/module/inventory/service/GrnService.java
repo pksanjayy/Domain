@@ -55,10 +55,33 @@ public class GrnService {
     @LogExecution
     @Transactional(readOnly = true)
     public PageResponse<GrnDto> listGrns(FilterRequest filterRequest) {
-        Predicate predicate = predicateBuilder.build(filterRequest.filters());
+        String globalSearch = null;
+        java.util.List<com.hyundai.dms.common.filter.FilterCriteria> remainingFilters = new java.util.ArrayList<>();
+        
+        if (filterRequest.filters() != null) {
+            for (com.hyundai.dms.common.filter.FilterCriteria f : filterRequest.filters()) {
+                if ("globalSearch".equals(f.field())) {
+                    globalSearch = (String) f.value();
+                } else {
+                    remainingFilters.add(f);
+                }
+            }
+        }
+
+        Predicate basePredicate = predicateBuilder.build(remainingFilters);
+        com.querydsl.core.BooleanBuilder finalPredicate = new com.querydsl.core.BooleanBuilder(basePredicate);
+
+        if (globalSearch != null && !globalSearch.isBlank()) {
+            com.hyundai.dms.module.inventory.entity.QGrnRecord qGrn = com.hyundai.dms.module.inventory.entity.QGrnRecord.grnRecord;
+            finalPredicate.and(
+                qGrn.grnNumber.containsIgnoreCase(globalSearch)
+                .or(qGrn.vehicle.vin.containsIgnoreCase(globalSearch))
+            );
+        }
+
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<GrnRecord> page = grnRecordRepository.findAll(predicate, pageRequest);
+        Page<GrnRecord> page = grnRecordRepository.findAll(finalPredicate, pageRequest);
         Page<GrnDto> dtoPage = page.map(grnMapper::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }
@@ -165,6 +188,7 @@ public class GrnService {
                 .orElseThrow(() -> new ResourceNotFoundException("GrnRecord", grnId));
 
         Vehicle vehicle = grn.getVehicle();
+        vehicle.setGrnRecord(null);
         
         if (vehicle.getStatus() == StockStatus.GRN_RECEIVED) {
             vehicle.setStatus(StockStatus.IN_TRANSIT);

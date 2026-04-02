@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {GrnMapper.class, PdiMapper.class})
+@Mapper(componentModel = "spring", uses = {GrnMapper.class})
 public interface VehicleMapper {
 
     VehicleMapper INSTANCE = Mappers.getMapper(VehicleMapper.class);
@@ -28,7 +28,6 @@ public interface VehicleMapper {
     @Mapping(target = "transmission", expression = "java(vehicle.getTransmission().name())")
     @Mapping(target = "ageDays", expression = "java(vehicle.getManufacturedDate() != null ? (int) java.time.temporal.ChronoUnit.DAYS.between(vehicle.getManufacturedDate(), java.time.LocalDate.now()) : 0)")
     @Mapping(target = "grnRecord", source = "grnRecord")
-    @Mapping(target = "pdiChecklist", source = "pdiChecklist")
     @Mapping(target = "accessories", source = "accessories")
     VehicleDetailDto toDetailDto(Vehicle vehicle);
 

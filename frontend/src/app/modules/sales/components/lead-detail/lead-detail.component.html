@@ -1,0 +1,101 @@
+<div class="lead-detail-container" *ngIf="lead">
+  <div class="page-header">
+    <div class="title-area">
+      <button mat-icon-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Lead Details: {{ lead.customerName }}</h2>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" 
+              *ngIf="getNextStage(lead.stage) as next" 
+              (click)="transitionStage(next)">
+        Advance to {{ next.replace('_', ' ') }}
+      </button>
+      <button mat-stroked-button color="warn" 
+              *ngIf="lead.stage !== 'DELIVERED' && lead.stage !== 'LOST'" 
+              (click)="transitionStage('LOST')">
+        Mark as Lost
+      </button>
+    </div>
+  </div>
+
+  <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+
+  <div class="detail-cards-grid" *ngIf="!isLoading">
+    <!-- Status Card -->
+    <mat-card class="detail-card status-card">
+      <mat-card-header>
+        <mat-card-title>Status & Workflow</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label">Current Stage:</span>
+          <span class="stage-badge" [style.background]="getStageColor(lead.stage)">
+            {{ lead.stage.replace('_', ' ') }}
+          </span>
+        </div>
+        <div class="info-row" *ngIf="lead.lostReason">
+          <span class="label">Lost Reason:</span>
+          <span class="value lost-reason">{{ lead.lostReason }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Created At:</span>
+          <span class="value">{{ lead.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Last Updated:</span>
+          <span class="value">{{ lead.updatedAt | date:'medium' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Context Card -->
+    <mat-card class="detail-card context-card">
+      <mat-card-header>
+        <mat-card-title>Lead Context</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="info-row">
+          <span class="label">Source:</span>
+          <mat-chip>{{ lead.source || 'N/A' }}</mat-chip>
+        </div>
+        <div class="info-row">
+          <span class="label">Model Interested:</span>
+          <span class="value">{{ lead.modelInterested }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Branch:</span>
+          <span class="value">{{ lead.branchName }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Assigned Rep:</span>
+          <span class="value">{{ lead.assignedToUsername || 'Unassigned' }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Vehicle Link Card -->
+    <mat-card class="detail-card vehicle-card">
+      <mat-card-header>
+        <mat-card-title>Associated Vehicle</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngIf="lead.vehicleId; else noVehicle">
+          <div class="info-row">
+            <span class="label">VIN:</span>
+            <span class="value"><code>{{ lead.vehicleVin }}</code></span>
+          </div>
+          <!-- More vehicle info can go here later -->
+        </div>
+        <ng-template #noVehicle>
+          <div class="empty-state">
+            <mat-icon>directions_car</mat-icon>
+            <p>No vehicle formally linked to this lead yet.</p>
+          </div>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+    
+  </div>
+</div>

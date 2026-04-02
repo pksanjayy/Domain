@@ -154,8 +154,7 @@ export class InventoryReportComponent implements OnInit {
     // Status
     if (data.statusBreakdown) {
       const colors: Record<string, string> = {
-        IN_TRANSIT: '#8b5cf6', IN_STOCK: '#6366f1', PDI_PENDING: '#f59e0b', PDI_PASSED: '#22c55e',
-        PDI_FAILED: '#ef4444', AVAILABLE: '#10b981', RESERVED: '#3b82f6', HOLD: '#f97316',
+        IN_TRANSIT: '#8b5cf6', IN_STOCK: '#6366f1', AVAILABLE: '#10b981', RESERVED: '#3b82f6', HOLD: '#f97316',
         SOLD: '#06b6d4', DELIVERED: '#14b8a6', BOOKED: '#8b5cf6', GRN_RECEIVED: '#0ea5e9',
       };
       const entries = Object.entries(data.statusBreakdown).filter(([, c]: any) => c > 0);

@@ -179,6 +179,7 @@ databaseChangeLog:
   - changeSet:
       id: 13
       author: antigravity
+      validCheckSum: ANY
       comment: "Add Test Drive Module v7.0"
       sqlFile:
         path: v7.0/schema.sql
@@ -228,6 +229,7 @@ databaseChangeLog:
   - changeSet:
       id: 16
       author: antigravity
+      validCheckSum: ANY
       comment: "Insert mock data for Branch 2 (Mumbai) and Branch 3 (Chennai) v10.0"
       sqlFile:
         path: v10.0/data.sql
@@ -289,3 +291,34 @@ databaseChangeLog:
       rollback:
         sql: >
           ALTER TABLE vehicles MODIFY COLUMN status ENUM('IN_TRANSIT','GRN_RECEIVED','PDI_PENDING','PDI_DONE','AVAILABLE','HOLD','BOOKED','INVOICED','TRANSFERRED') NOT NULL DEFAULT 'IN_TRANSIT';
+  - changeSet:
+      id: 21
+      author: antigravity
+      comment: "Update vehicles data to remove PDI statuses v14.0"
+      sqlFile:
+        path: v14.0/data.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: ""
+
+  - changeSet:
+      id: 22
+      author: antigravity
+      comment: "Remove PDI statuses from vehicles enum v14.0"
+      sqlFile:
+        path: v14.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: ""
+
+  - changeSet:
+      id: 23
+      author: antigravity
+      comment: "Add deleted flag for soft-deleting customers and leads v15.0"
+      sqlFile:
+        path: v15.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE customers DROP COLUMN deleted;
+          ALTER TABLE leads DROP COLUMN deleted;

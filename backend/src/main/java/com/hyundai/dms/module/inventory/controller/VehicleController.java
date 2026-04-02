@@ -58,7 +58,7 @@ public class VehicleController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get vehicle by ID", description = "Full vehicle detail including GRN, PDI, and accessories")
+    @Operation(summary = "Get vehicle by ID", description = "Full vehicle detail including GRN and accessories")
     public ResponseEntity<ApiResponse<VehicleDetailDto>> getVehicleById(@PathVariable Long id) {
         VehicleDetailDto vehicle = vehicleService.getVehicleById(id);
         // ETag is handled by ShallowEtagHeaderFilter

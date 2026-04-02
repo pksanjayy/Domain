@@ -9,6 +9,8 @@ import { BookingListComponent } from './components/booking-list/booking-list.com
 import { PaymentListComponent } from './components/payment-list/payment-list.component';
 import { PaymentFormComponent } from './components/payment-form/payment-form.component';
 import { PaymentDetailComponent } from './components/payment-detail/payment-detail.component';
+import { LeadDetailComponent } from './components/lead-detail/lead-detail.component';
+import { BookingDetailComponent } from './components/booking-detail/booking-detail.component';
 
 const routes: Routes = [
   {
@@ -18,11 +20,13 @@ const routes: Routes = [
       { path: '', redirectTo: 'customers', pathMatch: 'full' },
       { path: 'customers', component: CustomerListComponent },
       { path: 'leads', component: LeadListComponent },
+      { path: 'leads/:id', component: LeadDetailComponent },
       { path: 'payments', component: PaymentListComponent },
       { path: 'payments/new', component: PaymentFormComponent },
       { path: 'payments/:id', component: PaymentDetailComponent },
       { path: 'payments/:id/edit', component: PaymentFormComponent },
       { path: 'bookings', component: BookingListComponent },
+      { path: 'bookings/:id', component: BookingDetailComponent },
     ],
   },
 ];
@@ -32,7 +36,9 @@ const routes: Routes = [
     SalesComponent,
     CustomerListComponent,
     LeadListComponent,
+    LeadDetailComponent,
     BookingListComponent,
+    BookingDetailComponent,
     PaymentListComponent,
     PaymentFormComponent,
     PaymentDetailComponent,

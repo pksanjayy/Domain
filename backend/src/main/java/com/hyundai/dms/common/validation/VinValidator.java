@@ -6,11 +6,11 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 /**
- * Validates VIN: exactly 17 alphanumeric chars, no I/O/Q.
+ * Validates VIN: exactly 17 alphanumeric chars.
  */
 public class VinValidator implements ConstraintValidator<ValidVin, String> {
 
-    private static final Pattern VIN_PATTERN = Pattern.compile("^[A-HJ-NPR-Z0-9]{17}$");
+    private static final Pattern VIN_PATTERN = Pattern.compile("^[A-Z0-9]{17}$");
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {

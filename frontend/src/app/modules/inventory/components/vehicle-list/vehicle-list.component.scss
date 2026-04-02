@@ -60,22 +60,12 @@
   &::before { background: var(--dms-status-transit-dot); }
 }
 .status-stock,
-.status-available,
-.status-pdi-passed {
+.status-available {
   background: var(--dms-status-available-bg);
   color: var(--dms-status-available-text);
   &::before { background: var(--dms-status-available-dot); }
 }
-.status-pdi-pending {
-  background: var(--dms-status-pdi-bg);
-  color: var(--dms-status-pdi-text);
-  &::before { background: var(--dms-status-pdi-dot); }
-}
-.status-pdi-failed {
-  background: rgba(196,28,28,0.08);
-  color: var(--dms-error);
-  &::before { background: var(--dms-error); }
-}
+
 .status-reserved {
   background: var(--dms-status-hold-bg);
   color: var(--dms-status-hold-text);

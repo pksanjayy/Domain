@@ -14,8 +14,6 @@ DELETE FROM bookings;
 DELETE FROM leads;
 DELETE FROM customers;
 DELETE FROM stock_transfers;
-DELETE FROM pdi_checklist_items;
-DELETE FROM pdi_checklists;
 DELETE FROM vehicle_accessories;
 DELETE FROM grn_records;
 DELETE FROM vehicles;
@@ -30,13 +28,13 @@ DELETE FROM vehicles;
 INSERT INTO vehicles (id, vin, brand, model, variant, colour, fuel_type, transmission, manufactured_date, msrp, status, branch_id, engine_number, chassis_number, key_number, exterior_colour_code, interior_colour_code, created_by) VALUES
 (1, 'MH12VIN0000000001', 'Hyundai', 'Creta', 'SX Opt', 'Abyss Black', 'PETROL', 'AUTOMATIC', '2023-11-01', 1900000.00, 'AVAILABLE', 1, 'ENGCRE001', 'CHSCRE001', 'KEYCRE001', 'BLK01', 'INTBLK01', 'system'),
 (2, 'MH12VIN0000000002', 'Hyundai', 'Venue', 'SX', 'Titan Grey', 'DIESEL', 'MANUAL', '2023-11-05', 1300000.00, 'AVAILABLE', 1, 'ENGVEN001', 'CHSVEN001', 'KEYVEN001', 'GRY01', 'INTBLK02', 'system'),
-(3, 'MH12VIN0000000003', 'Hyundai', 'i20', 'Asta (O)', 'Fiery Red', 'PETROL', 'AUTOMATIC', '2023-11-10', 1150000.00, 'PDI_PENDING', 1, 'ENGI20001', 'CHSI20001', 'KEYI20001', 'RED01', 'INTGRY01', 'system'),
+(3, 'MH12VIN0000000003', 'Hyundai', 'i20', 'Asta (O)', 'Fiery Red', 'PETROL', 'AUTOMATIC', '2023-11-10', 1150000.00, 'AVAILABLE', 1, 'ENGI20001', 'CHSI20001', 'KEYI20001', 'RED01', 'INTGRY01', 'system'),
 (4, 'MH12VIN0000000004', 'Hyundai', 'Tucson', 'Platinum', 'Polar White', 'DIESEL', 'AUTOMATIC', '2023-10-15', 3000000.00, 'AVAILABLE', 1, 'ENGTUC001', 'CHSTUC001', 'KEYTUC001', 'WHT01', 'INTBEI01', 'system'),
 (5, 'MH12VIN0000000005', 'Hyundai', 'Verna', 'SX (O)', 'Starry Night', 'PETROL', 'AUTOMATIC', '2023-12-01', 1700000.00, 'GRN_RECEIVED', 1, 'ENGVER001', 'CHSVER001', 'KEYVER001', 'BLU01', 'INTBLK03', 'system'),
 (6, 'MH12VIN0000000006', 'Hyundai', 'Aura', 'SX (+)', 'Titan Grey', 'PETROL', 'MANUAL', '2023-11-20', 850000.00, 'BOOKED', 1, 'ENGAUR001', 'CHSAUR001', 'KEYAUR001', 'GRY02', 'INTBEI02', 'system'),
 (7, 'MH12VIN0000000007', 'Hyundai', 'Grand i10 Nios', 'Asta', 'Aqua Teal', 'PETROL', 'MANUAL', '2023-12-05', 750000.00, 'INVOICED', 1, 'ENGG10001', 'CHSG10001', 'KEYG10001', 'BLU02', 'INTGRY02', 'system'),
 (8, 'MH12VIN0000000008', 'Hyundai', 'IONIQ 5', 'Premium', 'Gravity Gold Matte', 'ELECTRIC', 'AUTOMATIC', '2023-09-10', 4500000.00, 'AVAILABLE', 1, 'ENGION001', 'CHSION001', 'KEYION001', 'GLD01', 'INTBLK04', 'system'),
-(9, 'MH12VIN0000000009', 'Hyundai', 'Alcazar', 'Signature', 'Typhoon Silver', 'DIESEL', 'AUTOMATIC', '2023-11-25', 2100000.00, 'PDI_DONE', 1, 'ENGALC001', 'CHSALC001', 'KEYALC001', 'SLV01', 'INTGBR01', 'system'),
+(9, 'MH12VIN0000000009', 'Hyundai', 'Alcazar', 'Signature', 'Typhoon Silver', 'DIESEL', 'AUTOMATIC', '2023-11-25', 2100000.00, 'AVAILABLE', 1, 'ENGALC001', 'CHSALC001', 'KEYALC001', 'SLV01', 'INTGBR01', 'system'),
 (10, 'MH12VIN0000000010', 'Hyundai', 'Creta', 'E', 'Polar White', 'PETROL', 'MANUAL', '2023-12-10', 1100000.00, 'IN_TRANSIT', 1, 'ENGCRE002', 'CHSCRE002', 'KEYCRE002', 'WHT02', 'INTBLK05', 'system'),
 (11, 'MH12VIN0000000011', 'Hyundai', 'Venue N Line', 'N8', 'Shadow Grey', 'PETROL', 'AUTOMATIC', '2023-12-08', 1400000.00, 'AVAILABLE', 1, 'ENGVNN001', 'CHSVNN001', 'KEYVNN001', 'GRY03', 'INTBLK06', 'system'),
 (12, 'MH12VIN0000000012', 'Hyundai', 'i20 N Line', 'N8', 'Thunder Blue', 'PETROL', 'AUTOMATIC', '2023-11-30', 1250000.00, 'AVAILABLE', 1, 'ENGI2N001', 'CHSI2N001', 'KEYI2N001', 'BLU03', 'INTBLK07', 'system'),
@@ -62,33 +60,6 @@ INSERT INTO grn_records (id, grn_number, vehicle_id, transporter_name, dispatch_
 (12, 'GRN-2023-0012', 13, 'Delhivery', '2023-10-25', '2023-10-30', 'GOOD', 'Held for VIP client check', 1, 'system'),
 (13, 'GRN-2024-0013', 15, 'VRL Logistics', '2024-01-15', '2024-01-20', 'GOOD', 'New year batch', 1, 'system'),
 (14, 'GRN-2023-0014', 16, 'Bluedart', '2023-08-20', '2023-08-25', 'GOOD', 'Premium SUV allocated', 1, 'system');
-
--- Insert PDI Checklists
-INSERT INTO pdi_checklists (id, vehicle_id, overall_status, completed_at, remarks, created_by) VALUES
-(1, 1, 'PASSED', '2023-11-11 10:00:00', 'Passed all exterior and interior checks', 'system'),
-(2, 2, 'PASSED', '2023-11-16 11:30:00', 'Passed, bumper scratch noted but cleared', 'system'),
-(3, 4, 'PASSED', '2023-10-26 14:00:00', 'Perfect condition', 'system'),
-(4, 6, 'PASSED', '2023-12-01 09:15:00', 'All good to go for booking', 'system'),
-(5, 7, 'PASSED', '2023-12-16 15:45:00', 'Invoiced customer PDI done', 'system'),
-(6, 8, 'PASSED', '2023-09-21 16:30:00', 'EV systems check passed', 'system'),
-(7, 9, 'PASSED', '2023-12-06 10:20:00', 'PDI completed, accessories ready', 'system'),
-(8, 11, 'PASSED', '2023-12-21 11:00:00', 'N line visual checks passed', 'system'),
-(9, 12, 'PASSED', '2023-12-11 10:00:00', 'Battery check passed', 'system'),
-(10, 15, 'PASSED', '2024-01-21 13:00:00', 'Recent PDI passed', 'system'),
-(11, 16, 'PASSED', '2023-08-26 10:00:00', 'Passed with flying colours', 'system');
-
--- Insert PDI Checklist Items
-INSERT INTO pdi_checklist_items (checklist_id, point_name, result, remark, created_by) VALUES
-(1, 'Exterior Body Paint', 'PASS', 'No scratches', 'system'),
-(1, 'Engine Oil Level', 'PASS', 'Optimal', 'system'),
-(1, 'Electronics Check', 'PASS', 'All working', 'system'),
-(2, 'Exterior Body Paint', 'FAIL', 'Minor scratch on bumper', 'system'),
-(2, 'Engine Oil Level', 'PASS', 'Optimal', 'system'),
-(3, 'Electronics Check', 'PASS', 'Passed', 'system'),
-(6, 'Battery Health', 'PASS', '100% capacity', 'system'),
-(6, 'Charging Cable', 'PASS', 'Present and tested', 'system'),
-(7, 'Exterior Body Paint', 'PASS', '', 'system'),
-(8, 'Sport Exhaust Note', 'PASS', 'Sounds aggressive', 'system');
 
 -- Insert Vehicle Accessories
 INSERT INTO vehicle_accessories (vehicle_id, name, cost, fitted_at, created_by) VALUES

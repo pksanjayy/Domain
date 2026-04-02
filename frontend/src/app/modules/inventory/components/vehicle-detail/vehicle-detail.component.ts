@@ -49,9 +49,6 @@ export class VehicleDetailComponent implements OnInit {
     const classMap: Record<string, string> = {
       IN_TRANSIT: 'status-transit',
       IN_STOCK: 'status-stock',
-      PDI_PENDING: 'status-pdi-pending',
-      PDI_PASSED: 'status-pdi-passed',
-      PDI_FAILED: 'status-pdi-failed',
       AVAILABLE: 'status-available',
       RESERVED: 'status-reserved',
       SOLD: 'status-sold',
@@ -89,12 +86,6 @@ export class VehicleDetailComponent implements OnInit {
 
   goToGrn(): void {
     this.router.navigate(['/inventory/grn/new']);
-  }
-
-  goToPdi(): void {
-    if (this.vehicle) {
-      this.router.navigate(['/inventory/pdi', this.vehicle.id]);
-    }
   }
 
   goBack(): void {

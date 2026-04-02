@@ -75,7 +75,7 @@ export class AuthEffects {
       exhaustMap(() => {
         const refreshToken = this.authService.getRefreshToken();
         if (!refreshToken) {
-          return of(AuthActions.refreshTokenFailure());
+          return of(AuthActions.refreshTokenFailure({ isNetworkError: false }));
         }
         return this.authService.refreshToken(refreshToken).pipe(
           map((response) => {
@@ -85,7 +85,10 @@ export class AuthEffects {
               accessToken: response.data.accessToken,
             });
           }),
-          catchError(() => of(AuthActions.refreshTokenFailure()))
+          catchError((err) => {
+            const isNetworkError = err.status === 0 || err.status >= 500;
+            return of(AuthActions.refreshTokenFailure({ isNetworkError }));
+          })
         );
       })
     )
@@ -95,9 +98,14 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(AuthActions.refreshTokenFailure),
-        tap(() => {
-          this.authService.logout();
-          this.router.navigate(['/login']);
+        tap(({ isNetworkError }) => {
+          if (!isNetworkError) {
+            this.authService.logout();
+            // Only navigate to login if not already on the login page
+            if (!this.router.url.startsWith('/login')) {
+              this.router.navigate(['/login']);
+            }
+          }
         })
       ),
     { dispatch: false }

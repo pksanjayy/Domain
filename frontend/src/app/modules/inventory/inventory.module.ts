@@ -11,7 +11,6 @@ import { VehicleDetailComponent } from './components/vehicle-detail/vehicle-deta
 import { VehicleFormComponent } from './components/vehicle-form/vehicle-form.component';
 import { GrnListComponent } from './components/grn-list/grn-list.component';
 import { GrnFormComponent } from './components/grn-form/grn-form.component';
-import { PdiChecklistComponent } from './components/pdi-checklist/pdi-checklist.component';
 import { StockTransferComponent } from './components/stock-transfer/stock-transfer.component';
 
 const routes: Routes = [
@@ -29,7 +28,6 @@ const routes: Routes = [
   { path: 'grn', component: GrnListComponent },
   { path: 'grn/new', component: GrnFormComponent },
   { path: 'grn/:id/edit', component: GrnFormComponent },
-  { path: 'pdi/:vehicleId', component: PdiChecklistComponent },
   { path: 'transfers', component: StockTransferComponent },
 ];
 
@@ -41,7 +39,6 @@ const routes: Routes = [
     VehicleFormComponent,
     GrnListComponent,
     GrnFormComponent,
-    PdiChecklistComponent,
     StockTransferComponent,
   ],
   imports: [SharedModule, NgChartsModule, RouterModule.forChild(routes)],

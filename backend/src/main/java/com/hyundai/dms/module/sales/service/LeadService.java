@@ -59,9 +59,14 @@ public class LeadService {
     @Transactional(readOnly = true)
     public PageResponse<LeadDto> listLeads(FilterRequest filterRequest) {
         Predicate predicate = predicateBuilder.build(filterRequest.filters());
+        
+        com.hyundai.dms.module.sales.entity.QLead qLead = com.hyundai.dms.module.sales.entity.QLead.lead;
+        com.querydsl.core.BooleanBuilder finalPredicate = new com.querydsl.core.BooleanBuilder(predicate);
+        finalPredicate.and(qLead.deleted.isFalse());
+        
         PageRequest pageRequest = PageUtils.buildPageRequest(
                 filterRequest.page(), filterRequest.size(), filterRequest.sorts());
-        Page<Lead> page = leadRepository.findAll(predicate, pageRequest);
+        Page<Lead> page = leadRepository.findAll(finalPredicate, pageRequest);
         Page<LeadDto> dtoPage = page.map(leadMapper::toDto);
         return PageUtils.toPageResponse(dtoPage);
     }
@@ -147,12 +152,48 @@ public class LeadService {
     }
 
     @LogExecution
+    @Audited(entity = "Lead", action = ActionType.UPDATE)
+    @PreAuthorize("hasRole('SALES_CRM_EXEC') or hasRole('SUPER_ADMIN')")
+    @Transactional
+    public LeadDto updateLead(Long id, com.hyundai.dms.module.sales.dto.UpdateLeadRequest request) {
+        Lead lead = findLeadOrThrow(id);
+        
+        if (request.getAssignedToId() != null) {
+            User assignedTo = userRepository.findById(request.getAssignedToId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User", request.getAssignedToId()));
+            lead.setAssignedTo(assignedTo);
+        }
+        
+        if (request.getBranchId() != null) {
+             Branch branch = branchRepository.findById(request.getBranchId())
+                     .orElseThrow(() -> new ResourceNotFoundException("Branch", request.getBranchId()));
+             lead.setBranch(branch);
+        }
+
+        if (request.getVehicleId() != null) {
+             Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
+                     .orElseThrow(() -> new ResourceNotFoundException("Vehicle", request.getVehicleId()));
+             lead.setVehicle(vehicle);
+        } else {
+             lead.setVehicle(null);
+        }
+        
+        lead.setModelInterested(request.getModelInterested());
+        lead.setSource(LeadSource.valueOf(request.getSource().toUpperCase()));
+        
+        lead = leadRepository.save(lead);
+        log.info("Updated lead id={}", id);
+        return leadMapper.toDto(lead);
+    }
+
+    @LogExecution
     @Audited(entity = "Lead", action = ActionType.DELETE)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @Transactional
     public void deleteLead(Long id) {
         Lead lead = findLeadOrThrow(id);
-        leadRepository.delete(lead);
+        lead.setDeleted(true);
+        leadRepository.save(lead);
         log.info("Deleted lead id={}", id);
     }
 
