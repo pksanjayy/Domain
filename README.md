@@ -1,218 +1,322 @@
 # Hyundai Dealer Management System (DMS)
 
-A full-stack, role-based Dealer Management System built with Angular 17 + Spring Boot 3.3 as a college project showcase. Features a premium UI design system with coral accent palette, real-time WebSocket notifications, multi-tier caching, and comprehensive audit logging.
+A comprehensive full-stack dealer management system built with Spring Boot and Angular, designed for automotive dealerships to manage inventory, sales, service, and test drives.
 
-| Layer     | Stack                                                      |
-|-----------|-------------------------------------------------------------|
-| Frontend  | Angular 17, Angular Material, NgRx, Chart.js, WebSocket    |
-| Backend   | Spring Boot 3.3, Java 21, Spring Security (JWT), JPA       |
-| Database  | MySQL 8.0, Liquibase migrations                            |
-| Cache     | Caffeine (L1) + Redis 7.2 (L2) + HTTP ETag (browser)      |
-| DevOps    | Docker Compose                                             |
+## 🚀 Features
 
----
+### Inventory Management
+- Vehicle stock tracking with real-time status updates
+- GRN (Goods Receipt Note) management
+- Centralized vehicle model management
+- Vehicle aging analysis
+- Branch-wise inventory distribution
 
-## Prerequisites
+### Sales Management
+- Lead management with stage tracking
+- Customer relationship management
+- Booking management with vehicle allocation
+- Payment processing and tracking
+- Sales reporting and analytics
 
-| Tool               | Version      | Purpose                    |
-|--------------------|--------------|----------------------------|
-| Docker Desktop     | ≥ 4.x       | Run MySQL + Redis          |
-| Node.js            | ≥ 18.x      | Frontend dev server        |
-| npm                | ≥ 9.x       | Package manager            |
-| Java JDK           | ≥ 21        | Backend runtime            |
-| Maven              | ≥ 3.9        | Backend build tool         |
-| Angular CLI        | ≥ 17.x      | `npm install -g @angular/cli` |
+### Service Management
+- Service booking and scheduling
+- Service history tracking
+- Parts and labor management
+- Service reminders
 
----
+### Test Drive Management
+- Test drive fleet management
+- Test drive booking and scheduling
+- Fleet maintenance tracking
+- Customer license verification
 
-## Quick Start (Full Stack)
+### User Management
+- Role-based access control (RBAC)
+- Multi-branch support
+- User authentication with account locking
+- Branch context switching
 
-### Step 1 — Start Infrastructure
+## 🛠️ Technology Stack
 
-```powershell
-# From project root
-docker-compose up -d mysql redis
+### Backend
+- **Framework**: Spring Boot 3.2.x
+- **Language**: Java 21
+- **Database**: MySQL 8.0
+- **ORM**: Spring Data JPA with QueryDSL
+- **Security**: Spring Security with JWT
+- **Database Migration**: Liquibase
+- **API Documentation**: Swagger/OpenAPI
+- **Build Tool**: Maven
+
+### Frontend
+- **Framework**: Angular 17
+- **UI Library**: Angular Material
+- **State Management**: NgRx
+- **HTTP Client**: Angular HttpClient
+- **Build Tool**: Angular CLI
+
+### DevOps
+- **Containerization**: Docker & Docker Compose
+- **Database**: MySQL in Docker
+- **Reverse Proxy**: Nginx (optional)
+
+## 📋 Prerequisites
+
+- Java 21 or higher
+- Node.js 18+ and npm
+- Docker and Docker Compose
+- Maven 3.8+
+- Git
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/pksanjayy/Domain.git
+cd Domain
 ```
 
-This starts:
-- **MySQL 8.0** on `localhost:3306` (DB: `dms_db`, user: `dms_user`, pass: `dms_password`)
-- **Redis 7.2** on `localhost:6379`
+### 2. Start the Database
+```bash
+docker-compose up -d
+```
 
-### Step 2 — Start Backend
+This will start MySQL on port 3306 with:
+- Database: `dms_db`
+- Username: `dms_user`
+- Password: `dms_password`
+- Root Password: `root_password`
 
-```powershell
+### 3. Start the Backend
+```bash
 cd backend
-mvn clean spring-boot:run "-Dspring-boot.run.profiles=dev" -e
+mvn clean install
+mvn spring-boot:run
 ```
 
-- API: **http://localhost:8080**
-- Swagger UI: **http://localhost:8080/swagger-ui.html**
-- Liquibase will auto-create all tables and seed demo data on first run
+The backend will start on `http://localhost:8080`
 
-> **Tip:** Use `mvn clean spring-boot:run "-Dspring-boot.run.profiles=dev" -DskipTests -e` to skip tests for faster startup.
-
-### Step 3 — Start Frontend
-
-```powershell
+### 4. Start the Frontend
+```bash
 cd frontend
-npm install          # First time only
-ng serve --proxy-config proxy.conf.json
+npm install
+npm start
 ```
 
-- App: **http://localhost:4200**
-- The proxy routes `/api/**` and `/ws/**` to `http://localhost:8080`
+The frontend will start on `http://localhost:4200`
 
-> **Important:** The backend **must** be running before the frontend can function. The proxy config in `proxy.conf.json` forwards all API calls to the backend.
+### 5. Access the Application
+- **Frontend**: http://localhost:4200
+- **Backend API**: http://localhost:8080
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
 
----
+### Default Credentials
+- **Username**: `admin`
+- **Password**: `admin123`
 
-## Default Login Credentials
-
-| Username      | Password       | Role            | Access                    |
-|---------------|----------------|-----------------|---------------------------|
-| `admin`       | `Admin@123`    | SUPER_ADMIN     | Full access to everything |
-
-After login, you can create additional users with different roles via Admin → User Management.
-
----
-
-## Design System
-
-The frontend implements a custom design system defined in [`design.json`](design.json). Key design decisions:
-
-| Token                | Value                                          |
-|----------------------|------------------------------------------------|
-| **Font Family**      | DM Sans (UI), DM Mono (VINs, codes, IDs)       |
-| **Primary Accent**   | `#E85D3A` (Coral)                              |
-| **Page Background**  | `#F4F3F0` (Warm off-white)                     |
-| **Card Radius**      | `20px`                                         |
-| **Sidenav**          | `#111110` (Dark, creates contrast with cards)  |
-| **Card Surface**     | `#FFFFFF` with `rgba(0,0,0,0.06)` border       |
-
-All colors use CSS custom properties (e.g., `var(--dms-accent)`) — never hardcode hex values in components.
-
----
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-hyundai-dms/
-├── backend/                          # Spring Boot 3.3 + Java 21
-│   ├── src/main/java/com/hyundai/dms/
-│   │   ├── config/                   # Security, Cache, WebSocket, Rate Limit
-│   │   ├── common/                   # BaseEntity, ApiResponse, filters
-│   │   ├── exception/                # Global exception handler
-│   │   ├── security/                 # JWT, Auth, UserDetails
-│   │   ├── audit/                    # AOP audit logging
-│   │   └── module/
-│   │       ├── user/                 # User, Role, Menu, Branch, Permission
-│   │       ├── inventory/            # Vehicle, GRN, PDI, Stock Transfer
-│   │       ├── sales/                # Customer, Lead, Quotation, Booking
-│   │       └── notification/         # Real-time WebSocket notifications
-│   ├── src/main/resources/
-│   │   ├── application.yml           # Main config
-│   │   ├── application-dev.yml       # Dev profile (Docker services)
-│   │   └── db/changelog/             # Liquibase migrations
-│   ├── pom.xml
-│   └── Dockerfile
+Domain/
+├── backend/                    # Spring Boot backend
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── com/hyundai/dms/
+│   │   │   │       ├── common/           # Common utilities
+│   │   │   │       ├── config/           # Configuration classes
+│   │   │   │       ├── exception/        # Exception handling
+│   │   │   │       ├── module/           # Business modules
+│   │   │   │       │   ├── inventory/    # Inventory management
+│   │   │   │       │   ├── sales/        # Sales management
+│   │   │   │       │   ├── service/      # Service management
+│   │   │   │       │   ├── testdrive/    # Test drive management
+│   │   │   │       │   └── user/         # User management
+│   │   │   │       └── security/         # Security configuration
+│   │   │   └── resources/
+│   │   │       ├── db/changelog/         # Liquibase migrations
+│   │   │       └── application.yml       # Application config
+│   │   └── test/                         # Unit tests
+│   └── pom.xml                           # Maven dependencies
 │
-├── frontend/                         # Angular 17 + MaterialUI
+├── frontend/                   # Angular frontend
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── core/                 # Auth store (NgRx), interceptors, guards
-│   │   │   ├── shared/               # DataTable, FilterPanel, directives, pipes
-│   │   │   ├── layout/               # Topbar, Sidenav, Layout shell
-│   │   │   └── modules/
-│   │   │       ├── auth/             # Login (split-screen coral gradient)
-│   │   │       ├── dashboard/        # KPI overview dashboard
-│   │   │       ├── inventory/        # 8 components (dashboard, vehicles, GRN, PDI)
-│   │   │       ├── sales/            # Leads, Customers, Quotations, Bookings
-│   │   │       └── admin/            # Users, Roles, Menus, Codes, Audit Log
-│   │   ├── styles.scss               # Global design system (CSS custom properties)
-│   │   └── index.html                # DM Sans + DM Mono fonts
-│   ├── angular.json
-│   ├── proxy.conf.json               # Dev proxy → backend:8080
-│   └── package.json
+│   │   │   ├── core/                     # Core services
+│   │   │   ├── layout/                   # Layout components
+│   │   │   ├── modules/                  # Feature modules
+│   │   │   │   ├── admin/                # Admin module
+│   │   │   │   ├── auth/                 # Authentication
+│   │   │   │   ├── inventory/            # Inventory module
+│   │   │   │   ├── sales/                # Sales module
+│   │   │   │   ├── service/              # Service module
+│   │   │   │   ├── testdrive/            # Test drive module
+│   │   │   │   └── reports/              # Reports module
+│   │   │   └── shared/                   # Shared components
+│   │   └── assets/                       # Static assets
+│   ├── angular.json                      # Angular config
+│   └── package.json                      # npm dependencies
 │
-├── docker-compose.yml                # MySQL 8 + Redis 7.2
-├── design.json                       # Complete UI design system specification
-└── README.md
+├── docker-compose.yml          # Docker compose config
+├── .gitignore                  # Git ignore rules
+└── README.md                   # This file
 ```
 
----
+## 🔧 Configuration
 
-## Architecture Highlights
+### Backend Configuration
+Edit `backend/src/main/resources/application.yml`:
 
-### Authentication & Authorization
-- **JWT tokens**: 15-min access tokens + long-lived refresh tokens (stored in DB)
-- **5 roles**: `SUPER_ADMIN`, `MASTER_USER`, `SALES_CRM_EXEC`, `WORKSHOP_EXEC`, `MANAGER_VIEWER`
-- **Permission matrix**: Module × CRUD granularity
-- **Frontend**: NgRx auth state, `JwtInterceptor` (auto-attach), `ErrorInterceptor` (auto-refresh)
-- **Backend**: `@PreAuthorize` method-level security
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/dms_db
+    username: dms_user
+    password: dms_password
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
 
-### Data Layer
-- **Query DSL**: `SpecificationBuilder` converts `FilterCriteria[]` to JPA `Specification<T>` at runtime
-- **Multi-tier cache**: Caffeine (L1) → Redis (L2) → HTTP ETag (L3)
-- **Audit logging**: `@Audited` AOP annotation captures before/after state with correlation IDs
+jwt:
+  secret: your-secret-key
+  expiration: 86400000  # 24 hours
+```
 
-### Real-Time Features
-- **WebSocket**: STOMP over SockJS for push notifications
-- **Notification bell**: Live unread count badge, priority-based styling
+### Frontend Configuration
+Edit `frontend/src/environments/environment.ts`:
 
-### Security Hardening
-- CSP headers, X-Frame-Options: DENY, X-Content-Type-Options: nosniff
-- Rate limiting: 5 req/min token-bucket on login endpoint
-- CORS configured for development proxy
+```typescript
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:8080/api'
+};
+```
 
----
+## 📚 API Documentation
 
-## Running Tests
+Once the backend is running, access the Swagger UI at:
+```
+http://localhost:8080/swagger-ui.html
+```
 
-```powershell
-# Backend unit + integration tests
+## 🗄️ Database Schema
+
+The application uses Liquibase for database migrations. All migrations are located in:
+```
+backend/src/main/resources/db/changelog/
+```
+
+Key tables:
+- `users` - User accounts
+- `branches` - Dealership branches
+- `vehicles` - Vehicle inventory
+- `vehicle_models` - Centralized vehicle models
+- `customers` - Customer information
+- `leads` - Sales leads
+- `bookings` - Vehicle bookings
+- `test_drive_fleet` - Test drive vehicles
+- `test_drive_bookings` - Test drive bookings
+- `service_bookings` - Service appointments
+
+## 🔐 Security
+
+- JWT-based authentication
+- Role-based access control (RBAC)
+- Account locking after failed login attempts
+- Password encryption using BCrypt
+- CORS configuration for frontend access
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
 cd backend
 mvn test
-
-# Frontend unit tests
-cd frontend
-ng test
 ```
 
----
-
-## Building for Production
-
-```powershell
-# Frontend production build
+### Frontend Tests
+```bash
 cd frontend
-ng build --configuration production
-# Output → frontend/dist/dms-frontend/
+npm test
+```
 
-# Backend production JAR
+## 📦 Building for Production
+
+### Backend
+```bash
 cd backend
 mvn clean package -DskipTests
-# Output → backend/target/dms-*.jar
+```
+The JAR file will be in `backend/target/dms-1.0.0-SNAPSHOT.jar`
 
-# Full stack via Docker
+### Frontend
+```bash
+cd frontend
+npm run build
+```
+The build artifacts will be in `frontend/dist/`
+
+## 🐳 Docker Deployment
+
+Build and run with Docker Compose:
+```bash
 docker-compose up --build
 ```
 
+## 📝 Recent Updates
+
+### Latest Features (v1.0.0)
+- ✅ Centralized Vehicle Model Management System
+- ✅ Searchable vehicle model and customer dropdowns
+- ✅ Card-based form layouts for all sales modules
+- ✅ Enhanced user authentication with account locking
+- ✅ Improved error handling and validation
+
+### Bug Fixes
+- ✅ Fixed form population issues in leads, bookings, and test drive modules
+- ✅ Fixed search functionality across all modules
+- ✅ Fixed vehicle dropdown not populating in booking edit mode
+- ✅ Enhanced customer selector to handle async loading
+- ✅ Fixed test drive fleet form to properly display brand and model
+
+See [COMPLETE_BUG_FIXES.md](COMPLETE_BUG_FIXES.md) for detailed information.
+
+## 📖 Documentation
+
+- [Vehicle Model Centralization Guide](VEHICLE_MODEL_CENTRALIZATION.md)
+- [Vehicle Model Dropdown Implementation](VEHICLE_MODEL_DROPDOWN_IMPLEMENTATION.md)
+- [Bug Fixes Summary](BUG_FIXES_SUMMARY.md)
+- [Complete Bug Fixes](COMPLETE_BUG_FIXES.md)
+- [Final Implementation Summary](FINAL_IMPLEMENTATION_SUMMARY.md)
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is proprietary software developed for Hyundai dealerships.
+
+## 👥 Authors
+
+- **Sanjay PK** - [GitHub](https://github.com/pksanjayy)
+
+## 🙏 Acknowledgments
+
+- Spring Boot team for the excellent framework
+- Angular team for the powerful frontend framework
+- All contributors who helped improve this project
+
+## 📞 Support
+
+For support, email support@example.com or open an issue in the repository.
+
 ---
 
-## API Documentation
-
-Swagger UI: **http://localhost:8080/swagger-ui.html**
-
-Endpoints are grouped by module: Auth, Users, Roles, Menus, Branches, Codes, Vehicles, GRN, PDI, Stock Transfers, Customers, Leads, Quotations, Bookings, Notifications, Audit Logs.
-
----
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| `ECONNREFUSED` on frontend | Make sure backend is running on port 8080 |
-| Liquibase lock error | Run `DELETE FROM dms_db.DATABASECHANGELOGLOCK;` in MySQL |
-| `npm install` fails | Delete `node_modules/` and `package-lock.json`, retry |
-| Maven compilation errors | Run `mvn clean` first, ensure Java 21 is on PATH |
-| Redis connection refused | Run `docker-compose up -d redis` |
+**Note**: This is a comprehensive dealer management system. Make sure to configure all environment variables and database connections before deploying to production.
