@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,7 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SalesService } from '../../services/sales.service';
-import { BookingDto, CreateBookingRequest } from '../../models/sales.model';
+import { BookingDto } from '../../models/sales.model';
 import { FilterRequest } from '../../../../core/models';
 import { BranchContextService } from '../../../../core/services/branch-context.service';
 import { Subject } from 'rxjs';
@@ -37,14 +36,8 @@ export class BookingListComponent implements OnInit {
     yearFilter: ''
   };
 
-  isDrawerOpen = false;
-  bookingForm!: FormGroup;
-  isSubmitting = false;
-  editingBookingId: number | null = null;
-
   constructor(
     private salesService: SalesService,
-    private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private branchContext: BranchContextService,
@@ -52,7 +45,6 @@ export class BookingListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
     this.loadBookings();
     this.generateYears();
     this.dataSource.filterPredicate = this.createFilter();
@@ -84,6 +76,11 @@ export class BookingListComponent implements OnInit {
     };
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   generateYears(): void {
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i >= 2024; i--) {
@@ -91,30 +88,11 @@ export class BookingListComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  initForm(): void {
-    this.bookingForm = this.fb.group({
-      leadId: [null, Validators.required],
-      vehicleId: [null, Validators.required],
-      totalAmount: [null, [Validators.required, Validators.min(0.01)]],
-      amountPaid: [null, [Validators.required, Validators.min(0)]],
-      bookingDate: [new Date(), Validators.required],
-      expectedDelivery: [null, Validators.required],
-    });
-  }
-
   loadBookings(): void {
     this.isLoading = true;
     const filters: any[] = [];
     const branchId = this.branchContext.getActiveBranchId();
     if (branchId !== null) {
-      // Booking entity maps Lead, which maps Branch. Check backend entity graph for mapping if needed
-      // Assuming Booking -> lead -> branch -> id or Vehicle -> branch -> id
-      // Since booking belongs to a lead, filtering on lead.branch.id usually works.
       filters.push({ field: 'lead.branch.id', operator: 'EQUAL', value: String(branchId) });
     }
     const filterRequest: FilterRequest = {
@@ -154,72 +132,12 @@ export class BookingListComponent implements OnInit {
     this.dataSource.filter = JSON.stringify(this.filterValues);
   }
 
-  openCreateDrawer(): void {
-    this.editingBookingId = null;
-    this.bookingForm.reset();
-    this.bookingForm.patchValue({ bookingDate: new Date() });
-    this.isDrawerOpen = true;
+  navigateToCreate(): void {
+    this.router.navigate(['/sales/bookings/new']);
   }
 
-  editBooking(booking: BookingDto): void {
-    this.editingBookingId = booking.id;
-    this.bookingForm.patchValue({
-      leadId: booking.leadId,
-      vehicleId: booking.vehicleId,
-      totalAmount: booking.totalAmount,
-      amountPaid: booking.amountPaid,
-      bookingDate: booking.bookingDate ? new Date(booking.bookingDate) : new Date(),
-      expectedDelivery: booking.expectedDelivery ? new Date(booking.expectedDelivery) : null
-    });
-    this.isDrawerOpen = true;
-  }
-
-  closeDrawer(): void {
-    this.isDrawerOpen = false;
-    this.editingBookingId = null;
-  }
-
-  onSubmit(): void {
-    if (this.bookingForm.invalid) {
-      this.bookingForm.markAllAsTouched();
-      return;
-    }
-    this.isSubmitting = true;
-    const val = this.bookingForm.value;
-    const request: CreateBookingRequest = {
-      leadId: val.leadId,
-      vehicleId: val.vehicleId,
-      totalAmount: val.totalAmount,
-      amountPaid: val.amountPaid,
-      bookingDate: val.bookingDate instanceof Date 
-        ? val.bookingDate.toISOString().slice(0, 10)
-        : val.bookingDate,
-      expectedDelivery: val.expectedDelivery instanceof Date
-        ? val.expectedDelivery.toISOString().slice(0, 10)
-        : val.expectedDelivery,
-    };
-
-    if (this.editingBookingId) {
-      this.salesService.updateBooking(this.editingBookingId, request).subscribe({
-        next: () => {
-          this.snackBar.open('Booking updated successfully', 'Close', { duration: 3000 });
-          this.closeDrawer();
-          this.loadBookings();
-          this.isSubmitting = false;
-        },
-        error: () => (this.isSubmitting = false),
-      });
-    } else {
-      this.salesService.createBooking(request).subscribe({
-        next: () => {
-          this.snackBar.open('Booking created — vehicle is now on HOLD', 'Close', { duration: 3000 });
-          this.closeDrawer();
-          this.loadBookings();
-          this.isSubmitting = false;
-        },
-        error: () => (this.isSubmitting = false),
-      });
-    }
+  navigateToEdit(id: number): void {
+    this.router.navigate(['/sales/bookings/edit', id]);
   }
 
   cancelBooking(booking: BookingDto): void {

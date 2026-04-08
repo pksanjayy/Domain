@@ -42,6 +42,8 @@ export interface TestDriveFleet {
   status: TestDriveFleetStatus;
   branchId: number;
   branchName?: string;
+  vehicleId?: number;
+  vehicleModel?: string;
   lastServiceDate: string | null;
   nextServiceDue: string | null;
   createdAt?: string;

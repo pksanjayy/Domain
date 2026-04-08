@@ -1,6 +1,7 @@
 package com.hyundai.dms.module.testdrive.entity;
 
 import com.hyundai.dms.common.BaseEntity;
+import com.hyundai.dms.module.inventory.entity.Vehicle;
 import com.hyundai.dms.module.testdrive.enums.FuelType;
 import com.hyundai.dms.module.testdrive.enums.TestDriveFleetStatus;
 import com.hyundai.dms.module.testdrive.enums.Transmission;
@@ -13,7 +14,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "test_drive_fleet", indexes = {
         @Index(name = "idx_test_drive_fleet_branch", columnList = "branch_id"),
-        @Index(name = "idx_test_drive_fleet_status", columnList = "status")
+        @Index(name = "idx_test_drive_fleet_status", columnList = "status"),
+        @Index(name = "idx_test_drive_fleet_vehicle", columnList = "vehicle_id")
 })
 @Getter
 @Setter
@@ -26,17 +28,15 @@ public class TestDriveFleet extends BaseEntity {
     @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vehicle_id")
+    private Vehicle vehicle;
+
     @Column(name = "fleet_id", nullable = false, unique = true, length = 50)
     private String fleetId;
 
     @Column(name = "vin", nullable = false, unique = true, length = 50)
     private String vin;
-
-    @Column(name = "brand", nullable = false, length = 100)
-    private String brand;
-
-    @Column(name = "model", nullable = false, length = 100)
-    private String model;
 
     @Column(name = "variant", nullable = false, length = 100)
     private String variant;

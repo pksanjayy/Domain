@@ -1,0 +1,77 @@
+<div class="form-container">
+  <div class="header-section">
+    <h1>{{ isEditMode ? 'Edit Lead' : 'New Lead' }}</h1>
+    <button mat-icon-button (click)="onCancel()" matTooltip="Back to list">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="loading-shade" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <form [formGroup]="leadForm" (ngSubmit)="onSubmit()" class="lead-form" *ngIf="leadForm">
+        
+        <div class="form-row">
+          <app-customer-selector
+            [label]="'Customer'"
+            [placeholder]="'Search for a customer'"
+            [required]="true"
+            formControlName="customerId">
+          </app-customer-selector>
+
+          <app-vehicle-model-selector
+            [label]="'Model Interested'"
+            [placeholder]="'Search for a model'"
+            [required]="false"
+            (ngModelChange)="onModelSelected($event)"
+            [ngModel]="selectedLeadModel"
+            [ngModelOptions]="{standalone: true}">
+          </app-vehicle-model-selector>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Branch</mat-label>
+            <mat-select formControlName="branchId">
+              <mat-option *ngFor="let b of branches" [value]="b.id">{{ b.name }}</mat-option>
+            </mat-select>
+            <mat-error>Branch is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Assigned To</mat-label>
+            <mat-select formControlName="assignedToId">
+              <mat-option [value]="null">Unassigned</mat-option>
+              <mat-option *ngFor="let u of users" [value]="u.id">{{ u.username }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Source</mat-label>
+            <mat-select formControlName="source">
+              <mat-option value="WALK_IN">Walk-In</mat-option>
+              <mat-option value="PHONE">Phone</mat-option>
+              <mat-option value="REFERRAL">Referral</mat-option>
+              <mat-option value="ONLINE">Online</mat-option>
+              <mat-option value="CAMP">Camp</mat-option>
+            </mat-select>
+            <mat-error>Source is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="card-actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="leadForm.invalid || isLoading">
+            {{ isEditMode ? 'Update' : 'Create' }} Lead
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

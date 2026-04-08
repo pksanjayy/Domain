@@ -1,7 +1,6 @@
 package com.hyundai.dms.module.service.entity;
 
 import com.hyundai.dms.common.BaseEntity;
-import com.hyundai.dms.module.inventory.entity.Vehicle;
 import com.hyundai.dms.module.sales.entity.Customer;
 import com.hyundai.dms.module.service.enums.ServiceBookingStatus;
 import com.hyundai.dms.module.service.enums.ServiceType;

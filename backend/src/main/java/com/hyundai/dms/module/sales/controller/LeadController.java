@@ -61,6 +61,14 @@ public class LeadController {
         return ResponseEntity.ok(ApiResponse.success(lead));
     }
 
+    @PutMapping("/{id}")
+    @Operation(summary = "Update lead", description = "Update lead details")
+    public ResponseEntity<ApiResponse<LeadDto>> updateLead(
+            @PathVariable Long id, @Valid @RequestBody com.hyundai.dms.module.sales.dto.UpdateLeadRequest request) {
+        LeadDto lead = leadService.updateLead(id, request);
+        return ResponseEntity.ok(ApiResponse.success(lead));
+    }
+
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete lead", description = "SUPER_ADMIN only")
     public ResponseEntity<ApiResponse<Void>> deleteLead(@PathVariable Long id) {

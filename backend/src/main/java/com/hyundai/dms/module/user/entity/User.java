@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users", indexes = {
@@ -27,9 +29,14 @@ public class User extends BaseEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
@@ -53,7 +60,20 @@ public class User extends BaseEntity {
         if (lockedAt == null) {
             return false;
         }
-        return lockedAt.plusMinutes(30).isAfter(LocalDateTime.now());
+        return lockedAt.plusMinutes(2).isAfter(LocalDateTime.now());
+    }
+
+    public long getLockTimeRemainingSeconds() {
+        if (lockedAt == null) {
+            return 0;
+        }
+        LocalDateTime unlockTime = lockedAt.plusMinutes(2);
+        long secondsRemaining = java.time.Duration.between(LocalDateTime.now(), unlockTime).getSeconds();
+        return Math.max(0, secondsRemaining);
+    }
+
+    public int getRemainingAttempts() {
+        return Math.max(0, 5 - this.failedLoginAttempts);
     }
 
     public void incrementFailedAttempts() {

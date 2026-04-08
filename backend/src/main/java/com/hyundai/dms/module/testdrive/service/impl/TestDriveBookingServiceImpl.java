@@ -19,6 +19,7 @@ import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
     private final QueryDslPredicateBuilder<TestDriveBooking> predicateBuilder = new QueryDslPredicateBuilder<>(TestDriveBooking.class);
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public com.hyundai.dms.common.PageResponse<TestDriveBookingDto> searchBookings(com.hyundai.dms.common.filter.FilterRequest filterRequest) {
         // Extract globalSearch before passing to predicate builder
         String globalSearch = null;
@@ -59,8 +60,8 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
                 q.bookingId.containsIgnoreCase(globalSearch)
                 .or(q.customer.name.containsIgnoreCase(globalSearch))
                 .or(q.customer.mobile.containsIgnoreCase(globalSearch))
-                .or(q.fleet.model.containsIgnoreCase(globalSearch))
-                .or(q.fleet.vin.containsIgnoreCase(globalSearch))
+                .or(q.fleet.vehicle.vehicleModel.model.containsIgnoreCase(globalSearch))
+                .or(q.fleet.vehicle.vin.containsIgnoreCase(globalSearch))
                 .or(q.licenseNumber.containsIgnoreCase(globalSearch))
             );
         }
@@ -82,7 +83,7 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public TestDriveBookingDto getBookingById(Long id) {
         TestDriveBooking entity = testDriveBookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TestDriveBooking", id));
@@ -90,7 +91,7 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TestDriveBookingDto createBooking(TestDriveBookingDto dto) {
         Customer customer = customerRepository.findById(dto.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", dto.getCustomerId()));
@@ -115,7 +116,7 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TestDriveBookingDto updateBooking(Long id, TestDriveBookingDto dto) {
         TestDriveBooking entity = testDriveBookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TestDriveBooking", id));
@@ -160,7 +161,7 @@ public class TestDriveBookingServiceImpl implements TestDriveBookingService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteBooking(Long id) {
         TestDriveBooking entity = testDriveBookingRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TestDriveBooking", id));

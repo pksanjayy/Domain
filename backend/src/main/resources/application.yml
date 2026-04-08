@@ -33,6 +33,7 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
+    clear-checksums: true
 
   cache:
     type: caffeine
@@ -60,7 +61,7 @@ app:
 
   security:
     max-failed-attempts: 5
-    lock-duration-minutes: 30
+    lock-duration-minutes: 2
 
 logging:
   level:

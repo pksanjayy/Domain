@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import com.querydsl.core.types.Predicate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -43,7 +44,7 @@ public class BookingService {
     private final QueryDslPredicateBuilder<Booking> predicateBuilder = new QueryDslPredicateBuilder<>(Booking.class);
 
     @LogExecution
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public PageResponse<BookingDto> listBookings(FilterRequest filterRequest) {
         Predicate predicate = predicateBuilder.build(filterRequest.filters());
         PageRequest pageRequest = PageUtils.buildPageRequest(
@@ -54,7 +55,7 @@ public class BookingService {
     }
 
     @LogExecution
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public BookingDto getBookingById(Long id) {
         Booking booking = findBookingOrThrow(id);
         return bookingMapper.toDto(booking);
@@ -63,7 +64,7 @@ public class BookingService {
     @LogExecution
     @Audited(entity = "Booking", action = ActionType.CREATE)
     @PreAuthorize("hasRole('ROLE_SALES_CRM_EXEC') or hasRole('ROLE_SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BookingDto createBooking(CreateBookingRequest request) {
         if (bookingRepository.existsByLeadId(request.getLeadId())) {
             throw new BusinessRuleException("A booking already exists for lead id=" + request.getLeadId());
@@ -95,7 +96,7 @@ public class BookingService {
     @LogExecution
     @Audited(entity = "Booking", action = ActionType.UPDATE)
     @PreAuthorize("hasRole('ROLE_SALES_CRM_EXEC') or hasRole('ROLE_SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BookingDto cancelBooking(Long id) {
         Booking booking = findBookingOrThrow(id);
 
@@ -113,7 +114,7 @@ public class BookingService {
     @LogExecution
     @Audited(entity = "Booking", action = ActionType.UPDATE)
     @PreAuthorize("hasRole('ROLE_SALES_CRM_EXEC') or hasRole('ROLE_SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public BookingDto updateBooking(Long id, com.hyundai.dms.module.sales.dto.UpdateBookingRequest request) {
         Booking booking = findBookingOrThrow(id);
         
@@ -136,7 +137,7 @@ public class BookingService {
     @LogExecution
     @Audited(entity = "Booking", action = ActionType.DELETE)
     @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteBooking(Long id) {
         Booking booking = findBookingOrThrow(id);
         bookingRepository.delete(booking);

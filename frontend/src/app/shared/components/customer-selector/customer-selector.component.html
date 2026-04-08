@@ -1,0 +1,23 @@
+<mat-form-field appearance="outline" class="full-width">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    [placeholder]="placeholder"
+    [matAutocomplete]="auto"
+    (input)="onSearchChange($any($event.target).value)"
+    [value]="selectedCustomer ? displayCustomer(selectedCustomer) : ''"
+    [required]="required">
+  <mat-icon matSuffix>person_search</mat-icon>
+  <mat-autocomplete
+    #auto="matAutocomplete"
+    [displayWith]="displayCustomer.bind(this)"
+    (optionSelected)="onCustomerSelected($event.option.value)">
+    <mat-option *ngFor="let customer of filteredCustomers$ | async" [value]="customer">
+      <div class="customer-option">
+        <span class="customer-name">{{ customer.name }}</span>
+        <span class="customer-mobile">{{ customer.mobile }}</span>
+      </div>
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *ngIf="required">{{ label }} is required</mat-error>
+</mat-form-field>

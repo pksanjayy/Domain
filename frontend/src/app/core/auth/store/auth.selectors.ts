@@ -36,7 +36,7 @@ export const selectAuthError = createSelector(
 
 export const selectUserRole = createSelector(
   selectCurrentUser,
-  (user) => (user?.role as RoleName) ?? null
+  (user) => (user?.roles?.[0] as RoleName) ?? null
 );
 
 export const selectUserMenus = createSelector(

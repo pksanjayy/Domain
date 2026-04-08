@@ -109,12 +109,19 @@ public class DemoController {
     }
 
     private UserDto toDto(User user) {
+        java.util.List<UserDto.RoleInfo> roleInfos = user.getRoles().stream()
+                .map(r -> UserDto.RoleInfo.builder()
+                        .id(r.getId())
+                        .name(r.getName().name())
+                        .displayName(r.getDescription() != null ? r.getDescription() : r.getName().name())
+                        .build())
+                .collect(java.util.stream.Collectors.toList());
+
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .roleName(user.getRole().getName().name())
-                .roleId(user.getRole().getId())
+                .roles(roleInfos)
                 .branchName(user.getBranch() != null ? user.getBranch().getName() : null)
                 .branchId(user.getBranch() != null ? user.getBranch().getId() : null)
                 .isActive(user.getIsActive())

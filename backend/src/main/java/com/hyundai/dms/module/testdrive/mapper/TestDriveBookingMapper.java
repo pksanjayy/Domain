@@ -13,7 +13,7 @@ public interface TestDriveBookingMapper {
     @Mapping(source = "customer.mobile", target = "customerPhone")
     @Mapping(source = "fleet.id", target = "fleetId")
     @Mapping(source = "fleet.vin", target = "fleetVin")
-    @Mapping(source = "fleet.model", target = "fleetModel")
+    @Mapping(target = "fleetModel", expression = "java(entity.getFleet() != null && entity.getFleet().getVehicle() != null ? entity.getFleet().getVehicle().getBrand() + \" \" + entity.getFleet().getVehicle().getModel() : null)")
     @Mapping(source = "salesExecutive.id", target = "salesExecutiveId")
     @Mapping(source = "salesExecutive.username", target = "salesExecutiveName")
     TestDriveBookingDto toDto(TestDriveBooking entity);

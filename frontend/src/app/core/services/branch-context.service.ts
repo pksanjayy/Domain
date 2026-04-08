@@ -23,7 +23,7 @@ export class BranchContextService {
   constructor(private store: Store) {
     this.store.select(selectCurrentUser).subscribe((user: User | null) => {
       if (user) {
-        this.userRole = user.role;
+        this.userRole = user.roles?.[0] ?? null;
         this.userBranchId = user.branchId;
 
         if (this.isAdmin()) {

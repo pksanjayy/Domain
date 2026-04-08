@@ -201,8 +201,14 @@ public class LeadService {
      * Package-visible helper used by QuotationService and BookingService.
      */
     public Lead findLeadOrThrow(Long id) {
-        return leadRepository.findById(id)
+        Lead lead = leadRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Lead", id));
+        
+        if (lead.isDeleted()) {
+            throw new ResourceNotFoundException("Lead", id);
+        }
+        
+        return lead;
     }
 
     private User getCurrentUser() {

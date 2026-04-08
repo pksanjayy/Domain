@@ -159,6 +159,12 @@ import { ReportsService } from '../../services/reports.service';
       mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 12px; }
       p { font-size: 14px; margin: 0; }
     }
+    
+    @media (max-width: 768px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   `],
 })
 export class SalesReportComponent implements OnInit {

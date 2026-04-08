@@ -92,6 +92,47 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ApiResponse.error(error), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(com.hyundai.dms.exception.InvalidCredentialsException.class)
+    public ResponseEntity<ApiResponse<Map<String, Object>>> handleInvalidCredentialsException(
+            com.hyundai.dms.exception.InvalidCredentialsException ex, HttpServletRequest request) {
+        log.warn("[{}] Invalid credentials: {} attempts remaining", getCorrelationId(), ex.getRemainingAttempts());
+        
+        Map<String, Object> errorData = new HashMap<>();
+        errorData.put("remainingAttempts", ex.getRemainingAttempts());
+        
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .errorCode("INVALID_CREDENTIALS")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .correlationId(getCorrelationId())
+                .details(errorData)
+                .build();
+        return new ResponseEntity<>(ApiResponse.error(error), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(com.hyundai.dms.exception.AccountLockedException.class)
+    public ResponseEntity<ApiResponse<Map<String, Object>>> handleAccountLockedException(
+            com.hyundai.dms.exception.AccountLockedException ex, HttpServletRequest request) {
+        log.warn("[{}] Account locked: {}s remaining", getCorrelationId(), ex.getLockTimeRemainingSeconds());
+        
+        Map<String, Object> errorData = new HashMap<>();
+        errorData.put("lockTimeRemainingSeconds", ex.getLockTimeRemainingSeconds());
+        errorData.put("remainingAttempts", 0);
+        
+        ApiErrorResponse error = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .errorCode("ACCOUNT_LOCKED")
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .correlationId(getCorrelationId())
+                .details(errorData)
+                .build();
+        return new ResponseEntity<>(ApiResponse.error(error), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(
             AuthenticationException ex, HttpServletRequest request) {

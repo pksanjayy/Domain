@@ -322,3 +322,34 @@ databaseChangeLog:
         sql: >
           ALTER TABLE customers DROP COLUMN deleted;
           ALTER TABLE leads DROP COLUMN deleted;
+
+  - changeSet:
+      id: 24
+      author: antigravity
+      comment: "Replace single role_id FK with user_roles join table for multi-role support v16.0"
+      sqlFile:
+        path: v16.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE users ADD COLUMN role_id BIGINT NOT NULL DEFAULT 1;
+          UPDATE users u SET u.role_id = (SELECT ur.role_id FROM user_roles ur WHERE ur.user_id = u.id LIMIT 1);
+          ALTER TABLE users ADD CONSTRAINT fk_users_role FOREIGN KEY (role_id) REFERENCES roles(id);
+          DROP TABLE IF EXISTS user_roles;
+
+  - changeSet:
+      id: 25-fixed
+      author: antigravity
+      comment: "Add VehicleModel table and relationships v17.0 (fixed)"
+      sqlFile:
+        path: v17.0/schema.sql
+        relativeToChangelogFile: true
+      rollback:
+        sql: >
+          ALTER TABLE vehicles DROP FOREIGN KEY IF EXISTS fk_vehicles_vehicle_model;
+          ALTER TABLE vehicles DROP COLUMN IF EXISTS vehicle_model_id;
+          ALTER TABLE test_drive_fleet DROP FOREIGN KEY IF EXISTS fk_test_drive_fleet_vehicle;
+          ALTER TABLE test_drive_fleet DROP COLUMN IF EXISTS vehicle_id;
+          ALTER TABLE test_drive_fleet ADD COLUMN IF NOT EXISTS brand VARCHAR(100) NOT NULL DEFAULT '';
+          ALTER TABLE test_drive_fleet ADD COLUMN IF NOT EXISTS model VARCHAR(100) NOT NULL DEFAULT '';
+          DROP TABLE IF EXISTS vehicle_models;

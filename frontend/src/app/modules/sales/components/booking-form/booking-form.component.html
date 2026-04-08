@@ -1,0 +1,100 @@
+<div class="form-container">
+  <div class="header-section">
+    <h1>{{ isEditMode ? 'Edit Booking' : 'New Booking' }}</h1>
+    <button mat-icon-button (click)="onCancel()" matTooltip="Back to list">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="loading-shade" *ngIf="isLoading">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="booking-form" *ngIf="bookingForm">
+        
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Lead ID</mat-label>
+            <input matInput type="number" formControlName="leadId" placeholder="Enter Lead ID">
+            <mat-error *ngIf="bookingForm.get('leadId')?.hasError('required')">Lead ID is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <app-vehicle-model-selector
+            [label]="'Select Vehicle Model'"
+            [placeholder]="'Search for a model'"
+            [required]="true"
+            (ngModelChange)="onVehicleModelSelected($event)"
+            [ngModel]="selectedBookingModel"
+            [ngModelOptions]="{standalone: true}">
+          </app-vehicle-model-selector>
+        </div>
+
+        <div class="form-row" *ngIf="filteredVehicles.length > 0">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Select Vehicle</mat-label>
+            <mat-select formControlName="vehicleId">
+              <mat-option *ngFor="let vehicle of filteredVehicles" [value]="vehicle.id">
+                {{ vehicle.vin }} - {{ vehicle.variant }} ({{ vehicle.colour }})
+              </mat-option>
+            </mat-select>
+            <mat-hint>{{ filteredVehicles.length }} available vehicle(s)</mat-hint>
+            <mat-error>Vehicle is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="selectedBookingModel && filteredVehicles.length === 0" class="no-vehicles-message">
+          <mat-icon>info</mat-icon>
+          <span>No available vehicles found for {{ selectedBookingModel.brand }} {{ selectedBookingModel.model }}</span>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Total Amount (₹)</mat-label>
+            <input matInput type="number" formControlName="totalAmount" placeholder="0.00">
+            <mat-icon matPrefix>currency_rupee</mat-icon>
+            <mat-error *ngIf="bookingForm.get('totalAmount')?.hasError('required')">Total amount is required</mat-error>
+            <mat-error *ngIf="bookingForm.get('totalAmount')?.hasError('min')">Minimum 0.01</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Amount Paid (₹)</mat-label>
+            <input matInput type="number" formControlName="amountPaid" placeholder="0.00">
+            <mat-icon matPrefix>currency_rupee</mat-icon>
+            <mat-error *ngIf="bookingForm.get('amountPaid')?.hasError('required')">Amount paid is required</mat-error>
+            <mat-error *ngIf="bookingForm.get('amountPaid')?.hasError('min')">Minimum 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Booking Date</mat-label>
+            <input matInput [matDatepicker]="bookingDatePicker" formControlName="bookingDate">
+            <mat-datepicker-toggle matIconSuffix [for]="bookingDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #bookingDatePicker></mat-datepicker>
+            <mat-error>Booking date is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Expected Delivery</mat-label>
+            <input matInput [matDatepicker]="deliveryPicker" formControlName="expectedDelivery">
+            <mat-datepicker-toggle matIconSuffix [for]="deliveryPicker"></mat-datepicker-toggle>
+            <mat-datepicker #deliveryPicker></mat-datepicker>
+            <mat-error>Expected delivery date is required</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="card-actions">
+          <button mat-button type="button" (click)="onCancel()" [disabled]="isLoading">Cancel</button>
+          <button mat-raised-button color="primary" type="submit" [disabled]="bookingForm.invalid || isLoading">
+            {{ isEditMode ? 'Update' : 'Create' }} Booking
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -26,6 +26,10 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.PathBuilder;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -56,7 +60,7 @@ public class UserService {
         }
 
         if (roleId != null) {
-            builder.and(userPath.get("role").get("id", Long.class).eq(roleId));
+            builder.and(userPath.getCollection("roles", Role.class).any().get("id", Long.class).eq(roleId));
         }
 
         if (branchId != null) {
@@ -90,8 +94,7 @@ public class UserService {
             throw new DuplicateResourceException("User", "email", request.getEmail());
         }
 
-        Role role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Role", request.getRoleId()));
+        Set<Role> roles = fetchAndValidateRoles(request.getRoleIds());
 
         Branch branch = null;
         if (request.getBranchId() != null) {
@@ -103,7 +106,7 @@ public class UserService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
-                .role(role)
+                .roles(roles)
                 .branch(branch)
                 .isActive(request.getIsActive() != null ? request.getIsActive() : true)
                 .failedLoginAttempts(0)
@@ -111,7 +114,8 @@ public class UserService {
                 .build();
 
         user = userRepository.save(user);
-        log.info("[{}] Created user: {} with role: {}", correlationId, user.getUsername(), role.getName());
+        String roleNames = roles.stream().map(r -> r.getName().name()).collect(Collectors.joining(", "));
+        log.info("[{}] Created user: {} with roles: {}", correlationId, user.getUsername(), roleNames);
         return toDto(user);
     }
 
@@ -122,14 +126,15 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", id));
 
-        Role role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Role", request.getRoleId()));
-        user.setRole(role);
+        Set<Role> roles = fetchAndValidateRoles(request.getRoleIds());
+        user.setRoles(roles);
 
         if (request.getBranchId() != null) {
             Branch branch = branchRepository.findById(request.getBranchId())
                     .orElseThrow(() -> new ResourceNotFoundException("Branch", request.getBranchId()));
             user.setBranch(branch);
+        } else {
+            user.setBranch(null);
         }
 
         if (request.getIsActive() != null) {
@@ -178,6 +183,16 @@ public class UserService {
         return tempPassword;
     }
 
+    // ─── Helpers ───
+
+    private Set<Role> fetchAndValidateRoles(List<Long> roleIds) {
+        Set<Role> roles = new HashSet<>(roleRepository.findAllById(roleIds));
+        if (roles.size() != roleIds.size()) {
+            throw new ResourceNotFoundException("Role", "ids", roleIds.toString());
+        }
+        return roles;
+    }
+
     private String generateTempPassword() {
         StringBuilder sb = new StringBuilder(12);
         for (int i = 0; i < 12; i++) {
@@ -187,12 +202,19 @@ public class UserService {
     }
 
     private UserDto toDto(User user) {
+        List<UserDto.RoleInfo> roleInfos = user.getRoles().stream()
+                .map(r -> UserDto.RoleInfo.builder()
+                        .id(r.getId())
+                        .name(r.getName().name())
+                        .displayName(r.getDescription() != null ? r.getDescription() : r.getName().name())
+                        .build())
+                .collect(Collectors.toList());
+
         return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .roleName(user.getRole().getName().name())
-                .roleId(user.getRole().getId())
+                .roles(roleInfos)
                 .branchName(user.getBranch() != null ? user.getBranch().getName() : null)
                 .branchId(user.getBranch() != null ? user.getBranch().getId() : null)
                 .isActive(user.getIsActive())

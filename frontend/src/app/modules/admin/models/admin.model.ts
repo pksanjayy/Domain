@@ -5,8 +5,7 @@ export interface UserListDto {
   id: number;
   username: string;
   email: string;
-  roleName: string;
-  roleId: number;
+  roles: { id: number; name: string; displayName: string }[];
   branchName: string | null;
   branchId: number | null;
   isActive: boolean;
@@ -21,13 +20,13 @@ export interface CreateUserRequest {
   username: string;
   email: string;
   password: string;
-  roleId: number;
+  roleIds: number[];
   branchId: number | null;
   isActive: boolean;
 }
 
 export interface UpdateUserRequest {
-  roleId: number;
+  roleIds: number[];
   branchId: number | null;
   isActive: boolean;
 }

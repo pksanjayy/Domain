@@ -10,7 +10,7 @@
   <mat-progress-bar *ngIf="isLoading" mode="indeterminate" class="loading-bar"></mat-progress-bar>
 
   <!-- Table -->
-  <div class="table-wrapper">
+  <div class="table-wrapper table-responsive-wrapper">
     <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)">
       <ng-container *ngFor="let col of columns" [matColumnDef]="col.field">
         <th mat-header-cell *matHeaderCellDef

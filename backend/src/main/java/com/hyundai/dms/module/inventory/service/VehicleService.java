@@ -34,6 +34,7 @@ import com.querydsl.core.types.Predicate;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
@@ -51,12 +52,13 @@ public class VehicleService {
     private final VehicleMapper vehicleMapper;
     private final StockStatusTransitionValidator transitionValidator;
     private final NotificationService notificationService;
+    private final VehicleModelService vehicleModelService;
     private final QueryDslPredicateBuilder<Vehicle> predicateBuilder = new QueryDslPredicateBuilder<>(Vehicle.class);
 
     // ── Reads ──
 
     @LogExecution
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public PageResponse<VehicleListDto> listVehicles(FilterRequest filterRequest) {
         List<com.hyundai.dms.common.filter.FilterCriteria> filters = new ArrayList<>(filterRequest.filters());
         
@@ -75,14 +77,14 @@ public class VehicleService {
     }
 
     @LogExecution
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public VehicleDetailDto getVehicleById(Long id) {
         Vehicle vehicle = findVehicleOrThrow(id);
         return vehicleMapper.toDetailDto(vehicle);
     }
 
     @LogExecution
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public VehicleDetailDto getVehicleByVin(String vin) {
         Vehicle vehicle = vehicleRepository.findByVin(vin)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle", "vin", vin));
@@ -91,7 +93,7 @@ public class VehicleService {
 
     @LogExecution
     @Cacheable(value = "vehicleModels")
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<Map<String, String>> getAvailableModels() {
         return vehicleRepository.findAvailableModels().stream()
                 .map(row -> Map.of("brand", (String) row[0], "model", (String) row[1]))
@@ -99,7 +101,7 @@ public class VehicleService {
     }
 
     @LogExecution
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public DashboardSummaryDto getDashboardSummary() {
         // Status counts
         List<Object[]> statusCounts = vehicleRepository.countGroupedByStatus();
@@ -209,7 +211,7 @@ public class VehicleService {
     @Audited(entity = "Vehicle", action = ActionType.CREATE)
     @CacheEvict(value = "vehicleModels", allEntries = true)
     @PreAuthorize("hasRole('WORKSHOP_EXEC') or hasRole('SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public VehicleDetailDto createVehicle(CreateVehicleRequest request) {
         String correlationId = MDC.get("correlationId");
 
@@ -220,8 +222,13 @@ public class VehicleService {
         Branch branch = branchRepository.findById(request.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch", request.getBranchId()));
 
+        // Get or create vehicle model
+        com.hyundai.dms.module.inventory.entity.VehicleModel vehicleModel = 
+                vehicleModelService.getOrCreateVehicleModel(request.getBrand(), request.getModel());
+
         Vehicle vehicle = Vehicle.builder()
                 .vin(request.getVin().toUpperCase())
+                .vehicleModel(vehicleModel)
                 .brand(request.getBrand())
                 .model(request.getModel())
                 .variant(request.getVariant())
@@ -241,14 +248,14 @@ public class VehicleService {
                 .build();
 
         vehicle = vehicleRepository.save(vehicle);
-        log.info("[{}] Created vehicle: VIN={}", correlationId, vehicle.getVin());
+        log.info("[{}] Created vehicle: VIN={}, Model: {} {}", correlationId, vehicle.getVin(), request.getBrand(), request.getModel());
         return vehicleMapper.toDetailDto(vehicle);
     }
 
     @LogExecution
     @Audited(entity = "Vehicle", action = ActionType.UPDATE)
     @CacheEvict(value = "vehicleModels", allEntries = true)
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public VehicleDetailDto updateVehicle(Long id, UpdateVehicleRequest request) {
         String correlationId = MDC.get("correlationId");
 
@@ -256,6 +263,15 @@ public class VehicleService {
 
         Branch branch = branchRepository.findById(request.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch", request.getBranchId()));
+
+        // Update vehicle model if brand/model changed
+        String oldBrand = vehicle.getBrand();
+        String oldModel = vehicle.getModel();
+        if (!oldBrand.equals(request.getBrand()) || !oldModel.equals(request.getModel())) {
+            com.hyundai.dms.module.inventory.entity.VehicleModel newVehicleModel = 
+                    vehicleModelService.updateVehicleModel(oldBrand, oldModel, request.getBrand(), request.getModel());
+            vehicle.setVehicleModel(newVehicleModel);
+        }
 
         vehicle.setVin(request.getVin().toUpperCase());
         vehicle.setBrand(request.getBrand());
@@ -279,14 +295,14 @@ public class VehicleService {
             throw new BusinessRuleException("Vehicle was modified concurrently, please refresh");
         }
 
-        log.info("[{}] Updated vehicle: id={}", correlationId, id);
+        log.info("[{}] Updated vehicle: id={}, Model: {} {}", correlationId, id, request.getBrand(), request.getModel());
         return vehicleMapper.toDetailDto(vehicle);
     }
 
     @LogExecution
     @Audited(entity = "Vehicle", action = ActionType.UPDATE)
     @CacheEvict(value = "vehicleModels", allEntries = true)
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public VehicleDetailDto transitionStatus(Long id, StatusTransitionRequest request) {
         String correlationId = MDC.get("correlationId");
 
@@ -326,7 +342,7 @@ public class VehicleService {
     @Audited(entity = "Vehicle", action = ActionType.UPDATE)
     @CacheEvict(value = "vehicleModels", allEntries = true)
     @PreAuthorize("hasRole('SALES_CRM_EXEC') or hasRole('SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public VehicleDetailDto holdVehicle(Long id, String remarks) {
         Vehicle vehicle = findVehicleOrThrow(id);
         transitionValidator.validate(vehicle.getStatus(), StockStatus.HOLD);
@@ -345,12 +361,16 @@ public class VehicleService {
     @LogExecution
     @Audited(entity = "Vehicle", action = ActionType.DELETE)
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteVehicle(Long id) {
         Vehicle vehicle = findVehicleOrThrow(id);
+        
+        // Decrement vehicle model count
+        vehicleModelService.decrementVehicleCount(vehicle.getBrand(), vehicle.getModel());
+        
         vehicle.setStatus(StockStatus.DELETED);
         vehicleRepository.save(vehicle);
-        log.info("Soft-deleted vehicle id={} (Status set to DELETED)", id);
+        log.info("Soft-deleted vehicle id={} (Status set to DELETED), Model: {} {}", id, vehicle.getBrand(), vehicle.getModel());
     }
 
     // ── Helpers ──

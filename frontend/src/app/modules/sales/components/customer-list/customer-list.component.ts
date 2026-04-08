@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SalesService } from '../../services/sales.service';
-import { CustomerDto, CreateCustomerRequest, UpdateCustomerRequest } from '../../models/sales.model';
+import { CustomerDto } from '../../models/sales.model';
 import { FilterRequest } from '../../../../core/models';
 import { BranchContextService } from '../../../../core/services/branch-context.service';
 import { Subject } from 'rxjs';
@@ -29,12 +29,6 @@ export class CustomerListComponent implements OnInit {
   availableYears: number[] = [];
   private destroy$ = new Subject<void>();
 
-  isDrawerOpen = false;
-  isEditMode = false;
-  editingCustomer: CustomerDto | null = null;
-  customerForm!: FormGroup;
-  isSubmitting = false;
-
   filterValues: any = {
     globalSearch: '',
     branchFilter: '',
@@ -43,15 +37,14 @@ export class CustomerListComponent implements OnInit {
 
   constructor(
     private salesService: SalesService,
-    private fb: FormBuilder,
     private http: HttpClient,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private branchContext: BranchContextService
+    private branchContext: BranchContextService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.initForm();
     this.loadCustomers();
     this.loadBranches();
     this.generateYears();
@@ -85,6 +78,11 @@ export class CustomerListComponent implements OnInit {
     };
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   generateYears(): void {
     const currentYear = new Date().getFullYear();
     for (let i = currentYear; i >= 2024; i--) {
@@ -92,20 +90,12 @@ export class CustomerListComponent implements OnInit {
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  navigateToCreate(): void {
+    this.router.navigate(['/sales/customers/new']);
   }
 
-  initForm(): void {
-    this.customerForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-      mobile: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-      email: ['', [Validators.required, Validators.email]],
-      dob: [null],
-      location: [''],
-      branchId: [null, Validators.required],
-    });
+  navigateToEdit(id: number): void {
+    this.router.navigate(['/sales/customers/edit', id]);
   }
 
   loadBranches(): void {
@@ -157,65 +147,6 @@ export class CustomerListComponent implements OnInit {
   onYearFilterChange(year: string): void {
     this.filterValues.yearFilter = year;
     this.dataSource.filter = JSON.stringify(this.filterValues);
-  }
-
-  openCreateDrawer(): void {
-    this.isEditMode = false;
-    this.editingCustomer = null;
-    this.customerForm.reset();
-    this.customerForm.get('mobile')?.enable();
-    this.isDrawerOpen = true;
-  }
-
-  openEditDrawer(customer: CustomerDto): void {
-    this.isEditMode = true;
-    this.editingCustomer = customer;
-    this.customerForm.patchValue(customer);
-    this.customerForm.get('mobile')?.disable();
-    this.isDrawerOpen = true;
-  }
-
-  closeDrawer(): void {
-    this.isDrawerOpen = false;
-  }
-
-  onSubmit(): void {
-    if (this.customerForm.invalid) {
-      this.customerForm.markAllAsTouched();
-      return;
-    }
-
-    this.isSubmitting = true;
-
-    if (this.isEditMode && this.editingCustomer) {
-      const request: UpdateCustomerRequest = {
-        name: this.customerForm.value.name,
-        email: this.customerForm.value.email,
-        dob: this.customerForm.value.dob,
-        location: this.customerForm.value.location,
-        branchId: this.customerForm.value.branchId,
-      };
-      this.salesService.updateCustomer(this.editingCustomer.id, request).subscribe({
-        next: () => {
-          this.snackBar.open('Customer updated', 'Close', { duration: 3000 });
-          this.closeDrawer();
-          this.loadCustomers();
-          this.isSubmitting = false;
-        },
-        error: () => (this.isSubmitting = false),
-      });
-    } else {
-      const request: CreateCustomerRequest = this.customerForm.getRawValue();
-      this.salesService.createCustomer(request).subscribe({
-        next: () => {
-          this.snackBar.open('Customer created', 'Close', { duration: 3000 });
-          this.closeDrawer();
-          this.loadCustomers();
-          this.isSubmitting = false;
-        },
-        error: () => (this.isSubmitting = false),
-      });
-    }
   }
 
   deleteCustomer(customer: CustomerDto): void {

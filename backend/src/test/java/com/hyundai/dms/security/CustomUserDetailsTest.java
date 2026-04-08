@@ -35,7 +35,7 @@ class CustomUserDetailsTest {
                 .username("admin")
                 .email("admin@hyundai.in")
                 .passwordHash("$2a$10$hashedpassword")
-                .role(testRole)
+                .roles(Set.of(testRole))
                 .isActive(true)
                 .failedLoginAttempts(0)
                 .forcePasswordChange(false)

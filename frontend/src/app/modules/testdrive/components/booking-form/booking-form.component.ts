@@ -4,9 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TestDriveService } from '../../services/testdrive.service';
 import { TestDriveBookingStatus, TestDriveFleet } from '../../models/testdrive.model';
-import { SalesService } from '../../../sales/services/sales.service';
 import { AdminService } from '../../../admin/services/admin.service';
-import { CustomerDto } from '../../../sales/models/sales.model';
 import { UserListDto } from '../../../admin/models/admin.model';
 import { FilterRequest } from '../../../../core/models';
 
@@ -29,13 +27,13 @@ import { FilterRequest } from '../../../../core/models';
         <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
           
           <div class="form-row">
-            <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Customer</mat-label>
-              <mat-select formControlName="customerId">
-                <mat-option *ngFor="let c of customers" [value]="c.id">{{c.name}} ({{c.mobile}})</mat-option>
-              </mat-select>
-              <mat-error *ngIf="bookingForm.get('customerId')?.hasError('required')">Customer is required</mat-error>
-            </mat-form-field>
+            <div class="form-field">
+              <app-customer-selector 
+                formControlName="customerId"
+                [required]="true"
+                label="Customer">
+              </app-customer-selector>
+            </div>
 
             <mat-form-field appearance="outline" class="form-field">
               <mat-label>Fleet Vehicle</mat-label>
@@ -123,14 +121,12 @@ export class BookingFormComponent implements OnInit {
   isSubmitting = false;
 
   statuses = Object.values(TestDriveBookingStatus);
-  customers: CustomerDto[] = [];
   fleets: TestDriveFleet[] = [];
   salesExecutives: UserListDto[] = [];
 
   constructor(
     private fb: FormBuilder,
     private testDriveService: TestDriveService,
-    private salesService: SalesService,
     private adminService: AdminService,
     private route: ActivatedRoute,
     private router: Router,
@@ -166,9 +162,6 @@ export class BookingFormComponent implements OnInit {
 
   loadDependencies() {
     const defaultRequest: FilterRequest = { page: 0, size: 1000, filters: [], sorts: [] };
-    this.salesService.getCustomers(defaultRequest).subscribe(res => {
-      if (res.data && res.data.content) this.customers = res.data.content;
-    });
     this.testDriveService.searchFleet(defaultRequest).subscribe(res => {
       if (res.data && res.data.content) this.fleets = res.data.content;
     });

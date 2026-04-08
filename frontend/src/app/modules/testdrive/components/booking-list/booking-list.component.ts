@@ -194,7 +194,8 @@ export class BookingListComponent implements OnInit, OnDestroy {
       filters.push({ field: 'fleet.branch.id', operator: 'EQUAL', value: String(branchId) });
     }
     if (this.globalSearchTerm) {
-      filters.push({ field: 'globalSearch', operator: 'LIKE', value: this.globalSearchTerm });
+      // Search by customer name or booking ID
+      filters.push({ field: 'customer.name', operator: 'LIKE', value: this.globalSearchTerm });
     }
     if (this.statusFilter) {
       filters.push({ field: 'status', operator: 'EQUAL', value: this.statusFilter });

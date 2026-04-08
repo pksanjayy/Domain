@@ -1,6 +1,7 @@
 package com.hyundai.dms.security;
 
 import com.hyundai.dms.module.user.entity.Permission;
+import com.hyundai.dms.module.user.entity.Role;
 import com.hyundai.dms.module.user.entity.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,24 +34,30 @@ public class CustomUserDetails implements UserDetails {
         this.user = user;
 
         Set<GrantedAuthority> auths = new HashSet<>();
-        auths.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName().name()));
 
-        if (user.getRole().getPermissions() != null) {
-            for (Permission p : user.getRole().getPermissions()) {
-                if (Boolean.TRUE.equals(p.getCanCreate())) {
-                    auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_CREATE"));
-                }
-                if (Boolean.TRUE.equals(p.getCanRead())) {
-                    auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_READ"));
-                }
-                if (Boolean.TRUE.equals(p.getCanUpdate())) {
-                    auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_UPDATE"));
-                }
-                if (Boolean.TRUE.equals(p.getCanDelete())) {
-                    auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_DELETE"));
+        for (Role role : user.getRoles()) {
+            // Add ROLE_ authority for each assigned role
+            auths.add(new SimpleGrantedAuthority("ROLE_" + role.getName().name()));
+
+            // Add fine-grained permission authorities from each role
+            if (role.getPermissions() != null) {
+                for (Permission p : role.getPermissions()) {
+                    if (Boolean.TRUE.equals(p.getCanCreate())) {
+                        auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_CREATE"));
+                    }
+                    if (Boolean.TRUE.equals(p.getCanRead())) {
+                        auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_READ"));
+                    }
+                    if (Boolean.TRUE.equals(p.getCanUpdate())) {
+                        auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_UPDATE"));
+                    }
+                    if (Boolean.TRUE.equals(p.getCanDelete())) {
+                        auths.add(new SimpleGrantedAuthority(p.getModuleName() + "_DELETE"));
+                    }
                 }
             }
         }
+
         this.authorities = auths;
     }
 

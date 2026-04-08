@@ -33,7 +33,7 @@
         <div class="user-info">
           <strong>{{ user.username }}</strong>
           <small>{{ user.email }}</small>
-          <span class="role-chip">{{ user.role }}</span>
+          <span class="role-chip">{{ (user.roles || []).join(', ') }}</span>
         </div>
       </div>
       <mat-divider></mat-divider>

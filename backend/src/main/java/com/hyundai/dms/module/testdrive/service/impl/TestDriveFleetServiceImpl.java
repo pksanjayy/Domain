@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     private final QueryDslPredicateBuilder<TestDriveFleet> predicateBuilder = new QueryDslPredicateBuilder<>(TestDriveFleet.class);
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public PageResponse<TestDriveFleetDto> searchFleet(FilterRequest filterRequest) {
         // Extract globalSearch before passing to generic predicate builder
         String globalSearch = null;
@@ -55,10 +56,10 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
         if (globalSearch != null && !globalSearch.isBlank()) {
             QTestDriveFleet q = QTestDriveFleet.testDriveFleet;
             builder.and(
-                q.vin.containsIgnoreCase(globalSearch)
-                .or(q.brand.containsIgnoreCase(globalSearch))
-                .or(q.model.containsIgnoreCase(globalSearch))
-                .or(q.variant.containsIgnoreCase(globalSearch))
+                q.vehicle.vin.containsIgnoreCase(globalSearch)
+                .or(q.vehicle.vehicleModel.brand.containsIgnoreCase(globalSearch))
+                .or(q.vehicle.vehicleModel.model.containsIgnoreCase(globalSearch))
+                .or(q.vehicle.variant.containsIgnoreCase(globalSearch))
                 .or(q.fleetId.containsIgnoreCase(globalSearch))
                 .or(q.registrationNumber.containsIgnoreCase(globalSearch))
             );
@@ -75,7 +76,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public TestDriveFleetDto getFleetById(Long id) {
         TestDriveFleet entity = testDriveFleetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TestDriveFleet", id));
@@ -83,7 +84,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TestDriveFleetDto createFleet(TestDriveFleetDto dto) {
         Branch branch = branchRepository.findById(dto.getBranchId())
                 .orElseThrow(() -> new ResourceNotFoundException("Branch", dto.getBranchId()));
@@ -96,7 +97,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public TestDriveFleetDto updateFleet(Long id, TestDriveFleetDto dto) {
         TestDriveFleet entity = testDriveFleetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TestDriveFleet", id));
@@ -109,8 +110,6 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
 
         entity.setFleetId(dto.getFleetId());
         entity.setVin(dto.getVin());
-        entity.setBrand(dto.getBrand());
-        entity.setModel(dto.getModel());
         entity.setVariant(dto.getVariant());
         entity.setFuelType(dto.getFuelType());
         entity.setTransmission(dto.getTransmission());
@@ -129,7 +128,7 @@ public class TestDriveFleetServiceImpl implements TestDriveFleetService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteFleet(Long id) {
         TestDriveFleet entity = testDriveFleetRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("TestDriveFleet", id));

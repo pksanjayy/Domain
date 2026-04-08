@@ -23,4 +23,5 @@ public class ApiErrorResponse {
     private String path;
     private String correlationId;
     private Map<String, String> fieldErrors;
+    private Map<String, Object> details;
 }

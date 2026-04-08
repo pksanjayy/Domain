@@ -45,6 +45,8 @@ import { NotificationBellComponent } from './components/notification-bell/notifi
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import { BranchSelectorComponent } from './components/branch-selector/branch-selector.component';
+import { VehicleModelSelectorComponent } from './components/vehicle-model-selector/vehicle-model-selector.component';
+import { CustomerSelectorComponent } from './components/customer-selector/customer-selector.component';
 
 // Directives
 import { HasRoleDirective } from './directives/has-role.directive';
@@ -99,6 +101,8 @@ const COMPONENTS = [
   ConfirmDialogComponent,
   LoadingSpinnerComponent,
   BranchSelectorComponent,
+  VehicleModelSelectorComponent,
+  CustomerSelectorComponent,
 ];
 
 const DIRECTIVES = [HasRoleDirective, HasPermissionDirective];

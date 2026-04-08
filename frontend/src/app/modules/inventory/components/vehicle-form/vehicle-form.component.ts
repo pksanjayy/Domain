@@ -19,6 +19,8 @@ export class VehicleFormComponent implements OnInit {
   isSubmitting = false;
   vehicleId: number | null = null;
   branches: BranchDto[] = [];
+  useExistingModel = false;
+  selectedModel: any = null;
 
   fuelTypes = [
     { value: 'PETROL', label: 'Petrol' },
@@ -118,6 +120,34 @@ export class VehicleFormComponent implements OnInit {
       branchId: vehicle.branchId,
       remarks: vehicle.remarks,
     });
+    
+    // Set selected model for the selector
+    this.selectedModel = {
+      brand: vehicle.brand,
+      model: vehicle.model
+    };
+  }
+
+  onModelSelectionModeChange(): void {
+    if (this.useExistingModel) {
+      // Clear manual inputs when switching to selector
+      this.vehicleForm.patchValue({
+        brand: '',
+        model: ''
+      });
+    } else {
+      // Clear selector when switching to manual
+      this.selectedModel = null;
+    }
+  }
+
+  onExistingModelSelected(model: any): void {
+    if (model && model.brand && model.model) {
+      this.vehicleForm.patchValue({
+        brand: model.brand,
+        model: model.model
+      });
+    }
   }
 
   onSubmit(): void {

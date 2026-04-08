@@ -4,6 +4,7 @@ import com.hyundai.dms.exception.BusinessRuleException;
 import com.hyundai.dms.exception.ResourceNotFoundException;
 import com.hyundai.dms.module.user.entity.Menu;
 import com.hyundai.dms.module.user.entity.Permission;
+import com.hyundai.dms.module.user.entity.Role;
 import com.hyundai.dms.module.user.entity.User;
 import com.hyundai.dms.module.user.repository.UserRepository;
 import com.hyundai.dms.security.dto.*;
@@ -34,12 +35,24 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Transactional
+    @Transactional(noRollbackFor = {BadCredentialsException.class, 
+            com.hyundai.dms.exception.InvalidCredentialsException.class,
+            com.hyundai.dms.exception.AccountLockedException.class})
     public LoginResponse login(LoginRequest request) {
         String correlationId = MDC.get("correlationId");
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+
+        // Check if account is locked
+        if (user.isAccountLocked()) {
+            long lockTimeRemaining = user.getLockTimeRemainingSeconds();
+            log.warn("[{}] Locked account login attempt: {} ({}s remaining)", 
+                    correlationId, user.getUsername(), lockTimeRemaining);
+            throw new com.hyundai.dms.exception.AccountLockedException(
+                    "Account is locked due to multiple failed login attempts", 
+                    lockTimeRemaining);
+        }
 
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -53,9 +66,14 @@ public class AuthService {
 
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
+            // Collect all role names for JWT
+            List<String> roleNames = user.getRoles().stream()
+                    .map(r -> r.getName().name())
+                    .collect(Collectors.toList());
+
             // Generate tokens
             Map<String, Object> claims = new HashMap<>();
-            claims.put("role", user.getRole().getName().name());
+            claims.put("roles", roleNames);
             claims.put("userId", user.getId());
 
             String accessToken = jwtUtil.generateAccessToken(userDetails, claims);
@@ -82,9 +100,21 @@ public class AuthService {
             // Increment failed attempts
             user.incrementFailedAttempts();
             userRepository.save(user);
-            log.warn("[{}] Failed login attempt for user: {} (attempt #{})",
-                    correlationId, user.getUsername(), user.getFailedLoginAttempts());
-            throw e;
+            
+            int remainingAttempts = user.getRemainingAttempts();
+            log.warn("[{}] Failed login attempt for user: {} (attempt #{}, {} remaining)",
+                    correlationId, user.getUsername(), user.getFailedLoginAttempts(), remainingAttempts);
+            
+            if (user.isAccountLocked()) {
+                long lockTimeRemaining = user.getLockTimeRemainingSeconds();
+                throw new com.hyundai.dms.exception.AccountLockedException(
+                        "Account locked due to multiple failed login attempts", 
+                        lockTimeRemaining);
+            }
+            
+            throw new com.hyundai.dms.exception.InvalidCredentialsException(
+                    "Invalid username or password", 
+                    remainingAttempts);
         }
     }
 
@@ -105,10 +135,15 @@ public class AuthService {
         existingToken.setRevoked(true);
         refreshTokenRepository.save(existingToken);
 
+        // Collect all role names for JWT
+        List<String> roleNames = user.getRoles().stream()
+                .map(r -> r.getName().name())
+                .collect(Collectors.toList());
+
         // Generate new tokens
         CustomUserDetails userDetails = new CustomUserDetails(user);
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRole().getName().name());
+        claims.put("roles", roleNames);
         claims.put("userId", user.getId());
 
         String newAccessToken = jwtUtil.generateAccessToken(userDetails, claims);
@@ -150,22 +185,45 @@ public class AuthService {
     }
 
     private UserProfileDto buildUserProfile(User user) {
-        List<PermissionDto> permissions = user.getRole().getPermissions().stream()
-                .map(this::toPermissionDto)
+        // Collect roles list
+        List<String> roleNames = user.getRoles().stream()
+                .map(r -> r.getName().name())
                 .collect(Collectors.toList());
 
-        List<MenuDto> menus = buildMenuTree(user.getRole().getMenus());
+        // Merge permissions from all roles (deduplicated by module)
+        Map<String, PermissionDto> permissionMap = new LinkedHashMap<>();
+        for (Role role : user.getRoles()) {
+            for (Permission p : role.getPermissions()) {
+                permissionMap.merge(p.getModuleName(), toPermissionDto(p), (existing, incoming) ->
+                    PermissionDto.builder()
+                        .id(existing.getId())
+                        .moduleName(existing.getModuleName())
+                        .canCreate(existing.isCanCreate() || incoming.isCanCreate())
+                        .canRead(existing.isCanRead() || incoming.isCanRead())
+                        .canUpdate(existing.isCanUpdate() || incoming.isCanUpdate())
+                        .canDelete(existing.isCanDelete() || incoming.isCanDelete())
+                        .build()
+                );
+            }
+        }
+
+        // Merge menus from all roles (deduplicated by menu id)
+        Set<Menu> allMenus = new HashSet<>();
+        for (Role role : user.getRoles()) {
+            allMenus.addAll(role.getMenus());
+        }
+        List<MenuDto> menus = buildMenuTree(allMenus);
 
         return UserProfileDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole().getName().name())
+                .roles(roleNames)
                 .branchId(user.getBranch() != null ? user.getBranch().getId() : null)
                 .branchName(user.getBranch() != null ? user.getBranch().getName() : null)
                 .forcePasswordChange(user.getForcePasswordChange())
                 .menus(menus)
-                .permissions(permissions)
+                .permissions(new ArrayList<>(permissionMap.values()))
                 .build();
     }
 

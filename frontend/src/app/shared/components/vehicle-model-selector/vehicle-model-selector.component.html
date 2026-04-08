@@ -1,0 +1,23 @@
+<mat-form-field [appearance]="appearance" class="full-width">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    type="text"
+    [placeholder]="placeholder"
+    matInput
+    [formControl]="searchControl"
+    [matAutocomplete]="auto"
+    [required]="required"
+    [disabled]="disabled">
+  <mat-icon matSuffix>search</mat-icon>
+  <mat-autocomplete 
+    #auto="matAutocomplete" 
+    [displayWith]="displayFn"
+    (optionSelected)="onSelectionChange($event.option.value)">
+    <mat-option *ngFor="let model of filteredModels$ | async" [value]="model">
+      <span class="model-option">
+        <strong>{{ model.brand }}</strong> {{ model.model }}
+      </span>
+    </mat-option>
+  </mat-autocomplete>
+  <mat-hint *ngIf="required">Required</mat-hint>
+</mat-form-field>

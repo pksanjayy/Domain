@@ -198,7 +198,13 @@ public class QueryDslPredicateBuilder<T> {
 
         List<Object> coercedValues = values.stream()
                 .map(v -> coerceValue(fullField, v.toString()))
+                .filter(v -> v != null) // Filter out null values from invalid inputs
                 .toList();
+
+        if (coercedValues.isEmpty()) {
+            // If all values were invalid/null, return a predicate that matches nothing
+            return new BooleanBuilder().and(path.get(leafField).isNull().and(path.get(leafField).isNotNull()));
+        }
 
         return path.get(leafField).in(coercedValues);
     }
@@ -246,8 +252,13 @@ public class QueryDslPredicateBuilder<T> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private Object coerceValue(String fieldPath, String value) {
-        if (value == null) return null;
+        if (value == null || value.trim().isEmpty()) return null;
         String str = value.trim();
+        
+        // Handle invalid string representations of null/undefined from frontend
+        if ("null".equalsIgnoreCase(str) || "undefined".equalsIgnoreCase(str)) {
+            return null;
+        }
 
         try {
             Class<?> fieldType = getFieldType(entityType, fieldPath);

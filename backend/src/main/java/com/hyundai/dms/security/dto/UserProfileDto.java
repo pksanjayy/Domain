@@ -16,7 +16,7 @@ public class UserProfileDto {
     private Long id;
     private String username;
     private String email;
-    private String role;
+    private List<String> roles;
     private Long branchId;
     private String branchName;
     private boolean forcePasswordChange;

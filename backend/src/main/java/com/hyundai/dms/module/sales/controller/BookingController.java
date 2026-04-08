@@ -58,4 +58,19 @@ public class BookingController {
         BookingDto booking = bookingService.cancelBooking(id);
         return ResponseEntity.ok(ApiResponse.success(booking));
     }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Update booking", description = "Update booking details")
+    public ResponseEntity<ApiResponse<BookingDto>> updateBooking(
+            @PathVariable Long id, @Valid @RequestBody com.hyundai.dms.module.sales.dto.UpdateBookingRequest request) {
+        BookingDto booking = bookingService.updateBooking(id, request);
+        return ResponseEntity.ok(ApiResponse.success(booking));
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Delete booking", description = "SUPER_ADMIN only")
+    public ResponseEntity<ApiResponse<Void>> deleteBooking(@PathVariable Long id) {
+        bookingService.deleteBooking(id);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
 }

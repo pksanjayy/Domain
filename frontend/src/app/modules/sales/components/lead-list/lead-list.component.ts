@@ -39,11 +39,6 @@ export class LeadListComponent implements OnInit, OnDestroy {
     source: ''
   };
 
-  isDrawerOpen = false;
-  leadForm!: FormGroup;
-  isSubmitting = false;
-  editingLeadId: number | null = null;
-
   branches: BranchDto[] = [];
   users: UserListDto[] = [];
 
@@ -53,7 +48,6 @@ export class LeadListComponent implements OnInit, OnDestroy {
   constructor(
     private salesService: SalesService,
     private adminService: AdminService,
-    private fb: FormBuilder,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private branchContext: BranchContextService,
@@ -62,9 +56,7 @@ export class LeadListComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.initForm();
     this.loadLeads();
-    this.loadLookupData();
     this.dataSource.filterPredicate = this.createFilter();
 
     // Reload when branch changes
@@ -93,15 +85,12 @@ export class LeadListComponent implements OnInit, OnDestroy {
     this.adminService.getUsers({ page: 0, size: 100 }).subscribe(res => this.users = res.data.content);
   }
 
+  navigateToCreate(): void {
+    this.router.navigate(['/sales/leads/new']);
+  }
 
-  initForm(): void {
-    this.leadForm = this.fb.group({
-      customerId: [null, Validators.required],
-      assignedToId: [null],
-      modelInterested: ['', Validators.required],
-      source: ['', Validators.required],
-      branchId: [null, Validators.required],
-    });
+  navigateToEdit(id: number): void {
+    this.router.navigate(['/sales/leads/edit', id]);
   }
 
 
@@ -147,71 +136,6 @@ export class LeadListComponent implements OnInit, OnDestroy {
   onSourceFilterChange(source: string): void {
     this.filterValues.source = source;
     this.dataSource.filter = JSON.stringify(this.filterValues);
-  }
-
-  openCreateDrawer(): void {
-    this.editingLeadId = null;
-    this.leadForm.reset({
-      branchId: this.branchContext.getActiveBranchId(),
-      source: 'WALK_IN'
-    });
-    this.isDrawerOpen = true;
-  }
-
-  editLead(lead: LeadDto): void {
-    this.editingLeadId = lead.id;
-    this.leadForm.patchValue({
-      customerId: lead.customerId,
-      assignedToId: lead.assignedToId,
-      modelInterested: lead.modelInterested,
-      source: lead.source,
-      branchId: lead.branchId
-    });
-    this.isDrawerOpen = true;
-  }
-
-  closeDrawer(): void {
-    this.isDrawerOpen = false;
-    this.editingLeadId = null;
-  }
-
-  onSubmit(): void {
-    if (this.leadForm.invalid) {
-      this.leadForm.markAllAsTouched();
-      return;
-    }
-    this.isSubmitting = true;
-    const request: CreateLeadRequest = this.leadForm.value;
-
-    if (this.editingLeadId) {
-      this.salesService.updateLead(this.editingLeadId, request).subscribe({
-        next: () => {
-          this.snackBar.open('Lead updated', 'Close', { duration: 3000 });
-          this.closeDrawer();
-          this.loadLeads();
-          this.isSubmitting = false;
-        },
-        error: (err) => {
-          const message = err?.error?.error?.message || 'Failed to update lead';
-          this.snackBar.open(message, 'Close', { duration: 5000 });
-          this.isSubmitting = false;
-        },
-      });
-    } else {
-      this.salesService.createLead(request).subscribe({
-        next: () => {
-          this.snackBar.open('Lead created', 'Close', { duration: 3000 });
-          this.closeDrawer();
-          this.loadLeads();
-          this.isSubmitting = false;
-        },
-        error: (err) => {
-          const message = err?.error?.error?.message || 'Failed to create lead';
-          this.snackBar.open(message, 'Close', { duration: 5000 });
-          this.isSubmitting = false;
-        },
-      });
-    }
   }
 
   onRowClick(lead: LeadDto): void {

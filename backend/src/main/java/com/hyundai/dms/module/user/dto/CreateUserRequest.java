@@ -2,12 +2,14 @@ package com.hyundai.dms.module.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -27,8 +29,8 @@ public class CreateUserRequest {
     @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
     private String password;
 
-    @NotNull(message = "Role ID is required")
-    private Long roleId;
+    @NotEmpty(message = "At least one role must be assigned")
+    private List<Long> roleIds;
 
     private Long branchId;
 

@@ -75,7 +75,7 @@ public class NotificationService {
     @Transactional
     public void sendToRole(RoleName role, NotificationDto dto, Long excludeUserId) {
         List<User> users = userRepository.findAll().stream()
-                .filter(u -> u.getRole() != null && u.getRole().getName() == role)
+                .filter(u -> u.getRoles() != null && u.getRoles().stream().anyMatch(r -> r.getName() == role))
                 .filter(u -> Boolean.TRUE.equals(u.getIsActive()))
                 .filter(u -> excludeUserId == null || !Objects.equals(u.getId(), excludeUserId))
                 .collect(Collectors.toList());

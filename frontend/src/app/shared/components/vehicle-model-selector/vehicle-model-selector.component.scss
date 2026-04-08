@@ -1,0 +1,13 @@
+.full-width {
+  width: 100%;
+}
+
+.model-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  strong {
+    color: #1976d2;
+  }
+}

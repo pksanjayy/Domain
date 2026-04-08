@@ -203,7 +203,8 @@ export class FleetListComponent implements OnInit, OnDestroy {
       filters.push({ field: 'branch.id', operator: 'EQUAL', value: String(branchId) });
     }
     if (this.globalSearchTerm) {
-      filters.push({ field: 'globalSearch', operator: 'LIKE', value: this.globalSearchTerm });
+      // Search by fleet ID or VIN
+      filters.push({ field: 'fleetId', operator: 'LIKE', value: this.globalSearchTerm });
     }
     if (this.statusFilter) {
       filters.push({ field: 'status', operator: 'EQUAL', value: this.statusFilter });

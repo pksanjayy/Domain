@@ -15,11 +15,12 @@
       <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()" class="payment-form" *ngIf="paymentForm">
 
         <div class="form-row">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Customer ID</mat-label>
-            <input matInput type="number" formControlName="customerId" placeholder="Enter Customer ID">
-            <mat-error *ngIf="paymentForm.get('customerId')?.hasError('required')">Customer ID is required</mat-error>
-          </mat-form-field>
+          <app-customer-selector
+            [label]="'Customer'"
+            [placeholder]="'Search for a customer'"
+            [required]="true"
+            formControlName="customerId">
+          </app-customer-selector>
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Payment Date</mat-label>

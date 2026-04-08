@@ -154,7 +154,7 @@
 /* ─── Error Alert ─── */
 .error-alert {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   padding: 12px 16px;
   margin-bottom: 20px;
@@ -170,6 +170,21 @@
     width: 18px;
     height: 18px;
     flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .error-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+
+    .attempts-remaining {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--dms-warning);
+      margin-top: 4px;
+    }
   }
 }
 
@@ -297,6 +312,16 @@ label {
 
   &.loading {
     pointer-events: none;
+  }
+
+  &.locked {
+    background: var(--dms-error);
+    cursor: not-allowed;
+    
+    &:hover {
+      background: var(--dms-error);
+      transform: none;
+    }
   }
 }
 

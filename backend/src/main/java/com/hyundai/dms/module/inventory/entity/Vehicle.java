@@ -27,6 +27,10 @@ public class Vehicle extends BaseEntity {
     @Column(name = "vin", nullable = false, unique = true, length = 17)
     private String vin;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vehicle_model_id", nullable = false)
+    private VehicleModel vehicleModel;
+
     @Column(name = "brand", nullable = false, length = 50)
     private String brand;
 

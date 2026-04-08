@@ -114,3 +114,12 @@
   color: var(--dms-accent-dark);
   width: fit-content;
 }
+
+@media (max-width: 600px) {
+  .user-name, .dropdown-arrow {
+    display: none !important;
+  }
+  .topbar {
+    padding: 0 var(--dms-space-md);
+  }
+}

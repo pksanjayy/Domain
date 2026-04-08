@@ -14,10 +14,12 @@ public class TestDriveFleetDto {
     private Long id;
     private Long branchId;
     private String branchName;
-    private String fleetId;
-    private String vin;
+    private Long vehicleId;
+    private String vehicleModel;
     private String brand;
     private String model;
+    private String fleetId;
+    private String vin;
     private String variant;
     private FuelType fuelType;
     private Transmission transmission;

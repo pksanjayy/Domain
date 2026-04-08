@@ -15,6 +15,9 @@ import {
   BranchDto,
 } from '../../models/admin.model';
 
+// Roles that should NOT appear in the multi-select dropdown
+const EXCLUDED_ROLES = ['SUPER_ADMIN'];
+
 @Component({
   selector: 'app-user-management',
   templateUrl: './user-management.component.html',
@@ -22,7 +25,7 @@ import {
 })
 export class UserManagementComponent implements OnInit {
   displayedColumns = [
-    'username', 'email', 'roleName', 'branchName', 'status',
+    'username', 'email', 'roles', 'branchName', 'status',
     'failedLoginAttempts', 'createdAt', 'actions'
   ];
   dataSource = new MatTableDataSource<UserListDto>([]);
@@ -40,9 +43,12 @@ export class UserManagementComponent implements OnInit {
   hidePassword = true;
   isSubmitting = false;
 
-  // Dropdown data
+  // Dropdown data (excludes SUPER_ADMIN)
   roles: RoleDetailDto[] = [];
   branches: BranchDto[] = [];
+
+  // Role expansion state: maps user id -> expanded
+  expandedRoles: Record<number, boolean> = {};
 
   // Filter
   filterRole = '';
@@ -70,7 +76,7 @@ export class UserManagementComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      roleId: [null, Validators.required],
+      roleIds: [[], Validators.required],
       branchId: [null],
       isActive: [true],
     });
@@ -78,7 +84,10 @@ export class UserManagementComponent implements OnInit {
 
   loadDropdowns(): void {
     this.adminService.getRoles().subscribe({
-      next: (res) => (this.roles = res.data),
+      next: (res) => {
+        // Exclude SUPER_ADMIN from the picker
+        this.roles = res.data.filter(r => !EXCLUDED_ROLES.includes(r.name));
+      },
     });
     this.adminService.getAllBranches().subscribe({
       next: (res) => (this.branches = res.data),
@@ -143,11 +152,21 @@ export class UserManagementComponent implements OnInit {
     this.loadUsers();
   }
 
+  // ─── Role expansion in table ───
+  toggleRoleExpand(userId: number, event: Event): void {
+    event.stopPropagation();
+    this.expandedRoles[userId] = !this.expandedRoles[userId];
+  }
+
+  isRoleExpanded(userId: number): boolean {
+    return !!this.expandedRoles[userId];
+  }
+
   // ─── Drawer ───
   openCreateDrawer(): void {
     this.isEditMode = false;
     this.editingUser = null;
-    this.userForm.reset({ isActive: true });
+    this.userForm.reset({ isActive: true, roleIds: [] });
     this.userForm.get('password')?.setValidators([Validators.required, Validators.minLength(8)]);
     this.userForm.get('password')?.updateValueAndValidity();
     this.userForm.get('username')?.enable();
@@ -157,10 +176,14 @@ export class UserManagementComponent implements OnInit {
   openEditDrawer(user: UserListDto): void {
     this.isEditMode = true;
     this.editingUser = user;
+    // Map existing roles to ids — exclude SUPER_ADMIN
+    const assignedRoleIds = user.roles
+      .filter(r => !EXCLUDED_ROLES.includes(r.name))
+      .map(r => r.id);
     this.userForm.patchValue({
       username: user.username,
       email: user.email,
-      roleId: user.roleId,
+      roleIds: assignedRoleIds,
       branchId: user.branchId,
       isActive: user.isActive,
     });
@@ -181,11 +204,17 @@ export class UserManagementComponent implements OnInit {
       return;
     }
 
+    const selectedIds: number[] = this.userForm.value.roleIds || [];
+    if (selectedIds.length === 0) {
+      this.snackBar.open('Please select at least one role', 'Close', { duration: 3000 });
+      return;
+    }
+
     this.isSubmitting = true;
 
     if (this.isEditMode && this.editingUser) {
       const request: UpdateUserRequest = {
-        roleId: this.userForm.value.roleId,
+        roleIds: selectedIds,
         branchId: this.userForm.value.branchId,
         isActive: this.userForm.value.isActive,
       };
@@ -203,7 +232,7 @@ export class UserManagementComponent implements OnInit {
         username: this.userForm.value.username,
         email: this.userForm.value.email,
         password: this.userForm.value.password,
-        roleId: this.userForm.value.roleId,
+        roleIds: selectedIds,
         branchId: this.userForm.value.branchId,
         isActive: this.userForm.value.isActive,
       };
@@ -291,5 +320,28 @@ export class UserManagementComponent implements OnInit {
       MANAGER_VIEWER: 'role-manager',
     };
     return map[roleName] || 'role-default';
+  }
+
+  getRoleLabel(roleName: string): string {
+    const map: Record<string, string> = {
+      SUPER_ADMIN: 'Super Admin',
+      MASTER_USER: 'Master User',
+      SALES_CRM_EXEC: 'Sales CRM',
+      WORKSHOP_EXEC: 'Workshop',
+      MANAGER_VIEWER: 'Manager',
+    };
+    return map[roleName] || roleName;
+  }
+
+  /** Returns display names of all selected roles (for multi-select trigger label) */
+  getRoleSelectLabel(selectedIds: number[]): string {
+    if (!selectedIds?.length) return '';
+    return selectedIds
+      .map(id => {
+        const role = this.roles.find(r => r.id === id);
+        return role ? (role.displayName || role.name) : '';
+      })
+      .filter(Boolean)
+      .join(', ');
   }
 }

@@ -23,9 +23,27 @@ export class AuthEffects {
             });
           }),
           catchError((error) => {
-            const message =
-              error?.error?.message || 'Login failed. Please try again.';
-            return of(AuthActions.loginFailure({ error: message }));
+            let errorMessage = 'Login failed. Please try again.';
+
+            // Extract error details from the API response
+            if (error?.error?.error) {
+              const apiError = error.error.error;
+              errorMessage = apiError.message || errorMessage;
+              
+              // If there are details (remainingAttempts, lockTimeRemainingSeconds), 
+              // pass them as a JSON string
+              if (apiError.details) {
+                const errorData = {
+                  message: errorMessage,
+                  ...apiError.details
+                };
+                errorMessage = JSON.stringify(errorData);
+              }
+            } else if (error?.error?.message) {
+              errorMessage = error.error.message;
+            }
+
+            return of(AuthActions.loginFailure({ error: errorMessage }));
           })
         )
       )

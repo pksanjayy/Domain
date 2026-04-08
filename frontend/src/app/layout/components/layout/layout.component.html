@@ -4,10 +4,11 @@
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav
       #sidenav
-      [mode]="'side'"
+      [mode]="sidenavMode"
       [opened]="sidenavOpened"
+      (closed)="sidenavOpened = false"
       class="sidenav">
-      <app-sidenav (toggleSidenav)="toggleSidenav()"></app-sidenav>
+      <app-sidenav (toggleSidenav)="closeSidenavOnMobile()"></app-sidenav>
     </mat-sidenav>
 
     <mat-sidenav-content class="main-content">

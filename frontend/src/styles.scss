@@ -442,3 +442,21 @@ a {
 a:hover {
   color: var(--dms-accent-hover);
 }
+
+/* ────────────────────────────────────────────────────
+   RESPONSIVE UTILITIES AND MEDIA QUERIES
+   ──────────────────────────────────────────────────── */
+
+.table-responsive-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  /* Let dialogs take up near full width on mobile */
+  .cdk-overlay-pane {
+    max-width: 95vw !important;
+    width: 95vw !important;
+  }
+}

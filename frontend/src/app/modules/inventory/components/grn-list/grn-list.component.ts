@@ -57,8 +57,8 @@ export class GrnListComponent implements OnInit {
     this.http.get<any>('/api/admin/branches').subscribe({
       next: (res) => {
         const branchFilter = this.filterConfig.find(f => f.field === 'branchName');
-        if (branchFilter && res.data) {
-          branchFilter.options = res.data.map((b: any) => ({ value: b.name, label: b.name }));
+        if (branchFilter && res.data && res.data.content) {
+          branchFilter.options = res.data.content.map((b: any) => ({ value: b.name, label: b.name }));
         }
       }
     });

@@ -82,8 +82,8 @@ export class VehicleListComponent implements OnInit, OnDestroy {
     this.http.get<any>('/api/admin/branches').subscribe({
       next: (res) => {
         const branchFilter = this.filterConfig.find(f => f.field === 'branchName');
-        if (branchFilter && res.data) {
-          branchFilter.options = res.data.map((b: any) => ({ value: b.name, label: b.name }));
+        if (branchFilter && res.data && res.data.content) {
+          branchFilter.options = res.data.content.map((b: any) => ({ value: b.name, label: b.name }));
         }
       }
     });
@@ -99,12 +99,21 @@ export class VehicleListComponent implements OnInit, OnDestroy {
   }
 
   applyGlobalSearch(value: string): void {
-    // Overriding the default filter logic to pass the global search string
-    // This relies on the backend accepting wildcard filters or we inject an implicit field target.
-    // For a generic search, we inject "vin": value inside filter components explicitly.
-    const searchFilter = { field: 'globalSearch', operator: 'LIKE' as const, value: value.trim() };
+    // Search across VIN, brand, and model fields
+    if (!value || value.trim() === '') {
+      if (this.dataTable) {
+        this.dataTable.onFilterChange([]);
+      }
+      return;
+    }
+    
+    const searchValue = value.trim();
+    const searchFilters = [
+      { field: 'vin', operator: 'LIKE' as const, value: searchValue }
+    ];
+    
     if (this.dataTable) {
-      this.dataTable.onFilterChange([searchFilter]);
+      this.dataTable.onFilterChange(searchFilters);
     }
   }
 

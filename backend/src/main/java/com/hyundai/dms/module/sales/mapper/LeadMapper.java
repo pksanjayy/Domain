@@ -17,6 +17,7 @@ public interface LeadMapper {
     @Mapping(target = "stage", expression = "java(lead.getStage().name())")
     @Mapping(target = "vehicleId", source = "vehicle.id")
     @Mapping(target = "vehicleVin", source = "vehicle.vin")
+    @Mapping(target = "vehicleModel", expression = "java(lead.getVehicle() != null ? lead.getVehicle().getBrand() + \" \" + lead.getVehicle().getModel() : null)")
     @Mapping(target = "branchId", source = "branch.id")
     @Mapping(target = "branchName", source = "branch.name")
     LeadDto toDto(Lead lead);

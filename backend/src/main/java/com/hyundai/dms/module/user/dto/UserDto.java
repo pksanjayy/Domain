@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,8 +17,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
-    private String roleName;
-    private Long roleId;
+    private List<RoleInfo> roles;
     private String branchName;
     private Long branchId;
     private Boolean isActive;
@@ -26,4 +26,14 @@ public class UserDto {
     private Boolean forcePasswordChange;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RoleInfo {
+        private Long id;
+        private String name;
+        private String displayName;
+    }
 }

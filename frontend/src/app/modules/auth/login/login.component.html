@@ -52,7 +52,15 @@
       <!-- Error Alert -->
       <div class="error-alert" *ngIf="error$ | async as error">
         <mat-icon>error_outline</mat-icon>
-        <span>{{ error }}</span>
+        <div class="error-content">
+          <span *ngIf="!isAccountLocked">Invalid username or password</span>
+          <span *ngIf="isAccountLocked && lockTimeRemaining">
+            Account locked. Please try again in {{ formatLockTime(lockTimeRemaining) }}
+          </span>
+          <span class="attempts-remaining" *ngIf="remainingAttempts !== null && remainingAttempts > 0 && !isAccountLocked">
+            {{ remainingAttempts }} attempt(s) remaining
+          </span>
+        </div>
       </div>
 
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -101,10 +109,12 @@
         <button
           type="submit"
           class="login-button"
-          [disabled]="isLoading$ | async"
-          [class.loading]="isLoading$ | async">
+          [disabled]="(isLoading$ | async) || isAccountLocked"
+          [class.loading]="isLoading$ | async"
+          [class.locked]="isAccountLocked">
           <mat-spinner *ngIf="isLoading$ | async" diameter="20" class="button-spinner"></mat-spinner>
-          <span *ngIf="!(isLoading$ | async)">Sign In</span>
+          <span *ngIf="!(isLoading$ | async) && !isAccountLocked">Sign In</span>
+          <span *ngIf="isAccountLocked">Account Locked</span>
         </button>
       </form>
     </div>

@@ -11,6 +11,7 @@ import com.hyundai.dms.module.sales.repository.PaymentRepository;
 import com.hyundai.dms.module.sales.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentMapper paymentMapper;
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public PaymentDto createPayment(PaymentDto paymentDto) {
         Customer customer = customerRepository.findById(paymentDto.getCustomerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "id", paymentDto.getCustomerId()));
@@ -41,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public PaymentDto updatePayment(Long id, PaymentDto paymentDto) {
         Payment existingPayment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment", id));
@@ -58,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public PaymentDto getPayment(Long id) {
         Payment payment = paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment", id));
@@ -66,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<PaymentDto> getAllPaymentsByBranch(Long branchId) {
         return paymentRepository.findByCustomerBranchId(branchId).stream()
                 .map(paymentMapper::toDto)
@@ -74,7 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public List<PaymentDto> filterPayments(Long branchId, Long customerId, String status) {
         // Simplified filter logic
         List<Payment> payments;
@@ -97,7 +98,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void deletePayment(Long id) {
         if (!paymentRepository.existsById(id)) {
             throw new ResourceNotFoundException("Payment", id);

@@ -28,22 +28,42 @@
           </mat-form-field>
 
           <!-- Brand & Model -->
-          <div class="form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>Brand <span class="required">*</span></mat-label>
-              <input matInput formControlName="brand" placeholder="e.g. Toyota">
-              <mat-error *ngIf="vehicleForm.get('brand')?.touched">
-                {{ getErrorMessage('brand') }}
-              </mat-error>
-            </mat-form-field>
+          <div class="model-selection-section">
+            <div class="selection-toggle">
+              <mat-slide-toggle [(ngModel)]="useExistingModel" [ngModelOptions]="{standalone: true}" 
+                                (change)="onModelSelectionModeChange()">
+                Select from existing models
+              </mat-slide-toggle>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Model <span class="required">*</span></mat-label>
-              <input matInput formControlName="model" placeholder="e.g. Creta">
-              <mat-error *ngIf="vehicleForm.get('model')?.touched">
-                {{ getErrorMessage('model') }}
-              </mat-error>
-            </mat-form-field>
+            <div *ngIf="useExistingModel" class="existing-model-selector">
+              <app-vehicle-model-selector
+                [label]="'Vehicle Model'"
+                [required]="true"
+                [includeInactive]="false"
+                (ngModelChange)="onExistingModelSelected($event)"
+                [ngModel]="selectedModel"
+                [ngModelOptions]="{standalone: true}">
+              </app-vehicle-model-selector>
+            </div>
+
+            <div *ngIf="!useExistingModel" class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Brand <span class="required">*</span></mat-label>
+                <input matInput formControlName="brand" placeholder="e.g. Hyundai">
+                <mat-error *ngIf="vehicleForm.get('brand')?.touched">
+                  {{ getErrorMessage('brand') }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Model <span class="required">*</span></mat-label>
+                <input matInput formControlName="model" placeholder="e.g. Creta">
+                <mat-error *ngIf="vehicleForm.get('model')?.touched">
+                  {{ getErrorMessage('model') }}
+                </mat-error>
+              </mat-form-field>
+            </div>
           </div>
 
           <!-- Variant & Colour -->

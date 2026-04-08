@@ -113,6 +113,12 @@ import { ReportsService } from '../../services/reports.service';
     }
 
     .chart-body { padding: 16px 24px 24px; height: 300px; }
+
+    @media (max-width: 768px) {
+      .summary-grid, .charts-row {
+        grid-template-columns: 1fr;
+      }
+    }
   `],
 })
 export class InventoryReportComponent implements OnInit {

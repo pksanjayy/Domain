@@ -27,6 +27,7 @@ public class LeadDto {
     private String lostReason;
     private Long vehicleId;
     private String vehicleVin;
+    private String vehicleModel;
     private Long branchId;
     private String branchName;
     private LocalDateTime createdAt;

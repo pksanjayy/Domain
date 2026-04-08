@@ -96,6 +96,30 @@
     padding: 24px; flex: 1; overflow-y: auto;
     display: flex; flex-direction: column; gap: 4px;
     .full-width { width: 100%; }
+    
+    .model-selector-section {
+      margin-bottom: 16px;
+    }
+    
+    .no-vehicles-message {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(255, 152, 0, 0.1);
+      border: 1px solid rgba(255, 152, 0, 0.3);
+      border-radius: 4px;
+      color: #e65100;
+      font-size: 14px;
+      margin-bottom: 16px;
+      
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+    
     .drawer-actions {
       display: flex; justify-content: flex-end; gap: 12px;
       margin-top: auto; padding-top: 16px; border-top: 1px solid var(--dms-card-border);
